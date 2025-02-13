@@ -1,10 +1,16 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   /* config options here */
-  basePath: "/my-next-app",
-  output: "export", // <=== enables static exports
+  basePath: isProd ? "/sr_portal" : "",
+  assetPrefix: isProd ? "/sr_portal/" : "",
+  output: "export",
   reactStrictMode: true,
+  images: {
+    unoptimized: true, // Disable default image optimization
+  },
 };
 
 export default nextConfig;

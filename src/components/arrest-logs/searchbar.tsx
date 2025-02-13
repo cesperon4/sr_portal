@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import React, { useState, useCallback } from "react";
+// import { Input } from "@/components/ui/input";
+// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,7 @@ const filters = [
 
 function Searchbar({ handleChange }: DataTableProps) {
   const [filterState, setFilterState] = useState<Record<string, boolean>>({});
-
+  console.log(handleChange);
   const setShowStatusBar = useCallback((checkedFilter: string) => {
     setFilterState((prev) =>
       Object.fromEntries(
@@ -69,7 +69,7 @@ function Searchbar({ handleChange }: DataTableProps) {
           })}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Input onChange={handleChange} />
+      {/* <Input onChange={handleChange} /> */}
     </div>
   );
 }

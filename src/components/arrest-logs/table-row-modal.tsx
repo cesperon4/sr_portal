@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Toggle } from "@/components/ui/toggle";
+// import { Checkbox } from "@/components/ui/checkbox";
+// import { Toggle } from "@/components/ui/toggle";
 
 import { Backdrop } from "../backdrop";
-import { useDataContext } from "../../context/DataContext";
+// import { useDataContext } from "../../context/DataContext";
 
 interface ArrestLogType {
   attributes: {
@@ -36,14 +36,14 @@ interface ArrestLogType {
   };
 }
 
-interface ArrestLogField {
-  alias: string | null;
-  defaultValue: string | null;
-  domain: string | null;
-  name: string;
-  sqlType: string | null;
-  type: string | null;
-}
+// interface ArrestLogField {
+//   alias: string | null;
+//   defaultValue: string | null;
+//   domain: string | null;
+//   name: string;
+//   sqlType: string | null;
+//   type: string | null;
+// }
 
 interface DataTableProps {
   //   arrestLogFields: ArrestLogField[];
@@ -52,7 +52,7 @@ interface DataTableProps {
 }
 
 export function TableRowModal({ data, handleClose }: DataTableProps) {
-  const { uncheckAllVisibleColumns, checkAllVisibleColumns } = useDataContext();
+  // const { uncheckAllVisibleColumns, checkAllVisibleColumns } = useDataContext();
   return (
     <Backdrop
       onClick={() => {
