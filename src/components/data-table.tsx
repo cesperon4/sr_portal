@@ -13,7 +13,6 @@ import {
 import { useDataContext } from "../context/DataContext";
 import { TableRowModal } from "@/components/arrest-logs/table-row-modal";
 import { SelectColumnModal } from "@/components/arrest-logs/select-column-modal";
-import { Button } from "@/components/ui/button";
 
 interface ArrestLogType {
   attributes: {
@@ -74,35 +73,24 @@ export function DataTable({ arrestLogs, arrestLogFields }: DataTableProps) {
   };
 
   const [selectColumns, setSelectColumns] = useState<boolean>(false);
-  const openSelectColumns = () => {
-    setSelectColumns(true);
-  };
+
   const closeSelectColumns = () => {
     setSelectColumns(false);
   };
 
   return (
-    <div className={`min-w-full flex flex-col gap-8`}>
-      <div className={``}>
-        <Button
-          variant="outline"
-          onClick={() => {
-            openSelectColumns();
-          }}
-        >
-          Select Columns
-        </Button>
-      </div>
+    <div className={`flex flex-col gap-4 justify-center items-center`}>
       {selectColumns && (
         <SelectColumnModal
           handleClose={closeSelectColumns}
           arrestLogFields={arrestLogFields}
         />
       )}
+
       {tableRow && tableRowModalData && (
         <TableRowModal handleClose={closeTableRow} data={tableRowModalData} />
       )}
-      <Table className={`min-w-full`}>
+      <Table className={``}>
         <TableCaption>{""}</TableCaption>
         <TableHeader>
           <TableRow>
@@ -147,6 +135,7 @@ export function DataTable({ arrestLogs, arrestLogFields }: DataTableProps) {
           )}
         </TableBody>
       </Table>
+      {/* <Paginate /> */}
     </div>
   );
 }

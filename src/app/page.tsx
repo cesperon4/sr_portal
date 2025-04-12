@@ -1,23 +1,41 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Image from "next/image";
-import { DataTable } from "../components/data-table";
+import React, { useState, useCallback, useMemo } from "react";
+
 import { useQueryBuilder } from "../api/queryBuilder"; // Adjust the import path
+import { Paginate } from "../components/paginate";
+
+import { DataTable } from "../components/data-table";
+import { Charts } from "../components/charts";
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { Map } from "@/components/map";
+import { SelectColumnModal } from "@/components/arrest-logs/select-column-modal";
+import { HeaderSelect } from "@/types/header.interface";
+import { Filter } from "@/components/map/filter";
+
+import {
+  getBarChartData,
+  getPieChartData,
+  getLineChartData,
+  getDoughnutChartData,
+} from "@/utils/chartData";
+
+import {
+  initialCrimeFilterState,
+  checkCrimeFilterState,
+} from "@/lib/constants";
+import { CrimeFilterState } from "@/types/map.interface";
 
 export default function Home() {
   const [arrestLogSearchParams, setArrestLogSearchParams] = useState<
     Record<string, string | number>
   >({
-    // AGE: "27",
     ArrestLocationStreet: "",
   });
 
   const searchArrestLogs = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, filter?: string) => {
+      console.log("filter: ", filter);
       if (!filter) {
         alert("Please select a filter");
         return;
@@ -31,13 +49,28 @@ export default function Home() {
     []
   );
 
+  ////Map Filters
+  const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
+    initialCrimeFilterState
+  );
+
+  const selectAllCriminalFilters = () => {
+    setCrimeFilterState(checkCrimeFilterState);
+  };
+
+  const clearAllCriminalFilters = () => {
+    setCrimeFilterState(initialCrimeFilterState);
+  };
+
   const {
     data: arrestLogs,
     isLoading: isArrestLogsLoading,
     error: arrestLogsError,
   } = useQueryBuilder({
     searchParams: arrestLogSearchParams,
+    filterParams: undefined,
     base_url: process.env.NEXT_PUBLIC_ARREST_LOG_URL,
+    orderBy: "DATE_ARRESTED DESC",
   });
 
   const {
@@ -46,87 +79,136 @@ export default function Home() {
     error: policeIncidentsError,
   } = useQueryBuilder({
     searchParams: undefined,
+    filterParams: crimeFilterState,
     base_url: process.env.NEXT_PUBLIC_POLICE_INCIDENT_URL,
+    orderBy: "",
   });
 
-  const [view, setView] = useState<"map" | "table">("map");
-  const toggleView = () =>
-    setView((prev) => (prev === "map" ? "table" : "map"));
+  const [view, setView] = useState<HeaderSelect>("Map");
+  const toggleView = (view: HeaderSelect) => setView(view);
 
   const renderMap = useCallback(() => {
     if (isPoliceIncidentsLoading) return <p>Loading map...</p>;
     if (policeIncidentsError)
       return <p>Error: {policeIncidentsError.message}</p>;
+
     return <Map policeIncidents={policeIncidents.features} />;
   }, [isPoliceIncidentsLoading, policeIncidentsError, policeIncidents]);
 
+  const chartsData = useMemo(() => {
+    if (!arrestLogs)
+      return {
+        barChartData: null,
+        pieChartData: null,
+        lineChartData: null,
+        doughnutChartData: null,
+      };
+
+    return {
+      barChartData: getBarChartData(arrestLogs.features, "AGE"),
+      pieChartData: getPieChartData(arrestLogs.features, "SEX"),
+      lineChartData: getLineChartData(arrestLogs.features, "RACE"),
+      lineChartDataChargeDescription: getLineChartData(
+        arrestLogs.features,
+        "Charge_Description"
+      ),
+      barChartDataDegree: getBarChartData(arrestLogs.features, "Degree"),
+      barChartDataStreet: getBarChartData(
+        arrestLogs.features,
+        "ArrestLocationStreet"
+      ),
+      doughnutChartData: getDoughnutChartData(arrestLogs.features, "RACE"),
+    };
+  }, [arrestLogs]);
+
+  const renderCharts = useCallback(() => {
+    if (isArrestLogsLoading) return <p>Loading table...</p>;
+    if (arrestLogsError) return <p>Error: {arrestLogsError.message}</p>;
+    if (
+      !chartsData.barChartData ||
+      !chartsData.lineChartData ||
+      !chartsData.pieChartData ||
+      !chartsData.doughnutChartData ||
+      !chartsData.barChartDataDegree ||
+      !chartsData.barChartDataStreet ||
+      !chartsData.lineChartDataChargeDescription
+    )
+      return <p>Error loading chart data...</p>;
+
+    return (
+      <Charts
+        chartData={chartsData.barChartData}
+        lineChartData={chartsData.lineChartData}
+        lineChartDataChargeDescription={
+          chartsData.lineChartDataChargeDescription
+        }
+        barChartDataDegree={chartsData.barChartDataDegree}
+        barChartDataStreet={chartsData.barChartDataStreet}
+        pieChartData={chartsData.pieChartData}
+        doughnutChartData={chartsData.doughnutChartData}
+      />
+    );
+  }, [isArrestLogsLoading, arrestLogsError, chartsData]);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const renderDataTable = useCallback(() => {
     if (isArrestLogsLoading) return <p>Loading table...</p>;
     if (arrestLogsError) return <p>Error: {arrestLogsError.message}</p>;
+
+    const itemsPerPage = 12;
+    const numOfPages = Math.ceil(arrestLogs.features.length / itemsPerPage);
+    const lastIndex = currentPage * itemsPerPage;
+    const firstIndex = lastIndex - itemsPerPage;
+
+    const displayLogs = arrestLogs.features.slice(firstIndex, lastIndex);
     return (
-      <DataTable
-        arrestLogs={arrestLogs.features}
-        arrestLogFields={arrestLogs.fields}
-      />
+      <>
+        <DataTable
+          arrestLogs={displayLogs}
+          arrestLogFields={arrestLogs.fields}
+        />
+        <Paginate count={numOfPages} setCurrentPage={setCurrentPage} />
+      </>
     );
-  }, [isArrestLogsLoading, arrestLogsError, arrestLogs]);
+  }, [isArrestLogsLoading, arrestLogsError, arrestLogs, currentPage]);
+
+  const [selectColumns, setSelectColumns] = useState<boolean>(false);
+  const openSelectColumns = () => {
+    setSelectColumns(true);
+  };
+  const closeSelectColumns = () => {
+    setSelectColumns(false);
+  };
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <Header
         view={view}
-        searchArrestLogs={searchArrestLogs}
         toggleView={toggleView}
+        searchArrestLogs={searchArrestLogs}
+        openSelectColumns={openSelectColumns}
       />
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full">
-        {view === "map" ? renderMap() : renderDataTable()}
-
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)] text-red-500">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      <main className="flex flex-col gap-8 w-full">
+        {selectColumns && (
+          <SelectColumnModal
+            handleClose={closeSelectColumns}
+            arrestLogFields={arrestLogs.fields}
+          />
+        )}
+        {view === "Map" && (
+          <div className="flex w-full gap-4">
+            <Filter
+              crimeFilterState={crimeFilterState}
+              setCrimeFilterState={setCrimeFilterState}
+              checkAllCriminalFilters={selectAllCriminalFilters}
+              clearAllCriminalFilters={clearAllCriminalFilters}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+            {renderMap()}
+          </div>
+        )}
+        {view === "Table" && renderDataTable()}
+        {view === "Chart" && renderCharts()}
       </main>
-      <Footer />
     </div>
   );
 }

@@ -1,3 +1,25 @@
+export type AttributeTypes =
+  | "AGE"
+  | "ARREST_STATUS"
+  | "ArrestLocationAptFlr"
+  | "ArrestLocationCity"
+  | "ArrestLocationStreet"
+  | "ArrestLocationStreetNBR"
+  | "Arrest_Charge"
+  | "Arrest_ID"
+  | "Case_Number"
+  | "Charge_Description"
+  | "Charge_Sequence"
+  | "DATE_ARRESTED"
+  | "DOB"
+  | "Degree"
+  | "FIRSTNAME"
+  | "LASTNAME"
+  | "MIDDLENAME"
+  | "RACE"
+  | "SEX"
+  | "TIME_ARREST";
+
 export interface ArrestLogType {
   attributes: {
     AGE: string | null;

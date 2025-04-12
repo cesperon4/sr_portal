@@ -52,11 +52,11 @@ interface DataTableProps {
 export function Map({ policeIncidents }: DataTableProps) {
   const center: [number, number] = [38.4404, -122.7141];
   return (
-    <div className="w-full h-[600px] flex items-center justify-center">
+    <div className="w-full h-[1400px] flex items-center justify-center">
       <MapContainer
         center={center}
         zoom={13}
-        className="h-[600px] w-full rounded-lg shadow-md"
+        className="h-[1400px] w-full rounded-lg shadow-md"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -74,7 +74,6 @@ export function Map({ policeIncidents }: DataTableProps) {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("hello");
                     }}
                     className={`cursor-pointer`}
                   >{`${incident.attributes.StatuteDescription}, ${incident.attributes.DateOccurred}`}</div>

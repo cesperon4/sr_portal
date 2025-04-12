@@ -1,6 +1,8 @@
 "use client"; // required in next.js 13+ which uses server side rendering
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { initialCrimeFilterState } from "@/lib/constants";
+import { CrimeFilterState } from "@/types/map.interface";
 
 type CustomObjectType = {
   [key: string]: boolean;
@@ -9,6 +11,8 @@ type CustomObjectType = {
 interface DataContextType {
   visibleColumns: CustomObjectType;
   setVisibleColumns: React.Dispatch<React.SetStateAction<CustomObjectType>>;
+  crimeFilterState: CrimeFilterState;
+  setCrimeFilterState: React.Dispatch<React.SetStateAction<CrimeFilterState>>;
   uncheckAllVisibleColumns: () => void;
   checkAllVisibleColumns: () => void;
 }
@@ -25,11 +29,11 @@ export const useDataContext = (): DataContextType => {
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const initialVisibleColumnState = {
-    OBJECTID: true,
+    OBJECTID: false,
     DATE_ARRESTED: true,
-    Arrest_ID: true,
+    Arrest_ID: false,
     Case_Number: true,
-    Charge_Sequence: true,
+    Charge_Sequence: false,
     Degree: true,
     Arrest_Charge: true,
     Charge_Description: true,
@@ -47,8 +51,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     DOB: true,
     AGE: true,
     ARREST_STATUS: true,
-    UNIQUEKEY: true,
-    OBJECTID_1: true,
+    UNIQUEKEY: false,
+    OBJECTID_1: false,
   };
   const [visibleColumns, setVisibleColumns] = useState<CustomObjectType>(
     initialVisibleColumnState
@@ -66,11 +70,17 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setVisibleColumns(initialVisibleColumnState);
   };
 
+  const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
+    initialCrimeFilterState
+  );
+
   return (
     <DataContext.Provider
       value={{
         visibleColumns,
         setVisibleColumns,
+        crimeFilterState,
+        setCrimeFilterState,
         uncheckAllVisibleColumns,
         checkAllVisibleColumns,
       }}

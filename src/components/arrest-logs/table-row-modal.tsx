@@ -1,11 +1,8 @@
 "use client";
 
 import * as React from "react";
-// import { Checkbox } from "@/components/ui/checkbox";
-// import { Toggle } from "@/components/ui/toggle";
-
 import { Backdrop } from "../backdrop";
-// import { useDataContext } from "../../context/DataContext";
+import { TABLE_ROW_CLASSES } from "@/lib/constants";
 
 interface ArrestLogType {
   attributes: {
@@ -36,23 +33,12 @@ interface ArrestLogType {
   };
 }
 
-// interface ArrestLogField {
-//   alias: string | null;
-//   defaultValue: string | null;
-//   domain: string | null;
-//   name: string;
-//   sqlType: string | null;
-//   type: string | null;
-// }
-
 interface DataTableProps {
-  //   arrestLogFields: ArrestLogField[];
   data: ArrestLogType;
   handleClose: () => void;
 }
 
 export function TableRowModal({ data, handleClose }: DataTableProps) {
-  // const { uncheckAllVisibleColumns, checkAllVisibleColumns } = useDataContext();
   return (
     <Backdrop
       onClick={() => {
@@ -60,45 +46,215 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
       }}
     >
       <div
-        className="bg-white rounded-lg p-6 shadow-lg w-4/12 overflow-auto max-h-[40rem]"
+        className="bg-white rounded-lg p-6 shadow-lg w-[50rem] overflow-auto max-h-[40rem]"
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b">
           Arrest Log Details
         </h2>
         <form>
-          <div className="flex gap-4">
-            <div className="flex gap-2">
-              <label>Object ID </label>
+          <div className="grid grid-cols-1 items-center gap-4 px-4">
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Object ID </label>
               <input
-                className="rounded"
+                className={TABLE_ROW_CLASSES.form_input}
                 disabled
-                value={data.attributes.OBJECTID || ""}
+                value={data.attributes.OBJECTID || "n/a"}
               />
             </div>
-            <div className="flex gap-2">
-              <label>Date Arrested </label>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Arrest ID </label>
               <input
-                className="rounded"
+                className={TABLE_ROW_CLASSES.form_input}
                 disabled
-                value={data.attributes.DATE_ARRESTED || ""}
+                value={data.attributes.Arrest_ID || "n/a"}
               />
             </div>
-            <div className="flex gap-2">
-              <label>Arrest ID </label>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Arrest Status{" "}
+              </label>
               <input
-                className="rounded"
+                className={TABLE_ROW_CLASSES.form_input}
                 disabled
-                value={data.attributes.Arrest_ID || ""}
+                value={data.attributes.ARREST_STATUS || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Arrest Location Apartment Floor{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.ArrestLocationAptFlr || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Arrest Location City{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.ArrestLocationCity || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Age </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.AGE || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Arrest Location Street{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.ArrestLocationStreet || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Date Arrested{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.DATE_ARRESTED || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Arrest Location Street Number{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.ArrestLocationStreetNBR || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Arrest Charge{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.Arrest_Charge || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Case Number{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.Case_Number || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Case Number{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.Charge_Description || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Charge Sequence{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.Charge_Sequence || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>D.O.B </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.DOB || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Degree </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.Degree || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                First Name{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.FIRSTNAME || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>
+                Middle Name{" "}
+              </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.MIDDLENAME || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Last Name </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.LASTNAME || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Suffix </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.SUFFIX || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Race </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.RACE || "n/a"}
+              />
+            </div>
+            <div className={TABLE_ROW_CLASSES.form_row}>
+              <label className={TABLE_ROW_CLASSES.form_label}>Sex </label>
+              <input
+                className={TABLE_ROW_CLASSES.form_input}
+                disabled
+                value={data.attributes.SEX || "n/a"}
               />
             </div>
           </div>
         </form>
         <button
-          onClick={() => {}}
-          className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+          onClick={() => {
+            handleClose();
+          }}
+          className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
         >
           Close
         </button>

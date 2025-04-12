@@ -1,7 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
-const buildArrestLogsUrl = ({ searchParams, base_url }: queryBuilderProps) => {
-  let whereClause = "1=1"; // Default filter (no filter)
+const buildArrestLogsUrl = ({
+  searchParams,
+  filterParams,
+  base_url,
+  orderBy = "",
+}: queryBuilderProps) => {
+  let whereClause = "1=0"; // Default filter (no filter)
 
   // If searchParams are provided, create the where clause dynamically
   if (searchParams && Object.keys(searchParams).length > 0) {
@@ -22,11 +27,27 @@ const buildArrestLogsUrl = ({ searchParams, base_url }: queryBuilderProps) => {
       .join(" AND "); // Join with AND for multiple conditions
   }
 
+  if (filterParams) {
+    const activeCodes = Object.entries(filterParams)
+      .filter(([_, value]) => value)
+      .map(([key]) => `statute='${key}'`);
+
+    if (activeCodes.length > 0) {
+      const filterClause = activeCodes.join(" OR ");
+      whereClause =
+        whereClause === "1=0"
+          ? filterClause
+          : `(${whereClause}) AND (${filterClause})`;
+    }
+  }
+
   const params = new URLSearchParams({
     where: whereClause, // Default filter to return all results
     outFields: "*", // Fetch all fields
     outSR: "4326", // Spatial reference
     f: "json", // Response format
+    orderByFields: orderBy,
+    // orderByFields: "DATE_ARRESTED DESC", // Sorting by date_arrested in descending order
     ...searchParams, // Add custom search params
   });
 
@@ -35,15 +56,27 @@ const buildArrestLogsUrl = ({ searchParams, base_url }: queryBuilderProps) => {
 
 interface queryBuilderProps {
   searchParams: Record<string, string | number> | undefined;
+  filterParams: Record<string, boolean> | undefined;
   base_url: string | undefined;
+  orderBy: string;
 }
 
 // Custom hook for fetching arrest logs
-export function useQueryBuilder({ searchParams, base_url }: queryBuilderProps) {
+export function useQueryBuilder({
+  searchParams,
+  filterParams,
+  base_url,
+  orderBy = "",
+}: queryBuilderProps) {
   return useQuery({
-    queryKey: [base_url, searchParams], // Key includes search params for caching
+    queryKey: [base_url, searchParams, filterParams], // Key includes search params for caching
     queryFn: async () => {
-      const url = buildArrestLogsUrl({ searchParams, base_url });
+      const url = buildArrestLogsUrl({
+        searchParams,
+        filterParams,
+        base_url,
+        orderBy,
+      });
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
