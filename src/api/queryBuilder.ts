@@ -29,7 +29,7 @@ const buildArrestLogsUrl = ({
 
   if (filterParams) {
     const activeCodes = Object.entries(filterParams)
-      .filter(([_, value]) => value)
+      .filter(([, value]) => value)
       .map(([key]) => `statute='${key}'`);
 
     if (activeCodes.length > 0) {

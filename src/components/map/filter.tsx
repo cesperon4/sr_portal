@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { crimeFilters } from "@/lib/constants";
 import { CrimeFilterState } from "@/types/map.interface";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 
 interface FilterProps {
   crimeFilterState: CrimeFilterState;
@@ -14,9 +14,9 @@ interface FilterProps {
 export function Filter({
   crimeFilterState,
   setCrimeFilterState,
-  checkAllCriminalFilters,
-  clearAllCriminalFilters,
-}: FilterProps) {
+}: //   checkAllCriminalFilters,
+//   clearAllCriminalFilters,
+FilterProps) {
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >({});
