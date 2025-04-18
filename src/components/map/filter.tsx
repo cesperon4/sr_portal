@@ -3,20 +3,18 @@
 import React, { useState } from "react";
 import { crimeFilters } from "@/lib/constants";
 import { CrimeFilterState } from "@/types/map.interface";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface FilterProps {
   crimeFilterState: CrimeFilterState;
   setCrimeFilterState: React.Dispatch<React.SetStateAction<CrimeFilterState>>;
-  checkAllCriminalFilters: () => void;
   clearAllCriminalFilters: () => void;
 }
 export function Filter({
   crimeFilterState,
   setCrimeFilterState,
-}: //   checkAllCriminalFilters,
-//   clearAllCriminalFilters,
-FilterProps) {
+  clearAllCriminalFilters,
+}: FilterProps) {
   const [expandedCategories, setExpandedCategories] = useState<
     Record<string, boolean>
   >({});
@@ -30,28 +28,18 @@ FilterProps) {
 
   return (
     <div className="shadow border border-gray-50 rounded p-8">
-      <header className="flex justify-between">
-        <h2 className="text-2xl font-bold mb-4">Filters</h2>
+      <header className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold">Filters</h2>
         <div className="flex gap-1">
-          {/* <Button
-            className="bg-green-400 hover:bg-green-300"
-            size="sm"
-            onClick={() => {
-              checkAllCriminalFilters();
-            }}
-          >
-            check all
-          </Button>
-
           <Button
-            className="bg-red-400 hover:bg-red-300"
+            className="bg-gray-400 hover:bg-gray-300"
             size="sm"
             onClick={() => {
               clearAllCriminalFilters();
             }}
           >
             clear all
-          </Button> */}
+          </Button>
         </div>
       </header>
 

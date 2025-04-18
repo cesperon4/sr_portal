@@ -6,7 +6,7 @@ const buildArrestLogsUrl = ({
   base_url,
   orderBy = "",
 }: queryBuilderProps) => {
-  let whereClause = "1=0"; // Default filter (no filter)
+  let whereClause = "1=1"; // Default filter (no filter)
 
   // If searchParams are provided, create the where clause dynamically
   if (searchParams && Object.keys(searchParams).length > 0) {
@@ -35,7 +35,7 @@ const buildArrestLogsUrl = ({
     if (activeCodes.length > 0) {
       const filterClause = activeCodes.join(" OR ");
       whereClause =
-        whereClause === "1=0"
+        whereClause === "1=1"
           ? filterClause
           : `(${whereClause}) AND (${filterClause})`;
     }

@@ -2,14 +2,14 @@ import React from "react";
 import { ModeToggle } from "../components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { HeaderSelect } from "@/types/header.interface";
-import Searchbar from "@/components/arrest-logs/searchbar";
+import Searchbar from "@/components/data-table/searchbar";
 
 import { HEADER_CLASSES } from "@/lib/constants";
 
 interface HeaderProps {
   view: HeaderSelect;
   toggleView: (view: HeaderSelect) => void;
-  searchArrestLogs: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchArrestLogs: (e: string, filter: string) => void;
   openSelectColumns: () => void;
 }
 export function Header({

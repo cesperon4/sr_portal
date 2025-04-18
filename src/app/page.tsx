@@ -1,63 +1,28 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
-
+import React, { useState } from "react";
 import { useQueryBuilder } from "../api/queryBuilder"; // Adjust the import path
-import { Paginate } from "../components/paginate";
-
-import { DataTable } from "../components/data-table";
-import { Charts } from "../components/charts";
 import { Header } from "@/components/header";
-import { Map } from "@/components/map";
-import { SelectColumnModal } from "@/components/arrest-logs/select-column-modal";
-import { HeaderSelect } from "@/types/header.interface";
+import { SelectColumnModal } from "@/components/data-table/select-column-modal";
 import { Filter } from "@/components/map/filter";
+//hooks
+import { useRenderMap } from "@/hooks/map/useRenderMap";
+import { useArrestLogSearch } from "@/hooks/data-table/useArrestLogSearch";
+import { useRenderCharts } from "@/hooks/charts/useRenderCharts";
+import { useRenderTable } from "@/hooks/data-table/useRenderTable";
 
-import {
-  getBarChartData,
-  getPieChartData,
-  getLineChartData,
-  getDoughnutChartData,
-} from "@/utils/chartData";
-
-import {
-  initialCrimeFilterState,
-  checkCrimeFilterState,
-} from "@/lib/constants";
+import { HeaderSelect } from "@/types/header.interface";
 import { CrimeFilterState } from "@/types/map.interface";
+import { initialCrimeFilterState } from "@/lib/constants";
 
 export default function Home() {
-  const [arrestLogSearchParams, setArrestLogSearchParams] = useState<
-    Record<string, string | number>
-  >({
-    ArrestLocationStreet: "",
-  });
-
-  const searchArrestLogs = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, filter?: string) => {
-      console.log("filter: ", filter);
-      if (!filter) {
-        alert("Please select a filter");
-        return;
-      }
-
-      setArrestLogSearchParams((prev) => ({
-        ...prev,
-        ArrestLocationStreet: e.target.value, // No need for bracket notation here
-      }));
-    },
-    []
-  );
+  //Table search
+  const { searchArrestLogs, arrestLogSearchParams } = useArrestLogSearch();
 
   ////Map Filters
   const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
     initialCrimeFilterState
   );
-
-  const selectAllCriminalFilters = () => {
-    setCrimeFilterState(checkCrimeFilterState);
-  };
-
   const clearAllCriminalFilters = () => {
     setCrimeFilterState(initialCrimeFilterState);
   };
@@ -87,90 +52,25 @@ export default function Home() {
   const [view, setView] = useState<HeaderSelect>("Map");
   const toggleView = (view: HeaderSelect) => setView(view);
 
-  const renderMap = useCallback(() => {
-    if (isPoliceIncidentsLoading) return <p>Loading map...</p>;
-    if (policeIncidentsError)
-      return <p>Error: {policeIncidentsError.message}</p>;
+  const { renderMap } = useRenderMap({
+    isPoliceIncidentsLoading,
+    policeIncidentsError,
+    policeIncidents: policeIncidents?.features,
+  });
 
-    return <Map policeIncidents={policeIncidents.features} />;
-  }, [isPoliceIncidentsLoading, policeIncidentsError, policeIncidents]);
+  const { renderCharts } = useRenderCharts({
+    isArrestLogsLoading,
+    arrestLogsError,
+    arrestLogs: arrestLogs?.features,
+  });
 
-  const chartsData = useMemo(() => {
-    if (!arrestLogs)
-      return {
-        barChartData: null,
-        pieChartData: null,
-        lineChartData: null,
-        doughnutChartData: null,
-      };
-
-    return {
-      barChartData: getBarChartData(arrestLogs.features, "AGE"),
-      pieChartData: getPieChartData(arrestLogs.features, "SEX"),
-      lineChartData: getLineChartData(arrestLogs.features, "RACE"),
-      lineChartDataChargeDescription: getLineChartData(
-        arrestLogs.features,
-        "Charge_Description"
-      ),
-      barChartDataDegree: getBarChartData(arrestLogs.features, "Degree"),
-      barChartDataStreet: getBarChartData(
-        arrestLogs.features,
-        "ArrestLocationStreet"
-      ),
-      doughnutChartData: getDoughnutChartData(arrestLogs.features, "RACE"),
-    };
-  }, [arrestLogs]);
-
-  const renderCharts = useCallback(() => {
-    if (isArrestLogsLoading) return <p>Loading table...</p>;
-    if (arrestLogsError) return <p>Error: {arrestLogsError.message}</p>;
-    if (
-      !chartsData.barChartData ||
-      !chartsData.lineChartData ||
-      !chartsData.pieChartData ||
-      !chartsData.doughnutChartData ||
-      !chartsData.barChartDataDegree ||
-      !chartsData.barChartDataStreet ||
-      !chartsData.lineChartDataChargeDescription
-    )
-      return <p>Error loading chart data...</p>;
-
-    return (
-      <Charts
-        chartData={chartsData.barChartData}
-        lineChartData={chartsData.lineChartData}
-        lineChartDataChargeDescription={
-          chartsData.lineChartDataChargeDescription
-        }
-        barChartDataDegree={chartsData.barChartDataDegree}
-        barChartDataStreet={chartsData.barChartDataStreet}
-        pieChartData={chartsData.pieChartData}
-        doughnutChartData={chartsData.doughnutChartData}
-      />
-    );
-  }, [isArrestLogsLoading, arrestLogsError, chartsData]);
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const renderDataTable = useCallback(() => {
-    if (isArrestLogsLoading) return <p>Loading table...</p>;
-    if (arrestLogsError) return <p>Error: {arrestLogsError.message}</p>;
-
-    const itemsPerPage = 12;
-    const numOfPages = Math.ceil(arrestLogs.features.length / itemsPerPage);
-    const lastIndex = currentPage * itemsPerPage;
-    const firstIndex = lastIndex - itemsPerPage;
-
-    const displayLogs = arrestLogs.features.slice(firstIndex, lastIndex);
-    return (
-      <>
-        <DataTable
-          arrestLogs={displayLogs}
-          arrestLogFields={arrestLogs.fields}
-        />
-        <Paginate count={numOfPages} setCurrentPage={setCurrentPage} />
-      </>
-    );
-  }, [isArrestLogsLoading, arrestLogsError, arrestLogs, currentPage]);
+  const { renderDataTable } = useRenderTable({
+    isArrestLogsLoading,
+    arrestLogsError,
+    arrestLogs: arrestLogs?.features,
+    arrestLogFields: arrestLogs?.fields,
+    arrestLogCount: arrestLogs?.features.length,
+  });
 
   const [selectColumns, setSelectColumns] = useState<boolean>(false);
   const openSelectColumns = () => {
@@ -200,7 +100,6 @@ export default function Home() {
             <Filter
               crimeFilterState={crimeFilterState}
               setCrimeFilterState={setCrimeFilterState}
-              checkAllCriminalFilters={selectAllCriminalFilters}
               clearAllCriminalFilters={clearAllCriminalFilters}
             />
             {renderMap()}
