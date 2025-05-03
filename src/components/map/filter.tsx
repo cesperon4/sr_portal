@@ -5,6 +5,8 @@ import { crimeFilters } from "@/lib/constants";
 import { CrimeFilterState } from "@/types/map.interface";
 import { Button } from "@/components/ui/button";
 
+import { FaFilter } from "react-icons/fa";
+
 interface FilterProps {
   crimeFilterState: CrimeFilterState;
   setCrimeFilterState: React.Dispatch<React.SetStateAction<CrimeFilterState>>;
@@ -29,7 +31,11 @@ export function Filter({
   return (
     <div className="shadow border border-gray-50 rounded p-8">
       <header className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">Filters</h2>
+        <div className="flex gap-1 items-center">
+          <h2 className="text-2xl font-bold">Filters</h2>
+          <FaFilter />
+        </div>
+
         <div className="flex gap-1">
           <Button
             className="bg-gray-400 hover:bg-gray-300"

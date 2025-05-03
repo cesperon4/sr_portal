@@ -18,6 +18,10 @@ interface UseRenderTableProps {
   arrestLogs: ArrestLogType[];
   arrestLogFields: ArrestLogField[];
   arrestLogCount: number;
+  headerFilter: string | null;
+  setHeaderFilter: (value: string | null) => void;
+  filterDirection: string | null;
+  setFilterDirection: (value: string | null) => void;
 }
 export function useRenderTable({
   isArrestLogsLoading,
@@ -25,6 +29,10 @@ export function useRenderTable({
   arrestLogs,
   arrestLogFields,
   arrestLogCount,
+  headerFilter,
+  setHeaderFilter,
+  filterDirection,
+  setFilterDirection,
 }: UseRenderTableProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const renderDataTable = useCallback(() => {
@@ -45,6 +53,10 @@ export function useRenderTable({
           arrestLogCount={arrestLogCount}
           currentPage={currentPage}
           numOfPages={numOfPages}
+          headerFilter={headerFilter}
+          setHeaderFilter={setHeaderFilter}
+          filterDirection={filterDirection}
+          setFilterDirection={setFilterDirection}
         />
         <Paginate count={numOfPages} setCurrentPage={setCurrentPage} />
       </>
@@ -56,6 +68,10 @@ export function useRenderTable({
     currentPage,
     arrestLogFields,
     arrestLogCount,
+    headerFilter,
+    filterDirection,
+    setHeaderFilter,
+    setFilterDirection,
   ]);
 
   return { renderDataTable };

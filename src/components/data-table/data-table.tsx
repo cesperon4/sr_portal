@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { useDataContext } from "../../context/DataContext";
 import { TableRowModal } from "@/components/data-table/table-row-modal";
+import { TiArrowSortedUp, TiArrowSortedDown } from "react-icons/ti";
 
 interface ArrestLogType {
   attributes: {
@@ -57,12 +58,20 @@ interface DataTableProps {
   arrestLogCount: number;
   currentPage: number;
   numOfPages: number;
+  headerFilter: string | null;
+  setHeaderFilter: (value: string | null) => void;
+  filterDirection: string | null;
+  setFilterDirection: (value: string | null) => void;
 }
 
 export function DataTable({
   arrestLogs,
   arrestLogFields,
   arrestLogCount,
+  headerFilter,
+  setHeaderFilter,
+  filterDirection,
+  setFilterDirection,
 }: DataTableProps) {
   const { visibleColumns } = useDataContext();
   const [tableRow, setTableRow] = useState(false);
@@ -78,6 +87,10 @@ export function DataTable({
     setTableRow(false);
   };
 
+  useEffect(() => {
+    console.log("headerfilter2: ", headerFilter);
+  }, [headerFilter]);
+
   return (
     <div className={`flex flex-col gap-4 justify-center items-center`}>
       {tableRow && tableRowModalData && (
@@ -90,7 +103,38 @@ export function DataTable({
           <TableRow>
             {arrestLogFields?.map((x: ArrestLogField) => {
               if (visibleColumns[x.name])
-                return <TableHead key={x.name}>{x.name}</TableHead>;
+                return (
+                  <TableHead key={x.name}>
+                    <div className="flex gap-2 items-center">
+                      <span>{x.name}</span>
+                      <div>
+                        <TiArrowSortedUp
+                          className={`hover:text-gray-200 cursor-pointer ${
+                            headerFilter === x.name &&
+                            filterDirection === "ASC" &&
+                            "text-yellow-400"
+                          }`}
+                          onClick={() => {
+                            setHeaderFilter(x.name);
+                            setFilterDirection("ASC");
+                          }}
+                        />
+
+                        <TiArrowSortedDown
+                          className={`hover:text-gray-200 cursor-pointer ${
+                            headerFilter === x.name &&
+                            filterDirection === "DESC" &&
+                            "text-yellow-400"
+                          }`}
+                          onClick={() => {
+                            setHeaderFilter(x.name);
+                            setFilterDirection("DESC");
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </TableHead>
+                );
             })}
           </TableRow>
         </TableHeader>

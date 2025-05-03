@@ -10,6 +10,7 @@ import { useRenderMap } from "@/hooks/map/useRenderMap";
 import { useArrestLogSearch } from "@/hooks/data-table/useArrestLogSearch";
 import { useRenderCharts } from "@/hooks/charts/useRenderCharts";
 import { useRenderTable } from "@/hooks/data-table/useRenderTable";
+import { useTableHeaderFilter } from "@/hooks/data-table/useTableHeaderFilter";
 
 import { HeaderSelect } from "@/types/header.interface";
 import { CrimeFilterState } from "@/types/map.interface";
@@ -18,6 +19,15 @@ import { initialCrimeFilterState } from "@/lib/constants";
 export default function Home() {
   //Table search
   const { searchArrestLogs, arrestLogSearchParams } = useArrestLogSearch();
+
+  //Table filters
+  const {
+    headerFilter,
+    setHeaderFilter,
+    filterDirection,
+    setFilterDirection,
+    filterText,
+  } = useTableHeaderFilter();
 
   ////Map Filters
   const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
@@ -35,7 +45,7 @@ export default function Home() {
     searchParams: arrestLogSearchParams,
     filterParams: undefined,
     base_url: process.env.NEXT_PUBLIC_ARREST_LOG_URL,
-    orderBy: "DATE_ARRESTED DESC",
+    orderBy: filterText,
   });
 
   const {
@@ -70,6 +80,10 @@ export default function Home() {
     arrestLogs: arrestLogs?.features,
     arrestLogFields: arrestLogs?.fields,
     arrestLogCount: arrestLogs?.features.length,
+    headerFilter,
+    setHeaderFilter,
+    filterDirection,
+    setFilterDirection,
   });
 
   const [selectColumns, setSelectColumns] = useState<boolean>(false);

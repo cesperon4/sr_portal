@@ -4,8 +4,9 @@ const buildArrestLogsUrl = ({
   searchParams,
   filterParams,
   base_url,
-  orderBy = "",
+  orderBy,
 }: queryBuilderProps) => {
+  console.log("orderBy: ", orderBy);
   let whereClause = "1=1"; // Default filter (no filter)
 
   // If searchParams are provided, create the where clause dynamically
@@ -66,10 +67,10 @@ export function useQueryBuilder({
   searchParams,
   filterParams,
   base_url,
-  orderBy = "",
+  orderBy,
 }: queryBuilderProps) {
   return useQuery({
-    queryKey: [base_url, searchParams, filterParams], // Key includes search params for caching
+    queryKey: [base_url, searchParams, filterParams, orderBy], // Key includes search params for caching
     queryFn: async () => {
       const url = buildArrestLogsUrl({
         searchParams,
@@ -77,6 +78,7 @@ export function useQueryBuilder({
         base_url,
         orderBy,
       });
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

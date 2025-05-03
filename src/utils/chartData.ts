@@ -144,7 +144,7 @@ export function getAverageArrestAgeBar(
   if (!chartData || !chartData.labels || !chartData.datasets.length) {
     return null;
   }
-
+  console.log("calcuating average");
   // Extract the first dataset (assuming it contains the number of arrests per age)
   const dataset = chartData.datasets[0];
   const counts = dataset.data as number[];
@@ -239,6 +239,109 @@ export function getHighestChargeDescriptionLine(
 
 export function getHighestRace(
   chartData: ChartData<"doughnut">
+): [string, number][] | null {
+  if (!chartData || !chartData.labels || !chartData.datasets.length) {
+    return null;
+  }
+
+  // Filter out non-number values from the arrest count data
+  const arrestCount: number[] = chartData.datasets[0].data.filter(
+    (item) => typeof item === "number"
+  );
+
+  // Cast chartData.labels to a string array (we assume all labels are strings)
+  const streets: string[] = chartData.labels as string[];
+
+  // Get the top 3 streets with the highest arrest counts
+  const topStreets = findTopThreeIndexes(arrestCount);
+
+  // If no valid data found, return null
+  if (topStreets.length === 0) return null;
+
+  // Return the top 3 street names based on the sorted indices
+  return topStreets.map((item) => [streets[item.index], item.value]);
+}
+
+export function getMaxChartData( //takes in chart data an returns label with the highest value
+  chartData:
+    | ChartData<"bar">
+    | ChartData<"line">
+    | ChartData<"pie">
+    | ChartData<"doughnut">
+): number | string | null {
+  if (!chartData || !chartData.labels || !chartData.datasets.length) {
+    return null;
+  }
+
+  // Extract the first dataset (assuming it contains the number of arrests per age)
+  const labels = chartData.labels as number[];
+  const dataset = chartData.datasets[0];
+  const counts = dataset.data as number[];
+
+  let max = 0;
+  let maxIndex = 0;
+  counts.forEach((x, index) => {
+    if (x > max && index !== 0) {
+      max = x;
+      maxIndex = index;
+    }
+  });
+
+  return labels[maxIndex];
+}
+
+export function getMinChartData(
+  chartData:
+    | ChartData<"pie">
+    | ChartData<"bar">
+    | ChartData<"line">
+    | ChartData<"doughnut">
+): number | string | null {
+  if (!chartData || !chartData.labels || !chartData.datasets.length) {
+    return null;
+  }
+
+  const counts = chartData.datasets[0].data as number[];
+  const labels = chartData.labels as string[];
+
+  let min = Infinity;
+  let minIndex = -1;
+
+  counts.forEach((x, index) => {
+    if (x < min) {
+      min = x;
+      minIndex = index;
+    }
+  });
+
+  return labels[minIndex];
+}
+
+export function getYoungestArrestAge(
+  chartData: ChartData<"bar">
+): number | null {
+  if (!chartData || !chartData.labels || !chartData.datasets.length) {
+    return null;
+  }
+
+  // Extract the first dataset (assuming it contains the number of arrests per age)
+  const labels = chartData.labels as number[];
+  return labels[1];
+}
+
+export function getOldestArrestAge(chartData: ChartData<"bar">): number | null {
+  if (!chartData || !chartData.labels || !chartData.datasets.length) {
+    return null;
+  }
+
+  // Extract the first dataset (assuming it contains the number of arrests per age)
+  const labels = chartData.labels as number[];
+  return labels[chartData.labels.length - 1];
+}
+
+//Location chart functions
+export function getHighestArrestLocation(
+  chartData: ChartData<"bar">
 ): [string, number][] | null {
   if (!chartData || !chartData.labels || !chartData.datasets.length) {
     return null;

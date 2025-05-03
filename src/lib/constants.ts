@@ -1,4 +1,5 @@
 import { CrimeFilterState } from "@/types/map.interface";
+import { SidebarState } from "@/types/charts.interface";
 export const TABLE_ROW_CLASSES = {
   form_label: "text-gray-500 font-semibold w-full",
   form_input: "rounded p-2 border border-gray-300 w-full",
@@ -331,4 +332,13 @@ export const checkCrimeFilterState: CrimeFilterState = {
   "3452 PC": true,
   "166(C)(1) PC": true,
   "166(C)(4) PC": true,
+};
+
+export const initialSidebarState: SidebarState = {
+  Age: false,
+  Gender: false,
+  Location: false,
+  Ethnicity: false,
+  Degree: false,
+  Charge: false,
 };

@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { ChartData } from "chart.js";
+import { Sidebar } from "./sidebar";
+
 import {
   Chart as ChartJS,
   BarElement,
@@ -13,15 +15,26 @@ import {
   ArcElement,
   RadialLinearScale,
 } from "chart.js";
-import { Bar, Line, Pie, Doughnut } from "react-chartjs-2";
+
 import { ChartModal } from "./chart-modal";
+import { initialSidebarState } from "@/lib/constants";
 
 import {
+  getYoungestArrestAge,
+  getOldestArrestAge,
   getAverageArrestAgeBar,
   getHighestArrestStreetBar,
   getHighestChargeDescriptionLine,
   getHighestRace,
+  getMaxChartData,
 } from "@/utils/chartData";
+
+import { AgeCharts } from "./age-chart";
+import { GenderChart } from "./gender-chart";
+import { LocationChart } from "./location-chart";
+import { EthnicityChart } from "./ethnicity-chart";
+import { DegreeChart } from "./degree-chart";
+import { ChargeChart } from "./charge-chart";
 
 ChartJS.register(
   CategoryScale,
@@ -70,232 +83,114 @@ export function Charts({
     }
   };
 
+  //Age insights
   const averageArrestAge = useMemo(() => {
     if (!chartData) return null;
 
     return getAverageArrestAgeBar(chartData);
   }, [chartData]);
 
+  const youngestArrestAge = useMemo(() => {
+    if (!chartData) return null;
+    return getYoungestArrestAge(chartData);
+  }, [chartData]);
+
+  const oldestArrestAge = useMemo(() => {
+    if (!chartData) return null;
+    return getOldestArrestAge(chartData);
+  }, [chartData]);
+
+  const highestOccurringArrestAge = useMemo(() => {
+    if (!chartData) return null;
+
+    return getMaxChartData(chartData);
+  }, [chartData]);
+
+  //Location insights
   const highestArrestStreet = useMemo(() => {
     if (!barChartDataStreet) return null;
 
     return getHighestArrestStreetBar(barChartDataStreet);
   }, [barChartDataStreet]);
 
+  //Charge insights
   const highestOccurringCharge = useMemo(() => {
     if (!lineChartDataChargeDescription) return null;
 
     return getHighestChargeDescriptionLine(lineChartDataChargeDescription);
   }, [lineChartDataChargeDescription]);
 
+  //Ethnicity insights
   const highestOccurringRace = useMemo(() => {
     if (!doughnutChartData) return null;
 
     return getHighestRace(doughnutChartData);
   }, [doughnutChartData]);
 
+  //data insights sidebar
+  const [sidebarState, setSidebarState] = useState(initialSidebarState);
+
+  const getButtonClass = (key: keyof typeof initialSidebarState) => {
+    return `px-24 text-gray-900 hover:bg-gray-100 ${
+      sidebarState[key] ? "bg-gray-100" : "bg-white"
+    }`;
+  };
+
+  const updateSidebar = (key: keyof typeof initialSidebarState) => {
+    const temp = { ...initialSidebarState, [key]: true };
+    setSidebarState(temp);
+  };
+
   return (
-    <div className="shadow p-12 flex flex-col gap-4 font-sans">
-      <div className="grid grid-cols-4 px-4 gap-4">
-        <div className="shadow rounded flex flex-col justify-center items-center border-4 border-blue-50">
-          <h2>Average Arrest Age</h2>
-          <span>{averageArrestAge}</span>
-        </div>
-        <div className="shadow rounded p-4 flex flex-col gap-2 items-start border-4 border-green-50">
-          <h2>Location With Highest # of Arrests</h2>
-          {highestArrestStreet?.map((street, index) => {
-            return (
-              <span key={index}>{`${index + 1}. ${street[0]} - ${
-                street[1]
-              } arrests`}</span>
-            );
-          })}
-        </div>
-        <div className="shadow rounded p-4 flex flex-col gap-2 items-start border-4 border-red-50">
-          <h2>Highest Ocurring Charge</h2>
+    <div className="shadow flex gap-4 font-sans">
+      <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
+      <div className="h-[80rem] w-full">
+        {sidebarState["Age"] && (
+          <AgeCharts
+            youngestArrestAge={youngestArrestAge}
+            oldestArrestAge={oldestArrestAge}
+            averageArrestAge={averageArrestAge}
+            highestOccurringArrestAge={highestOccurringArrestAge}
+            chartData={chartData}
+            toggleChartModal={toggleChartModal}
+          />
+        )}
+        {sidebarState["Gender"] && (
+          <GenderChart
+            pieChartData={pieChartData}
+            toggleChartModal={toggleChartModal}
+          />
+        )}
 
-          {highestOccurringCharge?.map((street, index) => {
-            return (
-              <span key={index}>{`${index + 1}. ${street[0]} - ${
-                street[1]
-              } arrests`}</span>
-            );
-          })}
-        </div>
-        <div className="shadow rounded p-4 flex flex-col gap-2 items-start border-4 border-orange-50">
-          <h2>Highest Arrested Ethnicity</h2>
+        {sidebarState["Location"] && (
+          <LocationChart
+            barChartDataStreet={barChartDataStreet}
+            highestArrestStreet={highestArrestStreet}
+            toggleChartModal={toggleChartModal}
+          />
+        )}
 
-          {highestOccurringRace?.map((street, index) => {
-            return (
-              <span key={index}>{`${index + 1}. ${street[0]} - ${
-                street[1]
-              } arrests`}</span>
-            );
-          })}
-        </div>
-      </div>
-      <div className="flex gap-4 w-full">
-        <div className="p-4 rounded flex flex-col justify-between">
-          <div
-            className="p-4 rounded shadow cursor-pointer"
-            onClick={() => {
-              toggleChartModal(
-                <Pie
-                  data={pieChartData}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "sm"
-              );
-            }}
-          >
-            <Pie
-              data={pieChartData}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer " // Fixed height (adjust as needed)
-            />
-          </div>
-
-          <div
-            className="p-4 rounded shadow cursor-pointer"
-            onClick={() => {
-              toggleChartModal(
-                <Doughnut
-                  data={doughnutChartData}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "sm"
-              );
-            }}
-          >
-            <Doughnut
-              data={doughnutChartData}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer " // Fixed height (adjust as needed)
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-8 w-full">
-          <div
-            className="p-4 rounded shadow cursor-pointer"
-            onClick={() => {
-              toggleChartModal(
-                <Bar
-                  data={chartData}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "lg"
-              );
-            }}
-          >
-            <Bar
-              data={chartData}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer w-full h-80" // Fixed height (adjust as needed)
-            />
-          </div>
-
-          <div
-            className="p-4 rounded shadow"
-            onClick={() => {
-              toggleChartModal(
-                <Bar
-                  data={barChartDataDegree}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "lg"
-              );
-            }}
-          >
-            <Bar
-              data={barChartDataDegree}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer w-full h-80" // Fixed height (adjust as needed)
-            />
-          </div>
-          <div
-            className="p-4 rounded shadow"
-            onClick={() => {
-              toggleChartModal(
-                <Bar
-                  data={barChartDataStreet}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "lg"
-              );
-            }}
-          >
-            <Bar
-              data={barChartDataStreet}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer w-full h-80"
-            />
-          </div>
-          <div
-            className="p-4 rounded shadow"
-            onClick={() => {
-              toggleChartModal(
-                <Line
-                  data={lineChartData}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "lg"
-              );
-            }}
-          >
-            <Line
-              data={lineChartData}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer w-full h-80" // Fixed height (adjust as needed)
-            />
-          </div>
-          <div
-            className="p-4 rounded shadow"
-            onClick={() => {
-              toggleChartModal(
-                <Line
-                  data={lineChartDataChargeDescription}
-                  options={{ responsive: true }}
-                  className="bg-white p-8 rounded" // Fixed height (adjust as needed)
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                />,
-                "lg"
-              );
-            }}
-          >
-            <Line
-              data={lineChartDataChargeDescription}
-              options={{ responsive: true }}
-              className="bg-white cursor-pointer w-full h-80" // Fixed height (adjust as needed)
-            />
-          </div>
-        </div>
+        {sidebarState["Ethnicity"] && (
+          <EthnicityChart
+            doughnutChartData={doughnutChartData}
+            highestOccurringRace={highestOccurringRace}
+            lineChartData={lineChartData}
+            toggleChartModal={toggleChartModal}
+          />
+        )}
+        {sidebarState["Degree"] && (
+          <DegreeChart
+            barChartDataDegree={barChartDataDegree}
+            toggleChartModal={toggleChartModal}
+          />
+        )}
+        {sidebarState["Charge"] && (
+          <ChargeChart
+            lineChartDataChargeDescription={lineChartDataChargeDescription}
+            highestOccurringCharge={highestOccurringCharge}
+            toggleChartModal={toggleChartModal}
+          />
+        )}
 
         {selectedChart.chart && (
           <ChartModal chart={selectedChart} handleClose={toggleChartModal} />

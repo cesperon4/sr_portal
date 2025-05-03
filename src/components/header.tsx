@@ -3,6 +3,9 @@ import { ModeToggle } from "../components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { HeaderSelect } from "@/types/header.interface";
 import Searchbar from "@/components/data-table/searchbar";
+import { MdInsights } from "react-icons/md";
+import { IoMdBook } from "react-icons/io";
+import { IoMapOutline } from "react-icons/io5";
 
 import { HEADER_CLASSES } from "@/lib/constants";
 
@@ -31,6 +34,7 @@ export function Header({
           className={`${view === "Map" && HEADER_CLASSES.view_button}`}
         >
           Map
+          <IoMapOutline />
         </Button>
 
         <Button
@@ -40,7 +44,8 @@ export function Header({
           }}
           className={`${view === "Table" && HEADER_CLASSES.view_button}`}
         >
-          Table
+          Arrest Log
+          <IoMdBook />
         </Button>
 
         <Button
@@ -50,7 +55,8 @@ export function Header({
           }}
           className={`${view === "Chart" && HEADER_CLASSES.view_button}`}
         >
-          Charts
+          Data Insights
+          <MdInsights />
         </Button>
       </div>
       {view === "Table" && (
