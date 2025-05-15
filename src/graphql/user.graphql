@@ -1,0 +1,105 @@
+# graphql/queries/getUser.graphql
+query GetUser($id: ID!) {
+  user(id: $id) {
+    id
+    firstname
+    lastname
+    email
+    username
+    password
+    role
+    createdAt
+    updatedAt
+  }
+}
+
+query GetUsers {
+  users {
+    id
+    firstname
+    lastname
+    email
+    username
+    password
+    role
+    createdAt
+    updatedAt
+  }
+}
+
+query Me {
+  me {
+    id
+    firstname
+    lastname
+    email
+    username
+    role
+    createdAt
+    updatedAt
+  }
+}
+
+mutation CreateUser($data: CreateUserInput!) {
+  createUser(data: $data) {
+    id
+    firstname
+    lastname
+    email
+    username
+    role
+    password
+    createdAt
+    updatedAt
+  }
+}
+
+mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
+  updateUser(id: $id, data: $data) {
+    id
+    firstname
+    lastname
+    email
+    username
+    password
+    createdAt
+    updatedAt
+  }
+}
+
+mutation DeleteUser($id: ID!) {
+  deleteUser(id: $id) {
+    id
+    firstname
+    lastname
+    email
+    username
+    role
+    createdAt
+    updatedAt
+  }
+}
+
+mutation login($data: LoginInput!) {
+  login(data: $data) {
+    user {
+      id
+      firstname
+      lastname
+      email
+      username
+      role
+      password
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+mutation logout {
+  logout
+}
+
+mutation loginGuest {
+  loginGuest
+}

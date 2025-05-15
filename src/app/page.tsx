@@ -1,127 +1,105 @@
 "use client";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useLogin } from "@/hooks/landing-page/useLogin";
 
-import React, { useState } from "react";
-import { useQueryBuilder } from "../api/queryBuilder"; // Adjust the import path
-import { Header } from "@/components/header";
-import { SelectColumnModal } from "@/components/data-table/select-column-modal";
-import { Filter } from "@/components/map/filter";
-//hooks
-import { useRenderMap } from "@/hooks/map/useRenderMap";
-import { useArrestLogSearch } from "@/hooks/data-table/useArrestLogSearch";
-import { useRenderCharts } from "@/hooks/charts/useRenderCharts";
-import { useRenderTable } from "@/hooks/data-table/useRenderTable";
-import { useTableHeaderFilter } from "@/hooks/data-table/useTableHeaderFilter";
+import { ToastContainer } from "react-toastify";
 
-import { HeaderSelect } from "@/types/header.interface";
-import { CrimeFilterState } from "@/types/map.interface";
-import { initialCrimeFilterState } from "@/lib/constants";
+import { LoginParams } from "@/types/user.interface";
 
-export default function Home() {
-  //Table search
-  const { searchArrestLogs, arrestLogSearchParams } = useArrestLogSearch();
+import { SignupModal } from "@/components/landing-page/signup-modal";
+import { useSignupModal } from "@/hooks/landing-page/useSignupModalToggle";
 
-  //Table filters
-  const {
-    headerFilter,
-    setHeaderFilter,
-    filterDirection,
-    setFilterDirection,
-    filterText,
-  } = useTableHeaderFilter();
+export default function LandingPage() {
+  const { setLoginParams, handleLogin, handleGuestLogin } = useLogin();
 
-  ////Map Filters
-  const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
-    initialCrimeFilterState
-  );
-  const clearAllCriminalFilters = () => {
-    setCrimeFilterState(initialCrimeFilterState);
-  };
-
-  const {
-    data: arrestLogs,
-    isLoading: isArrestLogsLoading,
-    error: arrestLogsError,
-  } = useQueryBuilder({
-    searchParams: arrestLogSearchParams,
-    filterParams: undefined,
-    base_url: process.env.NEXT_PUBLIC_ARREST_LOG_URL,
-    orderBy: filterText,
-  });
-
-  const {
-    data: policeIncidents,
-    isLoading: isPoliceIncidentsLoading,
-    error: policeIncidentsError,
-  } = useQueryBuilder({
-    searchParams: undefined,
-    filterParams: crimeFilterState,
-    base_url: process.env.NEXT_PUBLIC_POLICE_INCIDENT_URL,
-    orderBy: "",
-  });
-
-  const [view, setView] = useState<HeaderSelect>("Map");
-  const toggleView = (view: HeaderSelect) => setView(view);
-
-  const { renderMap } = useRenderMap({
-    isPoliceIncidentsLoading,
-    policeIncidentsError,
-    policeIncidents: policeIncidents?.features,
-  });
-
-  const { renderCharts } = useRenderCharts({
-    isArrestLogsLoading,
-    arrestLogsError,
-    arrestLogs: arrestLogs?.features,
-  });
-
-  const { renderDataTable } = useRenderTable({
-    isArrestLogsLoading,
-    arrestLogsError,
-    arrestLogs: arrestLogs?.features,
-    arrestLogFields: arrestLogs?.fields,
-    arrestLogCount: arrestLogs?.features.length,
-    headerFilter,
-    setHeaderFilter,
-    filterDirection,
-    setFilterDirection,
-  });
-
-  const [selectColumns, setSelectColumns] = useState<boolean>(false);
-  const openSelectColumns = () => {
-    setSelectColumns(true);
-  };
-  const closeSelectColumns = () => {
-    setSelectColumns(false);
-  };
+  const { isSignupModalOpen, openSignupModal, closeSignupModal } =
+    useSignupModal();
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <Header
-        view={view}
-        toggleView={toggleView}
-        searchArrestLogs={searchArrestLogs}
-        openSelectColumns={openSelectColumns}
-      />
-      <main className="flex flex-col gap-8 w-full">
-        {selectColumns && (
-          <SelectColumnModal
-            handleClose={closeSelectColumns}
-            arrestLogFields={arrestLogs.fields}
-          />
-        )}
-        {view === "Map" && (
-          <div className="flex w-full gap-4">
-            <Filter
-              crimeFilterState={crimeFilterState}
-              setCrimeFilterState={setCrimeFilterState}
-              clearAllCriminalFilters={clearAllCriminalFilters}
-            />
-            {renderMap()}
+    <main className="flex h-screen">
+      <ToastContainer />
+      {isSignupModalOpen && <SignupModal closeSignupModal={closeSignupModal} />}
+      <div className="flex items-center justify-center gap-24 h-full w-9/12 bg-gray-100">
+        <div className="text-start">
+          <h1 className="text-4xl font-bold">Welcome to SR Portal</h1>
+          <p className="mt-4 text-gray-600">
+            Where our goal is to provide insight on local police data
+          </p>
+          <p className=" text-gray-600">
+            by organizing and displaying data in a user-friendly way
+          </p>
+          <p className=" text-gray-600">
+            to help benefit members of the community.
+          </p>
+          <div className="landing-btns flex gap-2">
+            <button
+              onClick={() => handleGuestLogin()}
+              className="mt-6 px-4 py-2 bg-green-600 text-white rounded"
+            >
+              Explore as Guest
+            </button>
+            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded">
+              Learn More
+            </button>
           </div>
-        )}
-        {view === "Table" && renderDataTable()}
-        {view === "Chart" && renderCharts()}
-      </main>
-    </div>
+        </div>
+        <Image
+          aria-hidden
+          src="/landing1.svg"
+          alt="File icon"
+          width={400}
+          height={400}
+          className=""
+        />
+      </div>
+
+      <div className=" flex items-center justify-center ml-auto  h-screen w-3/12 shadow">
+        <div className="flex flex-col justify-center gap-4 shadow p-12 w-10/12 h-[30rem] bg-white rounded">
+          <h2 className="font-bold">SR Portal</h2>
+          <input
+            className="border rounded h-[2.5rem] p-2"
+            placeholder="username"
+            onChange={(e) => {
+              setLoginParams((prev: LoginParams) => ({
+                ...prev,
+                email: e.target.value,
+              }));
+            }}
+          />
+          <input
+            className="border rounded h-[2.5rem] p-2"
+            placeholder="password"
+            type="password"
+            onChange={(e) => {
+              setLoginParams((prev: LoginParams) => ({
+                ...prev,
+                password: e.target.value,
+              }));
+            }}
+          />
+          <div className="landing-btns flex flex-col gap-2 mt-8">
+            <Button
+              variant="outline"
+              className="bg-blue-500 text-white"
+              onClick={() => {
+                handleLogin();
+              }}
+            >
+              Login
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-green-400 text-white"
+              onClick={() => {
+                openSignupModal();
+              }}
+            >
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

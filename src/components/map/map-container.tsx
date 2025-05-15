@@ -20,7 +20,7 @@ interface DataTableProps {
 export function Map({ policeIncidents }: DataTableProps) {
   const center: [number, number] = [38.4404, -122.7141];
   return (
-    <div className="w-full h-[1400px] flex items-center justify-center">
+    <div className="w-full h-[1400px] flex items-center justify-center z-0">
       <MapContainer
         center={center}
         zoom={13}
