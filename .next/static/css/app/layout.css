@@ -655,14 +655,11 @@ video {
 .top-0 {
   top: 0px;
 }
-.z-50 {
-  z-index: 50;
-}
-.z-auto {
-  z-index: auto;
-}
 .z-0 {
   z-index: 0;
+}
+.z-50 {
+  z-index: 50;
 }
 .row-start-3 {
   grid-row-start: 3;
