@@ -6,7 +6,7 @@ const client = new ApolloClient({
     uri:
       process.env.NEXT_PUBLIC_NODE_ENV === "development"
         ? "http://localhost:3000/api/graphql"
-        : "/api/proxy", // or your deployed API URL
+        : "https://sr-portal-graphql-api.vercel.app/api/", // or your deployed API URL
     credentials: "include",
   }),
   cache: new InMemoryCache(),
