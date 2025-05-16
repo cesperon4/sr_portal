@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import { useLoginMutation } from "../../../generated/graphql";
 import { useLoginGuestMutation } from "../../../generated/graphql";
+
 import { LoginParams } from "@/types/user.interface";
 
 import { useUserContext } from "@/context/UserContext";
-
-import { toast } from "react-toastify";
 
 export function useLogin() {
   const router = useRouter();
@@ -30,7 +30,6 @@ export function useLogin() {
       return;
     }
 
-    // Call the login mutation
     loginMutation({
       variables: {
         data: {

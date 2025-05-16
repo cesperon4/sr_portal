@@ -16,5 +16,14 @@ export function ThemeProvider({
   // Return null until the component has mounted to avoid SSR mismatch
   if (!mounted) return null;
 
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="light" // ⬅️ set default explicitly
+      enableSystem={true} // or false if you don't want system preference
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }
