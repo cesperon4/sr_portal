@@ -3,18 +3,13 @@
 
 import { ApolloWrapper } from "@/lib/ApolloWrapper";
 import { UserProvider } from "@/context/UserContext";
-import { ThemeProvider } from "../components/theme-provider";
+import { ThemeProvider } from "../providers/theme-provider";
 import { DataProvider } from "../context/DataContext";
 import ReactQueryProvider from "../providers/ReactQueryProvider"; // Adjust path if needed
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider>
       <ReactQueryProvider>
         <DataProvider>
           <UserProvider>
