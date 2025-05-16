@@ -15,10 +15,12 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Token: { input: any; output: any; }
 };
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
+  token: Scalars['Token']['output'];
   user: User;
 };
 
@@ -31,6 +33,11 @@ export type CreateUserInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GuestPayload = {
+  __typename?: 'GuestPayload';
+  token: Scalars['Token']['output'];
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -41,7 +48,7 @@ export type Mutation = {
   createUser: User;
   deleteUser: User;
   login: AuthPayload;
-  loginGuest: Scalars['Boolean']['output'];
+  loginGuest: GuestPayload;
   logout: Scalars['Boolean']['output'];
   updateUser: User;
 };
@@ -149,7 +156,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: string | null, updatedAt?: string | null } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: string | null, updatedAt?: string | null } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -159,7 +166,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 export type LoginGuestMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoginGuestMutation = { __typename?: 'Mutation', loginGuest: boolean };
+export type LoginGuestMutation = { __typename?: 'Mutation', loginGuest: { __typename?: 'GuestPayload', token: any } };
 
 
 export const GetUserDocument = gql`
@@ -439,6 +446,7 @@ export const LoginDocument = gql`
       createdAt
       updatedAt
     }
+    token
   }
 }
     `;
@@ -500,7 +508,9 @@ export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const LoginGuestDocument = gql`
     mutation loginGuest {
-  loginGuest
+  loginGuest {
+    token
+  }
 }
     `;
 export type LoginGuestMutationFn = Apollo.MutationFunction<LoginGuestMutation, LoginGuestMutationVariables>;

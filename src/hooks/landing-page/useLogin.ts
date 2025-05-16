@@ -48,6 +48,7 @@ export function useLogin() {
           firstname: data.login.user.firstname || "",
           lastname: data.login.user.lastname || "",
           role: data.login.user.role || "",
+          token: data.login.token || "",
         });
         router.push("/dashboard");
       },
@@ -75,6 +76,7 @@ export function useLogin() {
           firstname: "",
           lastname: "",
           role: "GUEST",
+          token: data.loginGuest.token,
         });
         router.push("/dashboard");
       },

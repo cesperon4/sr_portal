@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "../components/theme-provider";
-import { DataProvider } from "../context/DataContext";
-import { UserProvider } from "../context/UserContext";
-import ReactQueryProvider from "../providers/ReactQueryProvider"; // Adjust path if needed
-import { ApolloWrapper } from "@/lib/ApolloWrapper";
+// import { ThemeProvider } from "../components/theme-provider";
+// import { DataProvider } from "../context/DataContext";
+// import { UserProvider } from "../context/UserContext";
+// import ReactQueryProvider from "../providers/ReactQueryProvider"; // Adjust path if needed
+// import { ApolloWrapper } from "@/lib/ApolloWrapper";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,20 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ApolloWrapper>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <DataProvider>
-              <UserProvider>
-                <ReactQueryProvider>{children}</ReactQueryProvider>
-              </UserProvider>
-            </DataProvider>
-          </ThemeProvider>
-        </ApolloWrapper>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -93,6 +93,7 @@ mutation login($data: LoginInput!) {
       createdAt
       updatedAt
     }
+    token
   }
 }
 
@@ -101,5 +102,7 @@ mutation logout {
 }
 
 mutation loginGuest {
-  loginGuest
+  loginGuest {
+    token
+  }
 }

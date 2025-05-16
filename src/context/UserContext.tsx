@@ -9,6 +9,7 @@ interface User {
   firstname: string;
   lastname: string;
   role: string;
+  token: string;
 }
 
 interface UserContextType {
@@ -35,6 +36,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     firstname: "",
     lastname: "",
     role: "",
+    token: "",
   });
 
   return (
