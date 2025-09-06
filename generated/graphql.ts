@@ -15,13 +15,87 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
   Token: { input: any; output: any; }
+};
+
+export type ArrestLog = {
+  __typename?: 'ArrestLog';
+  AGE?: Maybe<Scalars['String']['output']>;
+  ARREST_STATUS?: Maybe<Scalars['String']['output']>;
+  ArrestLocationAptFlr?: Maybe<Scalars['String']['output']>;
+  ArrestLocationCity?: Maybe<Scalars['String']['output']>;
+  ArrestLocationStreet?: Maybe<Scalars['String']['output']>;
+  ArrestLocationStreetNBR?: Maybe<Scalars['String']['output']>;
+  Arrest_Charge?: Maybe<Scalars['String']['output']>;
+  Arrest_ID?: Maybe<Scalars['String']['output']>;
+  Case_Number?: Maybe<Scalars['String']['output']>;
+  Charge_Description?: Maybe<Scalars['String']['output']>;
+  Charge_Sequence?: Maybe<Scalars['String']['output']>;
+  DATE_ARRESTED?: Maybe<Scalars['String']['output']>;
+  DOB?: Maybe<Scalars['String']['output']>;
+  Degree?: Maybe<Scalars['String']['output']>;
+  FIRSTNAME?: Maybe<Scalars['String']['output']>;
+  LASTNAME?: Maybe<Scalars['String']['output']>;
+  MIDDLENAME?: Maybe<Scalars['String']['output']>;
+  OBJECTID?: Maybe<Scalars['Int']['output']>;
+  OBJECTID_1?: Maybe<Scalars['Int']['output']>;
+  RACE?: Maybe<Scalars['String']['output']>;
+  SEX?: Maybe<Scalars['String']['output']>;
+  SUFFIX?: Maybe<Scalars['String']['output']>;
+  TIME_ARREST?: Maybe<Scalars['String']['output']>;
+  UNIQUEKEY?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  post?: Maybe<Post>;
+  postId?: Maybe<Scalars['ID']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
   token: Scalars['Token']['output'];
   user: User;
+};
+
+export type CreateArrestLogInput = {
+  AGE?: InputMaybe<Scalars['String']['input']>;
+  ARREST_STATUS?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationAptFlr?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationCity?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationStreet?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationStreetNBR?: InputMaybe<Scalars['String']['input']>;
+  Arrest_Charge?: InputMaybe<Scalars['String']['input']>;
+  Arrest_ID?: InputMaybe<Scalars['String']['input']>;
+  Case_Number?: InputMaybe<Scalars['String']['input']>;
+  Charge_Description?: InputMaybe<Scalars['String']['input']>;
+  Charge_Sequence?: InputMaybe<Scalars['String']['input']>;
+  DATE_ARRESTED?: InputMaybe<Scalars['String']['input']>;
+  DOB?: InputMaybe<Scalars['String']['input']>;
+  Degree?: InputMaybe<Scalars['String']['input']>;
+  FIRSTNAME?: InputMaybe<Scalars['String']['input']>;
+  LASTNAME?: InputMaybe<Scalars['String']['input']>;
+  MIDDLENAME?: InputMaybe<Scalars['String']['input']>;
+  OBJECTID?: InputMaybe<Scalars['Int']['input']>;
+  OBJECTID_1?: InputMaybe<Scalars['Int']['input']>;
+  RACE?: InputMaybe<Scalars['String']['input']>;
+  SEX?: InputMaybe<Scalars['String']['input']>;
+  SUFFIX?: InputMaybe<Scalars['String']['input']>;
+  TIME_ARREST?: InputMaybe<Scalars['String']['input']>;
+  UNIQUEKEY?: InputMaybe<Scalars['String']['input']>;
+  postId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CreatePostCommentInput = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  postId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CreatePostInput = {
+  arrestLogId?: InputMaybe<Scalars['ID']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateUserInput = {
@@ -45,17 +119,56 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createArrestLog: ArrestLog;
+  createPost: Post;
+  createPostComment: PostComment;
   createUser: User;
+  deleteArrestLog: ArrestLog;
+  deletePost: Post;
+  deletePostComment: PostComment;
   deleteUser: User;
   login: AuthPayload;
   loginGuest: GuestPayload;
   logout: Scalars['Boolean']['output'];
+  updateArrestLog: ArrestLog;
+  updatePost: Post;
+  updatePostComment: PostComment;
   updateUser: User;
+};
+
+
+export type MutationCreateArrestLogArgs = {
+  data?: InputMaybe<CreateArrestLogInput>;
+};
+
+
+export type MutationCreatePostArgs = {
+  data?: InputMaybe<CreatePostInput>;
+};
+
+
+export type MutationCreatePostCommentArgs = {
+  data?: InputMaybe<CreatePostCommentInput>;
 };
 
 
 export type MutationCreateUserArgs = {
   data?: InputMaybe<CreateUserInput>;
+};
+
+
+export type MutationDeleteArrestLogArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeletePostArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeletePostCommentArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -69,16 +182,85 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationUpdateArrestLogArgs = {
+  data?: InputMaybe<UpdateArrestLogInput>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdatePostArgs = {
+  data?: InputMaybe<UpdatePostInput>;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdatePostCommentArgs = {
+  data?: InputMaybe<UpdatePostCommentInput>;
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationUpdateUserArgs = {
   data?: InputMaybe<UpdateUserInput>;
   id: Scalars['ID']['input'];
 };
 
+export type Post = {
+  __typename?: 'Post';
+  arrestLog?: Maybe<ArrestLog>;
+  arrestLogId?: Maybe<Scalars['ID']['output']>;
+  body?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  postComments?: Maybe<Array<Maybe<PostComment>>>;
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['ID']['output']>;
+};
+
+export type PostComment = {
+  __typename?: 'PostComment';
+  body?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  post?: Maybe<Post>;
+  postId?: Maybe<Scalars['ID']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  arrestLog: ArrestLog;
+  arrestLogs: Array<ArrestLog>;
+  chatBotResponse: Scalars['String']['output'];
   me: User;
+  post: Post;
+  postComment: PostComment;
+  postComments: Array<PostComment>;
+  posts: Array<Post>;
   user: User;
   users: Array<User>;
+};
+
+
+export type QueryArrestLogArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryChatBotResponseArgs = {
+  prompt: Scalars['String']['input'];
+};
+
+
+export type QueryPostArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPostCommentArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -91,6 +273,42 @@ export enum Role {
   User = 'USER'
 }
 
+export type UpdateArrestLogInput = {
+  AGE?: InputMaybe<Scalars['String']['input']>;
+  ARREST_STATUS?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationAptFlr?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationCity?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationStreet?: InputMaybe<Scalars['String']['input']>;
+  ArrestLocationStreetNBR?: InputMaybe<Scalars['String']['input']>;
+  Arrest_Charge?: InputMaybe<Scalars['String']['input']>;
+  Arrest_ID?: InputMaybe<Scalars['String']['input']>;
+  Case_Number?: InputMaybe<Scalars['String']['input']>;
+  Charge_Description?: InputMaybe<Scalars['String']['input']>;
+  Charge_Sequence?: InputMaybe<Scalars['String']['input']>;
+  DATE_ARRESTED?: InputMaybe<Scalars['String']['input']>;
+  DOB?: InputMaybe<Scalars['String']['input']>;
+  Degree?: InputMaybe<Scalars['String']['input']>;
+  FIRSTNAME?: InputMaybe<Scalars['String']['input']>;
+  LASTNAME?: InputMaybe<Scalars['String']['input']>;
+  MIDDLENAME?: InputMaybe<Scalars['String']['input']>;
+  OBJECTID?: InputMaybe<Scalars['Int']['input']>;
+  OBJECTID_1?: InputMaybe<Scalars['Int']['input']>;
+  RACE?: InputMaybe<Scalars['String']['input']>;
+  SEX?: InputMaybe<Scalars['String']['input']>;
+  SUFFIX?: InputMaybe<Scalars['String']['input']>;
+  TIME_ARREST?: InputMaybe<Scalars['String']['input']>;
+  UNIQUEKEY?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdatePostCommentInput = {
+  body?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdatePostInput = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   firstname?: InputMaybe<Scalars['String']['input']>;
@@ -101,40 +319,68 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
-  createdAt?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   firstname?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   lastname?: Maybe<Scalars['String']['output']>;
   password?: Maybe<Scalars['String']['output']>;
+  posts?: Maybe<Array<Maybe<Post>>>;
   role: Role;
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
+
+export type GetPostQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null } };
+
+export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null }> };
+
+export type CreatePostMutationVariables = Exact<{
+  data: CreatePostInput;
+}>;
+
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id?: string | null } };
+
+export type UpdatePostMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: UpdatePostInput;
+}>;
+
+
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id?: string | null } };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: string | null, updatedAt?: string | null } };
+export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: string | null, updatedAt?: string | null }> };
+export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, createdAt?: string | null, updatedAt?: string | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } };
 
 export type CreateUserMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: string | null, updatedAt?: string | null } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -142,21 +388,21 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, createdAt?: string | null, updatedAt?: string | null } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, createdAt?: string | null, updatedAt?: string | null } };
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } };
 
 export type LoginMutationVariables = Exact<{
   data: LoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: string | null, updatedAt?: string | null } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: any | null, updatedAt?: any | null } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -169,6 +415,230 @@ export type LoginGuestMutationVariables = Exact<{ [key: string]: never; }>;
 export type LoginGuestMutation = { __typename?: 'Mutation', loginGuest: { __typename?: 'GuestPayload', token: any } };
 
 
+export const GetPostDocument = gql`
+    query GetPost($id: ID!) {
+  post(id: $id) {
+    id
+    title
+    body
+    userId
+    createdAt
+    updatedAt
+    arrestLogId
+    postComments {
+      id
+      body
+    }
+    arrestLog {
+      id
+      AGE
+      ARREST_STATUS
+      ArrestLocationAptFlr
+      ArrestLocationCity
+      ArrestLocationStreet
+      ArrestLocationStreetNBR
+      Arrest_Charge
+      Arrest_ID
+      Case_Number
+      Charge_Description
+      Charge_Sequence
+      DATE_ARRESTED
+      DOB
+      Degree
+      FIRSTNAME
+      LASTNAME
+      MIDDLENAME
+      OBJECTID
+      OBJECTID_1
+      RACE
+      SEX
+      SUFFIX
+      TIME_ARREST
+      UNIQUEKEY
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPostQuery__
+ *
+ * To run a query within a React component, call `useGetPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPostQuery(baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables> & ({ variables: GetPostQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+      }
+export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+        }
+export function useGetPostSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+        }
+export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
+export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
+export type GetPostSuspenseQueryHookResult = ReturnType<typeof useGetPostSuspenseQuery>;
+export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
+export const GetPostsDocument = gql`
+    query GetPosts {
+  posts {
+    id
+    title
+    body
+    userId
+    createdAt
+    updatedAt
+    arrestLogId
+    postComments {
+      id
+      body
+    }
+    arrestLog {
+      id
+      AGE
+      ARREST_STATUS
+      ArrestLocationAptFlr
+      ArrestLocationCity
+      ArrestLocationStreet
+      ArrestLocationStreetNBR
+      Arrest_Charge
+      Arrest_ID
+      Case_Number
+      Charge_Description
+      Charge_Sequence
+      DATE_ARRESTED
+      DOB
+      Degree
+      FIRSTNAME
+      LASTNAME
+      MIDDLENAME
+      OBJECTID
+      OBJECTID_1
+      RACE
+      SEX
+      SUFFIX
+      TIME_ARREST
+      UNIQUEKEY
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
+      }
+export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
+        }
+export function useGetPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
+        }
+export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
+export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
+export type GetPostsSuspenseQueryHookResult = ReturnType<typeof useGetPostsSuspenseQuery>;
+export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
+export const CreatePostDocument = gql`
+    mutation CreatePost($data: CreatePostInput!) {
+  createPost(data: $data) {
+    id
+  }
+}
+    `;
+export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
+
+/**
+ * __useCreatePostMutation__
+ *
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostMutation, CreatePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, options);
+      }
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
+export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
+export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const UpdatePostDocument = gql`
+    mutation UpdatePost($id: ID!, $data: UpdatePostInput!) {
+  updatePost(id: $id, data: $data) {
+    id
+  }
+}
+    `;
+export type UpdatePostMutationFn = Apollo.MutationFunction<UpdatePostMutation, UpdatePostMutationVariables>;
+
+/**
+ * __useUpdatePostMutation__
+ *
+ * To run a mutation, you first call `useUpdatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePostMutation, { data, loading, error }] = useUpdatePostMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePostMutation, UpdatePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument, options);
+      }
+export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
+export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
+export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
 export const GetUserDocument = gql`
     query GetUser($id: ID!) {
   user(id: $id) {

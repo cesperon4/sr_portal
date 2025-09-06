@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import { Backdrop } from "../backdrop";
 import { Button } from "@mui/material";
+import { useUserContext } from "@/context/UserContext";
 
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 interface ProfileSettingsProps {
@@ -9,6 +12,8 @@ interface ProfileSettingsProps {
 export function ProfileSettings({
   setIsProfileSettingsOpen,
 }: ProfileSettingsProps) {
+  const { loggedUser } = useUserContext();
+
   const { updateUserProps, handleUpdateUserProps, updateUser } =
     useProfileSettings();
 
@@ -34,6 +39,7 @@ export function ProfileSettings({
           name="firstname"
           placeholder={"First Name"}
           className="border rounded p-2 w-full"
+          disabled={loggedUser.role === "GUEST"}
           defaultValue={updateUserProps.firstname || ""}
           onChange={(e) => {
             handleUpdateUserProps(e);
@@ -45,6 +51,7 @@ export function ProfileSettings({
           name="lastname"
           placeholder={"Last Name"}
           className="border rounded p-2 w-full"
+          disabled={loggedUser.role === "GUEST"}
           defaultValue={updateUserProps.lastname || ""}
           onChange={(e) => {
             handleUpdateUserProps(e);
@@ -56,6 +63,7 @@ export function ProfileSettings({
           name="email"
           placeholder={"Email"}
           className="border rounded p-2 w-full"
+          disabled={loggedUser.role === "GUEST"}
           defaultValue={updateUserProps.email || ""}
           onChange={(e) => {
             handleUpdateUserProps(e);
@@ -67,6 +75,7 @@ export function ProfileSettings({
           name="username"
           placeholder={"Username"}
           className="border rounded p-2 w-full"
+          disabled={loggedUser.role === "GUEST"}
           defaultValue={updateUserProps.username || ""}
           onChange={(e) => {
             handleUpdateUserProps(e);
@@ -78,6 +87,7 @@ export function ProfileSettings({
           name="password"
           placeholder={"Password"}
           className="border rounded p-2 w-full"
+          disabled={loggedUser.role === "GUEST"}
           defaultValue={updateUserProps.password || ""}
           onChange={(e) => {
             handleUpdateUserProps(e);
@@ -86,6 +96,7 @@ export function ProfileSettings({
 
         <Button
           variant="contained"
+          disabled={loggedUser.role === "GUEST"}
           onClick={() => {
             updateUser();
           }}

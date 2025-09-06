@@ -1,0 +1,101 @@
+query GetPost($id: ID!) {
+  post(id: $id) {
+    id
+    title
+    body
+    userId
+    createdAt
+    updatedAt
+    arrestLogId
+    postComments {
+      id
+      body
+    }
+    arrestLog {
+      id
+      AGE
+      ARREST_STATUS
+      ArrestLocationAptFlr
+      ArrestLocationCity
+      ArrestLocationStreet
+      ArrestLocationStreetNBR
+      Arrest_Charge
+      Arrest_ID
+      Case_Number
+      Charge_Description
+      Charge_Sequence
+      DATE_ARRESTED
+      DOB
+      Degree
+      FIRSTNAME
+      LASTNAME
+      MIDDLENAME
+      OBJECTID
+      OBJECTID_1
+      RACE
+      SEX
+      SUFFIX
+      TIME_ARREST
+      UNIQUEKEY
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+query GetPosts {
+  posts {
+    id
+    title
+    body
+    userId
+    createdAt
+    updatedAt
+    arrestLogId
+    postComments {
+      id
+      body
+    }
+    arrestLog {
+      id
+      AGE
+      ARREST_STATUS
+      ArrestLocationAptFlr
+      ArrestLocationCity
+      ArrestLocationStreet
+      ArrestLocationStreetNBR
+      Arrest_Charge
+      Arrest_ID
+      Case_Number
+      Charge_Description
+      Charge_Sequence
+      DATE_ARRESTED
+      DOB
+      Degree
+      FIRSTNAME
+      LASTNAME
+      MIDDLENAME
+      OBJECTID
+      OBJECTID_1
+      RACE
+      SEX
+      SUFFIX
+      TIME_ARREST
+      UNIQUEKEY
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+mutation CreatePost($data: CreatePostInput!) {
+  createPost(data: $data) {
+    id
+  }
+}
+
+mutation UpdatePost($id: ID!, $data: UpdatePostInput!) {
+  updatePost(id: $id, data: $data) {
+    id
+  }
+}

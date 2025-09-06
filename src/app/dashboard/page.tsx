@@ -118,13 +118,13 @@ export default function Dashboard() {
     setSelectColumns(false);
   };
 
-  if (loading || !isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-lg font-semibold">Loading...</p>
-      </div>
-    );
-  }
+  // if (loading || !isAuthenticated) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <p className="text-lg font-semibold">Loading...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -157,6 +157,7 @@ export default function Dashboard() {
         )}
         {view === "Table" && renderDataTable()}
         {view === "Chart" && renderCharts()}
+        {view === "Community" && <div>hello</div>}
       </main>
     </div>
   );

@@ -334,6 +334,21 @@ export const checkCrimeFilterState: CrimeFilterState = {
   "166(C)(4) PC": true,
 };
 
+export const navLinks = [
+  {
+    name: "Work",
+    link: "#work",
+  },
+  {
+    name: "Experience",
+    link: "#experience",
+  },
+  {
+    name: "Skills",
+    link: "#skills",
+  },
+];
+
 export const initialSidebarState: SidebarState = {
   Age: false,
   Gender: false,

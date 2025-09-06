@@ -66,7 +66,7 @@ export function SignupModal({ closeSignupModal }: SignupModalProps) {
             onChange={handleChange}
           />
           <input
-            type="text"
+            type="password"
             id="confirmPassword"
             name="confirmPassword"
             placeholder={"Confirm Password"}

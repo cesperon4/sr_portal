@@ -9,6 +9,7 @@ import { MdInsights } from "react-icons/md";
 import { IoMdBook } from "react-icons/io";
 import { IoMapOutline } from "react-icons/io5";
 import { CiSettings } from "react-icons/ci";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 import { useLogoutMutation } from "../../generated/graphql";
 
@@ -76,12 +77,12 @@ export function Header({
         <Button
           variant="outline"
           onClick={() => {
-            // toggleView("Chart");
+            toggleView("Community");
           }}
-          // className={`${view === "Chart" && HEADER_CLASSES.view_button}`}
+          className={`${view === "Community" && HEADER_CLASSES.view_button}`}
         >
           Community
-          <MdInsights />
+          <FaPeopleGroup />
         </Button>
       </div>
       {view === "Table" && (

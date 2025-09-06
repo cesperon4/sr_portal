@@ -10,13 +10,13 @@ import ReactQueryProvider from "../providers/ReactQueryProvider"; // Adjust path
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
-      <ReactQueryProvider>
-        <DataProvider>
-          <UserProvider>
+      <UserProvider>
+        <ReactQueryProvider>
+          <DataProvider>
             <ApolloWrapper>{children}</ApolloWrapper>
-          </UserProvider>
-        </DataProvider>
-      </ReactQueryProvider>
+          </DataProvider>
+        </ReactQueryProvider>
+      </UserProvider>
     </ThemeProvider>
   );
 }
