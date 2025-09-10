@@ -37,7 +37,7 @@ export function Header({
   const { loggedUser } = useUserContext();
   const [logoutMutation] = useLogoutMutation();
   return (
-    <header className="flex gap-4 items-center mr-auto w-full border-b-2 pb-4">
+    <header className="dashboard-header">
       <span className="font-semibold">SR PORTAL</span>
       <ModeToggle />
       <div className="flex gap-1">
@@ -46,7 +46,7 @@ export function Header({
           onClick={() => {
             toggleView("Map");
           }}
-          className={`${view === "Map" && HEADER_CLASSES.view_button}`}
+          className={`map-btn ${view === "Map" && HEADER_CLASSES.view_button}`}
         >
           Map
           <IoMapOutline />
@@ -57,7 +57,9 @@ export function Header({
           onClick={() => {
             toggleView("Table");
           }}
-          className={`${view === "Table" && HEADER_CLASSES.view_button}`}
+          className={`header-toggle ${
+            view === "Table" && HEADER_CLASSES.view_button
+          }`}
         >
           Arrest Log
           <IoMdBook />
@@ -68,7 +70,9 @@ export function Header({
           onClick={() => {
             toggleView("Chart");
           }}
-          className={`${view === "Chart" && HEADER_CLASSES.view_button}`}
+          className={`header-toggle ${
+            view === "Chart" && HEADER_CLASSES.view_button
+          }`}
         >
           Data Insights
           <MdInsights />
@@ -79,7 +83,9 @@ export function Header({
           onClick={() => {
             toggleView("Community");
           }}
-          className={`${view === "Community" && HEADER_CLASSES.view_button}`}
+          className={`header-toggle ${
+            view === "Community" && HEADER_CLASSES.view_button
+          }`}
         >
           Community
           <FaPeopleGroup />
@@ -114,7 +120,7 @@ export function Header({
 
       <Button
         variant="outline"
-        className="ml-auto border-2 bg-red-400 text-white"
+        className="logout-btn"
         onClick={async () => {
           await logoutMutation();
           router.push("/");

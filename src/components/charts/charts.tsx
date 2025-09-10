@@ -144,7 +144,7 @@ export function Charts({
   return (
     <div className="shadow flex gap-4 font-sans">
       <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
-      <div className="h-[80rem] w-full">
+      <div className="h-320 w-full">
         {sidebarState["Age"] && (
           <AgeCharts
             youngestArrestAge={youngestArrestAge}

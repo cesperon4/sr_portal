@@ -7,7 +7,7 @@ export const TABLE_ROW_CLASSES = {
 };
 
 export const HEADER_CLASSES = {
-  view_button: "bg-blue-500 text-white",
+  view_button: "bg-blue-500 text-white rounded",
 };
 
 interface CrimeFilters {
@@ -336,15 +336,15 @@ export const checkCrimeFilterState: CrimeFilterState = {
 
 export const navLinks = [
   {
-    name: "Work",
+    name: "About",
     link: "#work",
   },
   {
-    name: "Experience",
+    name: "Resources",
     link: "#experience",
   },
   {
-    name: "Skills",
+    name: "Developer",
     link: "#skills",
   },
 ];

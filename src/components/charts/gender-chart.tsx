@@ -36,7 +36,7 @@ export function GenderChart({
   }, [pieChartData]);
 
   return (
-    <div className="h-[80rem] flex gap-12">
+    <div className="h-320 flex gap-12">
       <div className="flex flex-col w-2/12 gap-4">
         <div className="rounded p-4 flex flex-col gap-2 items-start ">
           <h2>Arrests by Gender</h2>

@@ -25,12 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <Providers>{children}</Providers>
+        <Providers>
+          {/* <Navbar /> */}
+          {children}
+        </Providers>
       </body>
     </html>
   );

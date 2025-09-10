@@ -44,7 +44,7 @@ export function AgeCharts({
         />
       </div>
       <div
-        className="rounded cursor-pointer h-[60rem] w-full"
+        className="rounded cursor-pointer h-240 w-full"
         onClick={() => {
           toggleChartModal(
             <Bar

@@ -33,7 +33,7 @@ export function SelectColumnModal({
   return (
     <Backdrop onClick={handleClose}>
       <div
-        className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md overflow-auto max-h-[40rem]"
+        className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md overflow-auto max-h-160"
         onClick={(e) => {
           e.stopPropagation();
         }}

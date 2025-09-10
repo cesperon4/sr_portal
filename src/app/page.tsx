@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 // import { Button } from "@/components/ui/button";
 // import { Cop } from "../components/models/Cop";
@@ -24,12 +25,14 @@ export default function LandingPage() {
 
   return (
     <main className="flex h-screen">
-      {/* <Navbar /> */}
+      <Navbar />
       <ToastContainer />
       {isSignupModalOpen && <SignupModal closeSignupModal={closeSignupModal} />}
-      <div className="flex items-center justify-center gap-24 h-full w-full bg-gray-100">
-        <div className="text-start">
-          <h1 className="text-4xl font-bold">Welcome to SR Portal</h1>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-24 h-full w-full">
+        <div className="text-start mt-80 p-10 md:mt-0 md:p-0">
+          <h1 className="text-4xl font-bold text-black">
+            Providing Meaningful Data Insight
+          </h1>
           <p className="mt-4 text-gray-600">
             Where our goal is to provide insight on local police data
           </p>
@@ -42,11 +45,11 @@ export default function LandingPage() {
           <div className="landing-btns flex gap-2">
             <button
               onClick={() => handleGuestLogin()}
-              className="mt-6 px-4 py-2 bg-green-600 text-white rounded"
+              className="mt-6 px-4 py-2 bg-green-600 text-white rounded cursor-pointer"
             >
               Explore as Guest
             </button>
-            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded">
+            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer">
               Learn More
             </button>
           </div>
@@ -85,11 +88,11 @@ export default function LandingPage() {
         </div> */}
       </div>
 
-      {/* <div className=" flex items-center justify-center ml-auto  h-screen w-3/12 shadow">
-        <div className="flex flex-col justify-center gap-4 shadow p-12 w-10/12 h-[30rem] bg-white rounded">
+      {/* <div className=" flex items-center justify-center ml-auto  h-screen w-3/12 shadow-sm">
+        <div className="flex flex-col justify-center gap-4 shadow-sm p-12 w-10/12 h-120 bg-white rounded">
           <h2 className="font-bold">SR Portal</h2>
           <input
-            className="border rounded h-[2.5rem] p-2"
+            className="border rounded h-10 p-2"
             placeholder="username"
             onChange={(e) => {
               setLoginParams((prev: LoginParams) => ({
@@ -99,7 +102,7 @@ export default function LandingPage() {
             }}
           />
           <input
-            className="border rounded h-[2.5rem] p-2"
+            className="border rounded h-10 p-2"
             placeholder="password"
             type="password"
             onChange={(e) => {

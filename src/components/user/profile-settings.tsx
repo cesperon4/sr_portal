@@ -24,7 +24,7 @@ export function ProfileSettings({
       }}
     >
       <form
-        className="flex flex-col gap-2 bg-white p-12 rounded shadow w-4/12"
+        className="flex flex-col gap-2 bg-white p-12 rounded shadow-sm w-4/12"
         // onSubmit={updateUser}
         onClick={(e) => {
           e.preventDefault();

@@ -25,6 +25,7 @@ export function useLogin() {
   const handleLogin = () => {
     const { email, password } = loginParams;
 
+    console.log("handle login", loginParams);
     if (!email || !password) {
       console.error("Username and password are required");
       return;
@@ -38,8 +39,6 @@ export function useLogin() {
         },
       },
       onCompleted: (data) => {
-        console.log("Login successful:", data);
-
         setLoggedUser({
           id: data.login.user.id || "",
           username: data.login.user.username || "",
@@ -49,6 +48,7 @@ export function useLogin() {
           role: data.login.user.role || "",
           token: data.login.token || "",
         });
+
         router.push("/dashboard");
       },
       onError: (error) => {
@@ -90,5 +90,5 @@ export function useLogin() {
     });
   };
 
-  return { setLoginParams, handleLogin, handleGuestLogin };
+  return { setLoginParams, handleLogin, handleGuestLogin, loginParams };
 }
