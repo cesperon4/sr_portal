@@ -18,10 +18,9 @@ import { useSignupModal } from "@/hooks/landing-page/useSignupModalToggle";
 import { Navbar } from "@/components/landing-page/navbar";
 
 export default function LandingPage() {
-  const { setLoginParams, handleLogin, handleGuestLogin } = useLogin();
+  const { handleGuestLogin } = useLogin();
 
-  const { isSignupModalOpen, openSignupModal, closeSignupModal } =
-    useSignupModal();
+  const { isSignupModalOpen, closeSignupModal } = useSignupModal();
 
   return (
     <main className="flex h-screen">
