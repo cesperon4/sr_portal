@@ -177,7 +177,7 @@
   }
 
   .logo {
-    @apply text-black text-xl md:text-3xl font-semibold transition-transform duration-300 hover:scale-105;
+    @apply text-black text-xl md:text-2xl font-semibold transition-transform duration-300 hover:scale-105;
   }
 
   nav.desktop {
@@ -412,7 +412,7 @@
   @apply flex justify-center items-center h-screen w-full relative;
 
   .login-form {
-    @apply flex flex-col gap-4 p-8 rounded w-10/12 md:w-2/12;
+    @apply flex flex-col gap-4 p-8 rounded w-10/12 md:w-3/12;
 
     .login-input {
       @apply p-2 rounded-xl border-3 border-gray-200;
@@ -425,6 +425,10 @@
       @apply bg-blue-400 p-2 rounded-xl text-white shadow cursor-pointer;
     }
   }
+}
+
+@utility auth-login {
+  @apply cursor-pointer p-4 shadow-md border border-gray-100 rounded-xl flex gap-2 w-6/12 justify-center items-center hover:bg-gray-100;
 }
 /* Hero text slider starts */
 .slide {

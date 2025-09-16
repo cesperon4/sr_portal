@@ -1,0 +1,94 @@
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
+
+const handler = NextAuth({
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
+  ],
+  callbacks: {
+    async signIn({ user }) {
+      try {
+        console.log("user: ", user);
+        const mutation = `
+        mutation {
+          upsertUser(data: {
+            firstname: "${user.name?.split(" ")[0] || ""}",
+            lastname: "${user.name?.split(" ")[1] || ""}",
+            email: "${user.email}"
+          }) {
+            token
+            user{
+                id
+                email
+                username
+                firstname
+                lastname
+                role
+            }
+          }
+        }
+      `;
+
+        const res = await fetch("http://localhost:3000/api/graphql", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query: mutation }),
+        });
+
+        const response = await res.json();
+
+        if (response.data) {
+          const token = response.data.upsertUser.token;
+          const { id, email, username, firstname, lastname, role } =
+            response.data.upsertUser.user;
+
+          Object.assign(user, {
+            backendToken: token,
+            id,
+            email,
+            username,
+            firstname,
+            lastname,
+            role,
+          });
+        }
+      } catch (err) {
+        console.error("Error syncing user with backend:", err);
+      }
+
+      return true; // allow sign-in
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.backendToken = user.backendToken;
+        token.id = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // You can attach your backend user ID here if needed
+      session.user.backendToken = token.backendToken;
+      session.user.id = token.id;
+      session.user.role = token.role;
+      return session;
+    },
+    //params {url, baseUrl}
+    async redirect() {
+      // always redirect to dashboard
+      return "/dashboard"; // or `${baseUrl}/dashboard`
+    },
+  },
+});
+
+export { handler as GET, handler as POST };

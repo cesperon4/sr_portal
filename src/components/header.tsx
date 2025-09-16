@@ -16,7 +16,10 @@ import { useLogoutMutation } from "../../generated/graphql";
 import { useUserContext } from "@/context/UserContext";
 
 import { HEADER_CLASSES } from "@/lib/constants";
-import { useRouter } from "next/navigation";
+
+import { signOut } from "next-auth/react";
+
+import Image from "next/image";
 
 interface HeaderProps {
   view: HeaderSelect;
@@ -32,9 +35,7 @@ export function Header({
   openSelectColumns,
   setIsProfileSettingsOpen,
 }: HeaderProps) {
-  const router = useRouter();
-
-  const { loggedUser } = useUserContext();
+  const { loggedUser, clearLoggedUser } = useUserContext();
   const [logoutMutation] = useLogoutMutation();
   return (
     <header className="dashboard-header">
@@ -109,6 +110,18 @@ export function Header({
         <span className="font-medium">
           {loggedUser.username ? loggedUser.username : loggedUser.role}
         </span>
+
+        {/* <span>{loggedUser.image}</span> */}
+        {loggedUser.image && (
+          <Image
+            aria-hidden
+            src={loggedUser.image}
+            alt="Window icon"
+            width={40}
+            height={40}
+            className="rounded-3xl"
+          />
+        )}
         <CiSettings
           size="28"
           className="hover:bg-text-100 cursor-pointer"
@@ -123,7 +136,8 @@ export function Header({
         className="logout-btn"
         onClick={async () => {
           await logoutMutation();
-          router.push("/");
+          signOut({ callbackUrl: "/" });
+          clearLoggedUser();
         }}
       >
         Logout

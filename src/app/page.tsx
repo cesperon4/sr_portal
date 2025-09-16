@@ -11,8 +11,6 @@ import Image from "next/image";
 
 import { useLogin } from "@/hooks/landing-page/useLogin";
 
-import { ToastContainer } from "react-toastify";
-
 import { SignupModal } from "@/components/landing-page/signup-modal";
 import { useSignupModal } from "@/hooks/landing-page/useSignupModalToggle";
 import { Navbar } from "@/components/landing-page/navbar";
@@ -25,7 +23,6 @@ export default function LandingPage() {
   return (
     <main className="flex h-screen">
       <Navbar />
-      <ToastContainer />
       {isSignupModalOpen && <SignupModal closeSignupModal={closeSignupModal} />}
       <div className="flex flex-col md:flex-row items-center justify-center gap-24 h-full w-full">
         <div className="text-start mt-80 p-10 md:mt-0 md:p-0">

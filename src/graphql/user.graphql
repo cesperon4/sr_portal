@@ -54,6 +54,14 @@ mutation CreateUser($data: CreateUserInput!) {
   }
 }
 
+mutation UpsertUser($data: UpsertUserInput!) {
+  upsertUser(data: $data) {
+    firstname
+    lastname
+    email
+  }
+}
+
 mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
   updateUser(id: $id, data: $data) {
     id

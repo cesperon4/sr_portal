@@ -23,22 +23,44 @@ import { useRouter } from "next/navigation";
 
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 
+import { useSession } from "next-auth/react";
+
+import { useUserContext } from "@/context/UserContext";
+
 export default function Dashboard() {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const { loggedUser, setLoggedUser } = useUserContext();
 
   const { loading, isAuthenticated } = useAuth();
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (loggedUser.id === "") {
+      setLoggedUser({
+        id: session?.user.id || "",
+        username: session?.user.name || "",
+        email: session?.user.email || "",
+        firstname: session?.user.firstname || "",
+        lastname: session?.user.lastname || "",
+        role: session?.user.role || "",
+        token: session?.user.backendToken || "",
+        image: session?.user.image || "",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated && !session) {
       const timeout = setTimeout(() => {
         router.push("/");
       }, 100); // 100–300ms is usually enough
 
       return () => clearTimeout(timeout);
     }
-  }, [loading, isAuthenticated, router]);
+  }, [loading, isAuthenticated, router, session]);
 
   //export default only required for pages
   //Table search
@@ -53,7 +75,7 @@ export default function Dashboard() {
     filterText,
   } = useTableHeaderFilter();
 
-  ////Map Filters
+  //Map Filters
   const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
     initialCrimeFilterState
   );
@@ -117,14 +139,6 @@ export default function Dashboard() {
   const closeSelectColumns = () => {
     setSelectColumns(false);
   };
-
-  // if (loading || !isAuthenticated) {
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <p className="text-lg font-semibold">Loading...</p>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-(family-name:--font-geist-sans)">

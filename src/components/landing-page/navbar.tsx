@@ -56,6 +56,11 @@ export function Navbar() {
           <a
             className="contact-btn group"
             onClick={() => router.push("/login")}
+            // onClick={() =>
+            //   signIn("google", {
+            //     callbackUrl: "http://localhost:3001", // redirect user to client after login
+            //   })
+            // }
           >
             <div className="inner">
               <span>Login</span>
