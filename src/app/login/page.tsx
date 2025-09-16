@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import { useLogin } from "@/hooks/landing-page/useLogin";
 
 import { LoginParams } from "@/types/user.interface";
+import { FcGoogle } from "react-icons/fc"; // Google icon
+import { FaGithub } from "react-icons/fa"; // GitHub icon
+
+import { signIn } from "next-auth/react";
 
 import React from "react";
 
@@ -13,6 +17,7 @@ export default function Login() {
   const { setLoginParams, handleLogin } = useLogin();
   const router = useRouter();
   const handleSubmit = () => {
+    console.log("handle submit");
     handleLogin();
   };
   return (
@@ -60,6 +65,31 @@ export default function Login() {
         <button className="login-btn" type="submit">
           Login
         </button>
+
+        <div className="flex gap-4 items-center justify-center">
+          <span className="border-t-2 border-gray-400 w-4/12" />
+          <span>Or continue with</span>
+          <span className="border-t-2 border-gray-400 w-4/12" />
+        </div>
+
+        <div className="flex justify-between gap-2">
+          <button
+            className="auth-login"
+            type="button"
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          >
+            <FcGoogle size={24} />
+            Google
+          </button>
+          <button
+            className="auth-login"
+            type="button"
+            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+          >
+            <FaGithub size={24} />
+            Github
+          </button>
+        </div>
 
         {/* <button className="register-btn" type="submit">
           Register User

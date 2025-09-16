@@ -10,11 +10,13 @@ interface User {
   lastname: string;
   role: string;
   token: string;
+  image?: string;
 }
 
 interface UserContextType {
   loggedUser: User;
   setLoggedUser: React.Dispatch<React.SetStateAction<User>>;
+  clearLoggedUser: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -39,8 +41,23 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     token: "",
   });
 
+  const clearLoggedUser = () => {
+    setLoggedUser({
+      id: "",
+      username: "",
+      email: "",
+      firstname: "",
+      lastname: "",
+      role: "",
+      token: "",
+      image: "",
+    });
+  };
+
   return (
-    <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
+    <UserContext.Provider
+      value={{ loggedUser, setLoggedUser, clearLoggedUser }}
+    >
       {children}
     </UserContext.Provider>
   );

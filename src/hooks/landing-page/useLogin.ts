@@ -25,7 +25,6 @@ export function useLogin() {
   const handleLogin = () => {
     const { email, password } = loginParams;
 
-    console.log("handle login", loginParams);
     if (!email || !password) {
       console.error("Username and password are required");
       return;
@@ -48,16 +47,19 @@ export function useLogin() {
           role: data.login.user.role || "",
           token: data.login.token || "",
         });
-
+        console.log("setting logged user");
         router.push("/dashboard");
       },
       onError: (error) => {
-        toast(error.message, {
-          position: "top-right",
-          hideProgressBar: false,
-          autoClose: 2000,
-          type: "warning",
-        });
+        toast.dismiss();
+        console.log("error: ", error);
+        setTimeout(() => {
+          toast(error.message, {
+            type: "warning",
+            autoClose: 2000,
+            position: "top-right",
+          });
+        }, 0);
       },
     });
   };

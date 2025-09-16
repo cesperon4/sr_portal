@@ -134,6 +134,7 @@ export type Mutation = {
   updatePost: Post;
   updatePostComment: PostComment;
   updateUser: User;
+  upsertUser: User;
 };
 
 
@@ -203,6 +204,11 @@ export type MutationUpdatePostCommentArgs = {
 export type MutationUpdateUserArgs = {
   data?: InputMaybe<UpdateUserInput>;
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpsertUserArgs = {
+  data?: InputMaybe<UpsertUserInput>;
 };
 
 export type Post = {
@@ -317,6 +323,12 @@ export type UpdateUserInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpsertUserInput = {
+  email: Scalars['String']['input'];
+  firstname: Scalars['String']['input'];
+  lastname: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -381,6 +393,13 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, createdAt?: any | null, updatedAt?: any | null } };
+
+export type UpsertUserMutationVariables = Exact<{
+  data: UpsertUserInput;
+}>;
+
+
+export type UpsertUserMutation = { __typename?: 'Mutation', upsertUser: { __typename?: 'User', firstname?: string | null, lastname?: string | null, email?: string | null } };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -821,6 +840,41 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const UpsertUserDocument = gql`
+    mutation UpsertUser($data: UpsertUserInput!) {
+  upsertUser(data: $data) {
+    firstname
+    lastname
+    email
+  }
+}
+    `;
+export type UpsertUserMutationFn = Apollo.MutationFunction<UpsertUserMutation, UpsertUserMutationVariables>;
+
+/**
+ * __useUpsertUserMutation__
+ *
+ * To run a mutation, you first call `useUpsertUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertUserMutation, { data, loading, error }] = useUpsertUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpsertUserMutation(baseOptions?: Apollo.MutationHookOptions<UpsertUserMutation, UpsertUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpsertUserMutation, UpsertUserMutationVariables>(UpsertUserDocument, options);
+      }
+export type UpsertUserMutationHookResult = ReturnType<typeof useUpsertUserMutation>;
+export type UpsertUserMutationResult = Apollo.MutationResult<UpsertUserMutation>;
+export type UpsertUserMutationOptions = Apollo.BaseMutationOptions<UpsertUserMutation, UpsertUserMutationVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
   updateUser(id: $id, data: $data) {
