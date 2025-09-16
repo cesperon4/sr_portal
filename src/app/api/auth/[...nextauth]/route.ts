@@ -16,7 +16,6 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user }) {
       try {
-        console.log("user: ", user);
         const mutation = `
         mutation {
           upsertUser(data: {
@@ -37,13 +36,18 @@ const handler = NextAuth({
         }
       `;
 
-        const res = await fetch("http://localhost:3000/api/graphql", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query: mutation }),
-        });
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_NODE_ENV === "development"
+            ? process.env.API_DEV_URL!
+            : process.env.API_PROD_URL!,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: mutation }),
+          }
+        );
 
         const response = await res.json();
 
