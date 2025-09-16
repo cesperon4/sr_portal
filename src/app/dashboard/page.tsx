@@ -22,9 +22,7 @@ import { useAuth } from "@/hooks/auth/useAuth";
 import { useRouter } from "next/navigation";
 
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
-
 import { useSession } from "next-auth/react";
-
 import { useUserContext } from "@/context/UserContext";
 
 export default function Dashboard() {

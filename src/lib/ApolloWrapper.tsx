@@ -28,6 +28,7 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
       process.env.NEXT_PUBLIC_NODE_ENV === "development"
         ? "http://localhost:3000/api/graphql"
         : "https://sr-portal-graphql-api.vercel.app/api/graphql",
+
     credentials: "include",
   });
 
