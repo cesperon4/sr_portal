@@ -415,7 +415,7 @@
     @apply flex flex-col gap-4 p-8 rounded w-10/12 md:w-3/12;
 
     .login-input {
-      @apply p-2 rounded-xl border-3 border-gray-200;
+      @apply p-2 rounded-xl border-1 border-gray-200;
     }
     .login-btn {
       @apply bg-green-300 p-2 rounded-xl text-white shadow cursor-pointer;
