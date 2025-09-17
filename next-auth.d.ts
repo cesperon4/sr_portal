@@ -32,5 +32,8 @@ declare module "next-auth/jwt" {
     backendToken?: string | null;
     id?: string;
     role?: string | null;
+    firstname?: string | null;
+    lastname?: string | null;
+    username?: string | null;
   }
 }

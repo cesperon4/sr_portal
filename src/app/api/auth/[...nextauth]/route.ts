@@ -77,6 +77,9 @@ const handler = NextAuth({
         token.backendToken = user.backendToken;
         token.id = user.id;
         token.role = user.role;
+        token.firstname = user.firstname;
+        token.lastname = user.lastname;
+        token.username = user.username;
       }
       return token;
     },
@@ -85,6 +88,9 @@ const handler = NextAuth({
       session.user.backendToken = token.backendToken;
       session.user.id = token.id;
       session.user.role = token.role;
+      session.user.firstname = token.firstname;
+      session.user.lastname = token.lastname;
+      session.user.username = token.username;
       return session;
     },
     //params {url, baseUrl}
