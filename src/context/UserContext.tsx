@@ -1,6 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useSession } from "next-auth/react";
 
 interface User {
   id: string;
@@ -28,9 +35,12 @@ export const useUserContext = () => {
   }
   return context;
 };
+
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { data: session } = useSession();
+
   const [loggedUser, setLoggedUser] = useState<User>({
     id: "",
     username: "",
@@ -39,7 +49,36 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     lastname: "",
     role: "",
     token: "",
+    image: "",
   });
+
+  // 👇 Auto-sync when session changes
+  useEffect(() => {
+    if (session?.user) {
+      setLoggedUser({
+        id: session.user.id ?? "",
+        username: session.user.username ?? "",
+        email: session.user.email ?? "",
+        firstname: session.user.firstname ?? "",
+        lastname: session.user.lastname ?? "",
+        role: session.user.role ?? "",
+        token: session.user.backendToken ?? "",
+        image: session.user.image ?? "",
+      });
+    } else {
+      // Reset when logged out
+      setLoggedUser({
+        id: "",
+        username: "",
+        email: "",
+        firstname: "",
+        lastname: "",
+        role: "",
+        token: "",
+        image: "",
+      });
+    }
+  }, [session]);
 
   const clearLoggedUser = () => {
     setLoggedUser({

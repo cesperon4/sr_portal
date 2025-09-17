@@ -23,32 +23,32 @@ import { useRouter } from "next/navigation";
 
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { useSession } from "next-auth/react";
-import { useUserContext } from "@/context/UserContext";
+// import { useUserContext } from "@/context/UserContext";
 
 export default function Dashboard() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const { loggedUser, setLoggedUser } = useUserContext();
+  // const { loggedUser, setLoggedUser } = useUserContext();
 
   const { loading, isAuthenticated } = useAuth();
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
 
-  useEffect(() => {
-    if (loggedUser.id === "") {
-      setLoggedUser({
-        id: session?.user.id || "",
-        username: session?.user.name || "",
-        email: session?.user.email || "",
-        firstname: session?.user.firstname || "",
-        lastname: session?.user.lastname || "",
-        role: session?.user.role || "",
-        token: session?.user.backendToken || "",
-        image: session?.user.image || "",
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (loggedUser.id === "") {
+  //     setLoggedUser({
+  //       id: session?.user.id || "",
+  //       username: session?.user.name || "",
+  //       email: session?.user.email || "",
+  //       firstname: session?.user.firstname || "",
+  //       lastname: session?.user.lastname || "",
+  //       role: session?.user.role || "",
+  //       token: session?.user.backendToken || "",
+  //       image: session?.user.image || "",
+  //     });
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (!loading && !isAuthenticated && !session) {

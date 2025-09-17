@@ -84,13 +84,15 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      // You can attach your backend user ID here if needed
-      session.user.backendToken = token.backendToken;
-      session.user.id = token.id;
-      session.user.role = token.role;
-      session.user.firstname = token.firstname;
-      session.user.lastname = token.lastname;
-      session.user.username = token.username;
+      const user = session.user!; // non-null assertion
+
+      user.backendToken = token.backendToken ?? null;
+      user.id = token.id ?? null;
+      user.role = token.role ?? null;
+      user.firstname = token.firstname ?? null;
+      user.lastname = token.lastname ?? null;
+      user.username = token.username ?? null;
+
       return session;
     },
     //params {url, baseUrl}
