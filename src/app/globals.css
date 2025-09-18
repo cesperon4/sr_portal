@@ -177,7 +177,7 @@
   }
 
   .logo {
-    @apply text-black text-xl md:text-2xl font-semibold transition-transform duration-300 hover:scale-105;
+    @apply text-black text-lg md:text-xl font-semibold transition-transform duration-300 hover:scale-105;
   }
 
   nav.desktop {
@@ -209,6 +209,18 @@
       span {
         @apply group-hover:text-white transition-colors duration-300;
       }
+    }
+  }
+
+  .fadebox {
+    @apply w-full text-black mt-10;
+
+    .fadebox-border {
+      @apply border-t-1 border-gray-300;
+    }
+
+    .fadebox-content {
+      @apply px-20 py-20 bg-white;
     }
   }
 }
@@ -418,7 +430,7 @@
       @apply p-2 rounded-xl border-1 border-gray-200;
     }
     .login-btn {
-      @apply bg-green-300 p-2 rounded-xl text-white shadow cursor-pointer;
+      @apply bg-green-400 hover:bg-green-500 p-2 rounded-xl text-white shadow cursor-pointer;
     }
 
     .register-btn {

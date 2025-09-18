@@ -1,8 +1,8 @@
 "use client";
 
+import React from "react";
 import { IoIosArrowBack } from "react-icons/io";
 
-import { useRouter } from "next/navigation";
 import { useLogin } from "@/hooks/landing-page/useLogin";
 
 import { LoginParams } from "@/types/user.interface";
@@ -10,26 +10,20 @@ import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaGithub } from "react-icons/fa"; // GitHub icon
 
 import { signIn } from "next-auth/react";
-
-import React from "react";
+import UnderlineButton from "@/components/ui/underline-button";
 
 export default function Login() {
   const { setLoginParams, handleLogin } = useLogin();
-  const router = useRouter();
   const handleSubmit = () => {
-    console.log("handle submit");
     handleLogin();
   };
   return (
     <main id="login-wrapper" className="login-wrapper">
-      <div
-        className="absolute top-0 left-0 p-12 flex items-center gap-1 cursor-pointer"
-        onClick={() => {
-          router.push("/");
-        }}
-      >
-        <IoIosArrowBack />
-        <span>Back</span>
+      <div className="absolute top-0 left-0 p-12 flex">
+        <UnderlineButton path="/">
+          <IoIosArrowBack />
+          <span>Back</span>
+        </UnderlineButton>
       </div>
       <form
         className="login-form"
@@ -38,7 +32,7 @@ export default function Login() {
           handleSubmit();
         }}
       >
-        <h2 className="text-2xl font-semibold mb-2">SR Portal Login</h2>
+        <h2 className="text-xl font-semibold mb-2">SR Portal Login</h2>
         <input
           className="login-input"
           type="text"

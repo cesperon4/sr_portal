@@ -169,7 +169,7 @@ export default function Dashboard() {
         )}
         {view === "Table" && renderDataTable()}
         {view === "Chart" && renderCharts()}
-        {view === "Community" && <div>hello</div>}
+        {view === "Community" && <div>Community</div>}
       </main>
     </div>
   );
