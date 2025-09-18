@@ -41,13 +41,13 @@ export default function LandingPage() {
           <div className="landing-btns flex gap-2">
             <button
               onClick={() => handleGuestLogin()}
-              className="mt-6 px-4 py-2 bg-green-600 text-white rounded cursor-pointer"
+              className="mt-6 px-4 py-2 bg-green-400 text-white rounded cursor-pointer font-semibold shadow-lg w-full hover:bg-green-500"
             >
               Explore as Guest
             </button>
-            <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer">
+            {/* <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer">
               Learn More
-            </button>
+            </button> */}
           </div>
         </div>
         <Image
