@@ -15,29 +15,35 @@ export function SignupModal({ closeSignupModal }: SignupModalProps) {
     <Backdrop onClick={closeSignupModal}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-4/12 bg-white rounded p-8 font-sans"
+        className="w-6/12 bg-white rounded p-24 font-sans"
       >
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <h2 className="font-semibold">Register for SR Portal</h2>
-          <input
-            type="text"
-            id="firstname"
-            name="firstname"
-            placeholder={"First Name"}
-            className="border rounded p-2 w-full"
-            value={formData.firstname}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            id="lastname"
-            name="lastname"
-            placeholder={"Last Name"}
-            className="border rounded p-2 w-full"
-            value={formData.lastname}
-            onChange={handleChange}
-          />
+        <form
+          className="flex flex-col gap-4 w-6/12 mx-auto"
+          onSubmit={handleSubmit}
+        >
+          <h2 className="font-semibold">Sign up</h2>
+          <div className="form-row flex w-full gap-2">
+            <input
+              type="text"
+              id="firstname"
+              name="firstname"
+              placeholder={"First Name"}
+              className="border rounded p-2 w-full"
+              value={formData.firstname}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              id="lastname"
+              name="lastname"
+              placeholder={"Last Name"}
+              className="border rounded p-2 w-full"
+              value={formData.lastname}
+              onChange={handleChange}
+            />
+          </div>
+
           <input
             type="text"
             id="email"
@@ -74,8 +80,8 @@ export function SignupModal({ closeSignupModal }: SignupModalProps) {
             value={formData.confirmPassword}
             onChange={handleChange}
           />
-          <Button variant="contained" type="submit">
-            Sign Up
+          <Button variant="contained" type="submit" className="">
+            Register
           </Button>
         </form>
       </div>

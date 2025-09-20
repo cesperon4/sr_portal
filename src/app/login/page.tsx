@@ -1,24 +1,28 @@
 "use client";
 
 import React from "react";
-import { IoIosArrowBack } from "react-icons/io";
 
 import { useLogin } from "@/hooks/landing-page/useLogin";
+import { signIn } from "next-auth/react";
+import { useModal } from "@/hooks/ui/useModal";
 
-import { LoginParams } from "@/types/user.interface";
 import { FcGoogle } from "react-icons/fc"; // Google icon
 import { FaGithub } from "react-icons/fa"; // GitHub icon
+import { IoIosArrowBack } from "react-icons/io";
 
-import { signIn } from "next-auth/react";
+import { LoginParams } from "@/types/user.interface";
+
 import UnderlineButton from "@/components/ui/underline-button";
+// import SingupMo from "@/components/user/registration-modal";
+import { SignupModal } from "@/components/landing-page/signup-modal";
 
 export default function Login() {
   const { setLoginParams, handleLogin } = useLogin();
-  const handleSubmit = () => {
-    handleLogin();
-  };
+  const { isOpen, openModal, closeModal } = useModal();
+
   return (
     <main id="login-wrapper" className="login-wrapper">
+      {isOpen && <SignupModal closeSignupModal={closeModal} />}
       <div className="absolute top-0 left-0 p-12 flex">
         <UnderlineButton path="/">
           <IoIosArrowBack />
@@ -29,7 +33,7 @@ export default function Login() {
         className="login-form"
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          handleLogin();
         }}
       >
         <h2 className="text-xl font-semibold mb-2">SR Portal Login</h2>
@@ -60,6 +64,10 @@ export default function Login() {
           Login
         </button>
 
+        <button className="register-btn" onClick={openModal} type="button">
+          Register
+        </button>
+
         <div className="flex gap-4 items-center justify-center">
           <span className="border-t-2 border-gray-400 w-4/12" />
           <span>Or continue with</span>
@@ -84,10 +92,6 @@ export default function Login() {
             Github
           </button>
         </div>
-
-        {/* <button className="register-btn" type="submit">
-          Register User
-        </button> */}
       </form>
     </main>
   );
