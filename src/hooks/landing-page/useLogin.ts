@@ -65,11 +65,8 @@ export function useLogin() {
   };
 
   const handleGuestLogin = () => {
-    // Call the login mutation
     loginGuestMutation({
       onCompleted: (data) => {
-        console.log("Guest Login successful:", data);
-
         setLoggedUser({
           id: "",
           username: "",

@@ -40,25 +40,26 @@ query Me {
   }
 }
 
-mutation CreateUser($data: CreateUserInput!) {
-  createUser(data: $data) {
-    id
-    firstname
-    lastname
-    email
-    username
-    role
-    password
-    createdAt
-    updatedAt
-  }
+mutation registerUser($data: CreateUserInput!) {
+  registerUser(data: $data)
+}
+
+mutation verifyEmail($token: Token!) {
+  verifyEmail(token: $token)
+}
+
+mutation resendVerificationEmail($email: String!) {
+  resendVerificationEmail(email: $email)
 }
 
 mutation UpsertUser($data: UpsertUserInput!) {
   upsertUser(data: $data) {
-    firstname
-    lastname
-    email
+    user {
+      firstname
+      lastname
+      email
+    }
+    token
   }
 }
 

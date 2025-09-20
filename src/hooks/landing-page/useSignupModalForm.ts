@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useCreateUserMutation } from "../../../generated/graphql";
+import { useRegisterUserMutation } from "../../../generated/graphql";
 import { toast } from "react-toastify";
 import { Role } from "../../../generated/graphql";
 
 export function useSignupModalForm(closeSignupModal: () => void) {
-  const [createUser] = useCreateUserMutation();
+  const [registerUser] = useRegisterUserMutation();
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -26,7 +26,7 @@ export function useSignupModalForm(closeSignupModal: () => void) {
       e.preventDefault();
       // Call the mutation to create a user
       const { firstname, lastname, email, username, password, role } = formData;
-      const res = await createUser({
+      const res = await registerUser({
         variables: {
           data: {
             firstname,
@@ -39,7 +39,9 @@ export function useSignupModalForm(closeSignupModal: () => void) {
         },
       });
 
-      if (res.data?.createUser) {
+      console.log("create user res", res);
+
+      if (res.data?.registerUser) {
         toast("Registration successful", {
           position: "top-right",
           hideProgressBar: false,
