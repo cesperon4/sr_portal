@@ -439,6 +439,16 @@
   }
 }
 
+@utility modal-wrapper {
+  @apply flex flex-col gap-4 bg-white w-4/12 p-8 rounded-xl;
+  .modal-wrapper-title {
+    @apply text-lg font-semibold;
+  }
+  .modal-btn {
+    @apply bg-blue-400 hover:bg-blue-500 p-2 text-white rounded cursor-pointer;
+  }
+}
+
 @utility auth-login {
   @apply cursor-pointer p-4 shadow-md border border-gray-100 rounded-xl flex gap-2 w-6/12 justify-center items-center hover:bg-gray-100;
 }

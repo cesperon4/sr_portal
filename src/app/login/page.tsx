@@ -15,14 +15,27 @@ import { LoginParams } from "@/types/user.interface";
 import UnderlineButton from "@/components/ui/underline-button";
 // import SingupMo from "@/components/user/registration-modal";
 import { SignupModal } from "@/components/landing-page/signup-modal";
+import EmailVerificationModal from "@/components/login/email-verification-modal";
 
 export default function Login() {
-  const { setLoginParams, handleLogin } = useLogin();
-  const { isOpen, openModal, closeModal } = useModal();
+  const signupModal = useModal();
+  const verificationModal = useModal();
+
+  const { setLoginParams, handleLogin, loginParams } = useLogin(
+    verificationModal.openModal
+  );
 
   return (
     <main id="login-wrapper" className="login-wrapper">
-      {isOpen && <SignupModal closeSignupModal={closeModal} />}
+      {signupModal.isOpen && (
+        <SignupModal closeSignupModal={signupModal.closeModal} />
+      )}
+      {verificationModal.isOpen && (
+        <EmailVerificationModal
+          closeVerificationModal={verificationModal.closeModal}
+          loginParams={loginParams}
+        />
+      )}
       <div className="absolute top-0 left-0 p-12 flex">
         <UnderlineButton path="/">
           <IoIosArrowBack />
@@ -64,7 +77,11 @@ export default function Login() {
           Login
         </button>
 
-        <button className="register-btn" onClick={openModal} type="button">
+        <button
+          className="register-btn"
+          onClick={signupModal.openModal}
+          type="button"
+        >
           Register
         </button>
 

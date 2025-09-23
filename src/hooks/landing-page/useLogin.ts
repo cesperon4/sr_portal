@@ -6,10 +6,9 @@ import { useLoginMutation } from "../../../generated/graphql";
 import { useLoginGuestMutation } from "../../../generated/graphql";
 
 import { LoginParams } from "@/types/user.interface";
-
 import { useUserContext } from "@/context/UserContext";
 
-export function useLogin() {
+export function useLogin(openVerificationModal: () => void) {
   const router = useRouter();
 
   const { setLoggedUser } = useUserContext();
@@ -38,6 +37,10 @@ export function useLogin() {
         },
       },
       onCompleted: (data) => {
+        // if (!data.login.user.emailVerified) {
+        //   openVerificationModal();
+        //   return;
+        // }
         setLoggedUser({
           id: data.login.user.id || "",
           username: data.login.user.username || "",
@@ -47,12 +50,11 @@ export function useLogin() {
           role: data.login.user.role || "",
           token: data.login.token || "",
         });
-        console.log("setting logged user");
         router.push("/dashboard");
       },
       onError: (error) => {
-        toast.dismiss();
-        console.log("error: ", error);
+        console.log("error");
+        // toast.dismiss();
         setTimeout(() => {
           toast(error.message, {
             type: "warning",
@@ -60,6 +62,10 @@ export function useLogin() {
             position: "top-right",
           });
         }, 0);
+
+        if (error.message === "Email not verified") {
+          openVerificationModal();
+        }
       },
     });
   };

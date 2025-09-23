@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Backdrop } from "../backdrop";
 import { Button } from "@mui/material";
 
@@ -9,8 +9,10 @@ interface SignupModalProps {
 }
 
 export function SignupModal({ closeSignupModal }: SignupModalProps) {
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+
   const { formData, handleChange, handleSubmit } =
-    useSignupModalForm(closeSignupModal);
+    useSignupModalForm(setRegisterSuccess);
   return (
     <Backdrop onClick={closeSignupModal}>
       <div
@@ -21,7 +23,20 @@ export function SignupModal({ closeSignupModal }: SignupModalProps) {
           className="flex flex-col gap-4 w-6/12 mx-auto"
           onSubmit={handleSubmit}
         >
-          <h2 className="font-semibold">Sign up</h2>
+          <div className="flex gap-4">
+            <h2 className="font-semibold">Sign up</h2>
+            {registerSuccess && (
+              <span className="text-green-500 font-semibold">
+                Registration Successful!
+              </span>
+            )}
+          </div>
+          {registerSuccess && (
+            <span className="text-yellow-500 font-semibold">
+              Please check email for verification link
+            </span>
+          )}
+
           <div className="form-row flex w-full gap-2">
             <input
               type="text"
@@ -83,6 +98,19 @@ export function SignupModal({ closeSignupModal }: SignupModalProps) {
           <Button variant="contained" type="submit" className="">
             Register
           </Button>
+          {registerSuccess && (
+            <Button
+              style={{
+                backgroundColor: "orange",
+                color: "white",
+              }}
+              variant="contained"
+              type="button"
+              className="bg-green-500"
+            >
+              Resend Verification Email
+            </Button>
+          )}
         </form>
       </div>
     </Backdrop>

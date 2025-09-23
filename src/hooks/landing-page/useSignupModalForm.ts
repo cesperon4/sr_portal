@@ -3,7 +3,9 @@ import { useRegisterUserMutation } from "../../../generated/graphql";
 import { toast } from "react-toastify";
 import { Role } from "../../../generated/graphql";
 
-export function useSignupModalForm(closeSignupModal: () => void) {
+export function useSignupModalForm(
+  setRegisterSuccess: React.Dispatch<React.SetStateAction<boolean>>
+) {
   const [registerUser] = useRegisterUserMutation();
 
   const [formData, setFormData] = useState({
@@ -39,8 +41,6 @@ export function useSignupModalForm(closeSignupModal: () => void) {
         },
       });
 
-      console.log("create user res", res);
-
       if (res.data?.registerUser) {
         toast("Registration successful", {
           position: "top-right",
@@ -48,7 +48,8 @@ export function useSignupModalForm(closeSignupModal: () => void) {
           autoClose: 2000,
           type: "success",
         });
-        closeSignupModal();
+
+        setRegisterSuccess(true);
       }
     } catch (error) {
       console.error("Error creating user:", error);

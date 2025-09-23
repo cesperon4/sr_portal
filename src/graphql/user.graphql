@@ -99,6 +99,7 @@ mutation login($data: LoginInput!) {
       username
       role
       password
+      emailVerified
       createdAt
       updatedAt
     }
