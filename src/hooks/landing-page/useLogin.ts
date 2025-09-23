@@ -8,7 +8,7 @@ import { useLoginGuestMutation } from "../../../generated/graphql";
 import { LoginParams } from "@/types/user.interface";
 import { useUserContext } from "@/context/UserContext";
 
-export function useLogin(openVerificationModal: () => void) {
+export function useLogin(openVerificationModal?: () => void) {
   const router = useRouter();
 
   const { setLoggedUser } = useUserContext();
@@ -54,7 +54,6 @@ export function useLogin(openVerificationModal: () => void) {
       },
       onError: (error) => {
         console.log("error");
-        // toast.dismiss();
         setTimeout(() => {
           toast(error.message, {
             type: "warning",
@@ -64,7 +63,7 @@ export function useLogin(openVerificationModal: () => void) {
         }, 0);
 
         if (error.message === "Email not verified") {
-          openVerificationModal();
+          if (openVerificationModal) openVerificationModal();
         }
       },
     });
