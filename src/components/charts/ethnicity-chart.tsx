@@ -54,7 +54,7 @@ export function EthnicityChart({
         />
       </div>
       <div
-        className="p-4 cursor-pointer h-320 w-10/12"
+        className="p-4 cursor-pointer h-250 w-8/12"
         onClick={() => {
           toggleChartModal(
             <Doughnut

@@ -10,7 +10,7 @@ interface SidebarProps {
 }
 export function Sidebar({ getButtonClass, updateSidebar }: SidebarProps) {
   return (
-    <div className="sidebar shadow-sm border border-gray-50 rounded flex flex-col gap-1">
+    <div className="sidebar shadow-sm border border-gray-50 rounded flex flex-col gap-1 ">
       <div className="flex items-center gap-1 mx-auto py-4 font-semibold">
         <span className="">Data Insights</span>
         <MdInsights />

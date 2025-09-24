@@ -128,7 +128,10 @@ export function Charts({
   }, [doughnutChartData]);
 
   //data insights sidebar
-  const [sidebarState, setSidebarState] = useState(initialSidebarState);
+  const [sidebarState, setSidebarState] = useState({
+    ...initialSidebarState,
+    Age: true,
+  });
 
   const getButtonClass = (key: keyof typeof initialSidebarState) => {
     return `px-24 text-gray-900 hover:bg-gray-100 ${
@@ -142,7 +145,7 @@ export function Charts({
   };
 
   return (
-    <div className="shadow flex gap-4 font-sans">
+    <div className="shadow flex gap-4 font-sans p-24">
       <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
       <div className="h-320 w-full">
         {sidebarState["Age"] && (

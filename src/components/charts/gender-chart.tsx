@@ -92,11 +92,13 @@ export function GenderChart({
           );
         }}
       >
-        <Pie
-          data={pieChartData}
-          options={{ responsive: true }}
-          className="bg-white cursor-pointer " // Fixed height (adjust as needed)
-        />
+        <div className="h-250">
+          <Pie
+            data={pieChartData}
+            options={{ responsive: true }}
+            className="bg-white cursor-pointer" // Fixed height (adjust as needed)
+          />
+        </div>
       </div>
     </div>
   );

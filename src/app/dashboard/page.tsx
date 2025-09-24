@@ -5,6 +5,7 @@ import { useQueryBuilder } from "../../api/queryBuilder"; // Adjust the import p
 import { Header } from "@/components/header";
 import { SelectColumnModal } from "@/components/data-table/select-column-modal";
 import { ProfileSettings } from "@/components/user/profile-settings";
+import CommunityContainer from "@/components/community/community-container";
 
 import { Filter } from "@/components/map/filter";
 //hooks
@@ -132,7 +133,7 @@ export default function Dashboard() {
         openSelectColumns={openSelectColumns}
         setIsProfileSettingsOpen={setIsProfileSettingsOpen}
       />
-      <main className="flex flex-col gap-8 w-full p-24">
+      <main className="flex flex-col gap-8 w-full">
         {selectColumns && (
           <SelectColumnModal
             handleClose={closeSelectColumns}
@@ -140,7 +141,7 @@ export default function Dashboard() {
           />
         )}
         {view === "Map" && (
-          <div className="flex w-full gap-4">
+          <div className="flex w-full gap-4 p-24">
             <Filter
               crimeFilterState={crimeFilterState}
               setCrimeFilterState={setCrimeFilterState}
@@ -151,7 +152,7 @@ export default function Dashboard() {
         )}
         {view === "Table" && renderDataTable()}
         {view === "Chart" && renderCharts()}
-        {view === "Community" && <div>Community</div>}
+        {view === "Community" && <CommunityContainer />}
       </main>
     </div>
   );
