@@ -38,7 +38,7 @@ export function Filter({
 
         <div className="flex gap-1">
           <Button
-            className="bg-gray-400 hover:bg-gray-300"
+            className="bg-gray-400 hover:bg-gray-300 rounded text-white cursor-pointer"
             size="sm"
             onClick={() => {
               clearAllCriminalFilters();

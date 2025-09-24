@@ -23,32 +23,14 @@ import { useRouter } from "next/navigation";
 
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { useSession } from "next-auth/react";
-// import { useUserContext } from "@/context/UserContext";
 
 export default function Dashboard() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  // const { loggedUser, setLoggedUser } = useUserContext();
-
   const { loading, isAuthenticated } = useAuth();
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
-
-  // useEffect(() => {
-  //   if (loggedUser.id === "") {
-  //     setLoggedUser({
-  //       id: session?.user.id || "",
-  //       username: session?.user.name || "",
-  //       email: session?.user.email || "",
-  //       firstname: session?.user.firstname || "",
-  //       lastname: session?.user.lastname || "",
-  //       role: session?.user.role || "",
-  //       token: session?.user.backendToken || "",
-  //       image: session?.user.image || "",
-  //     });
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (!loading && !isAuthenticated && !session) {
@@ -139,7 +121,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-8 sm:p-20 font-(family-name:--font-geist-sans)">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen pb-20 gap-8 font-(family-name:--font-geist-sans)">
       {isProfileSettingsOpen && (
         <ProfileSettings setIsProfileSettingsOpen={setIsProfileSettingsOpen} />
       )}
@@ -150,7 +132,7 @@ export default function Dashboard() {
         openSelectColumns={openSelectColumns}
         setIsProfileSettingsOpen={setIsProfileSettingsOpen}
       />
-      <main className="flex flex-col gap-8 w-full">
+      <main className="flex flex-col gap-8 w-full p-24">
         {selectColumns && (
           <SelectColumnModal
             handleClose={closeSelectColumns}
