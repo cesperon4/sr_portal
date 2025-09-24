@@ -405,7 +405,10 @@
 }
 
 @utility dashboard-header {
-  @apply flex gap-4 items-center mr-auto w-full border-b-2 pb-4;
+  @apply w-full border-b-1 border-gray-400;
+  .header-main {
+    @apply flex gap-4 items-center py-4 px-12 mt-20;
+  }
 
   .map-btn {
     @apply font-semibold rounded cursor-pointer;

@@ -37,10 +37,6 @@ export function useLogin(openVerificationModal?: () => void) {
         },
       },
       onCompleted: (data) => {
-        // if (!data.login.user.emailVerified) {
-        //   openVerificationModal();
-        //   return;
-        // }
         setLoggedUser({
           id: data.login.user.id || "",
           username: data.login.user.username || "",
