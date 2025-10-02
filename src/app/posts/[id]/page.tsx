@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 import { FiShield } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Image from "next/image";
@@ -9,15 +9,13 @@ import CommentBox from "@/components/community/comment-box";
 
 type Params = { id: string };
 
-// Make the page async so Next.js knows it might await data
+// mark the page as async to satisfy Next 15 types
 export default async function PostPage({ params }: { params: Params }) {
   const { id } = params;
 
-  // Fetch post data if needed:
+  // example: could fetch post here
   // const post = await fetchPost(id);
   // if (!post) return notFound();
-
-  if (false) return notFound();
 
   return (
     <article className="flex flex-col gap-4 w-11/12 md:w-6/12 mx-auto my-8">
