@@ -13,7 +13,6 @@ import { IoIosArrowBack } from "react-icons/io";
 import { LoginParams } from "@/types/user.interface";
 
 import UnderlineButton from "@/components/ui/underline-button";
-// import SingupMo from "@/components/user/registration-modal";
 import { SignupModal } from "@/components/landing-page/signup-modal";
 import EmailVerificationModal from "@/components/login/email-verification-modal";
 

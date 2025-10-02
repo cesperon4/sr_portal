@@ -25,13 +25,19 @@ import { useRouter } from "next/navigation";
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { useSession } from "next-auth/react";
 
+import { useSearchParams } from "next/navigation";
+
 export default function Dashboard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const { data: session } = useSession();
 
   const { loading, isAuthenticated } = useAuth();
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
+
+  const selectedView = searchParams.get("view") || "Map";
 
   useEffect(() => {
     if (!loading && !isAuthenticated && !session) {
@@ -86,7 +92,12 @@ export default function Dashboard() {
     orderBy: "",
   });
 
-  const [view, setView] = useState<HeaderSelect>("Map");
+  const [view, setView] = useState<HeaderSelect>(selectedView as HeaderSelect);
+
+  useEffect(() => {
+    router.replace(`/dashboard?view=${view.toLowerCase()}`);
+  }, [view, router]);
+
   const toggleView = (view: HeaderSelect) => setView(view);
 
   const { renderMap } = useRenderMap({
