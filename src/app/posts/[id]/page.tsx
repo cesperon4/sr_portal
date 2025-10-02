@@ -2,24 +2,23 @@ import { notFound } from "next/navigation";
 import { FiShield } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Image from "next/image";
-import PostFooter from "../../../components/community/post-footer";
+import PostFooter from "@/components/community/post-footer";
 import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 
-// Define explicit type for route params
-type Params = {
-  id: string;
-  type: string;
-};
-
 interface PageProps {
-  params: Params;
+  params: {
+    id: string;
+    type: string;
+  };
 }
 
-export default function PostPage({ params }: PageProps) {
-  // Example guard
-  if (!params.id) return notFound();
+// Mark component as async
+export default async function PostPage({ params }: PageProps) {
+  // Optional: fetch post data
+  // const post = await fetchPost(params.id);
+  // if (!post) return notFound();
 
   return (
     <article className="flex flex-col gap-4 w-11/12 md:w-6/12 mx-auto my-8">
