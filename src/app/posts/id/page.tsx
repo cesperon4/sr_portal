@@ -7,17 +7,17 @@ import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 
-// Define the params type
-type PostPageParams = {
-  id: string;
-};
+type Params = { id: string };
 
-export default async function PostPage({ params }: { params: PostPageParams }) {
-  // Example: fetch the post using params.id
-  // const post = await fetchPost(params.id);
+// Make the page async so Next.js knows it might await data
+export default async function PostPage({ params }: { params: Params }) {
+  const { id } = params;
+
+  // Fetch post data if needed:
+  // const post = await fetchPost(id);
   // if (!post) return notFound();
 
-  if (false) return notFound(); // placeholder
+  if (false) return notFound();
 
   return (
     <article className="flex flex-col gap-4 w-11/12 md:w-6/12 mx-auto my-8">
@@ -28,7 +28,7 @@ export default async function PostPage({ params }: { params: PostPageParams }) {
         </div>
       </Link>
 
-      <h1 className="text-2xl font-bold">Post {params.id}</h1>
+      <h1 className="text-2xl font-bold">Post {id}</h1>
 
       <div className="shadow w-full cursor-pointer px-8 py-2 border border-gray-300 rounded-xl">
         <div className="post-header flex gap-2 items-center">
@@ -42,7 +42,7 @@ export default async function PostPage({ params }: { params: PostPageParams }) {
 
         <Image
           aria-hidden
-          src={"/police_img.jpg"}
+          src="/police_img.jpg"
           alt="Window icon"
           width={500}
           height={200}
