@@ -7,13 +7,14 @@ import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 
-type Params = { id: string };
+// Define params as a Promise
+type Params = Promise<{ id: string }>;
 
-// mark the page as async to satisfy Next 15 types
 export default async function PostPage({ params }: { params: Params }) {
-  const { id } = params;
+  // Await the params promise
+  const { id } = await params;
 
-  // example: could fetch post here
+  // You could fetch your post here
   // const post = await fetchPost(id);
   // if (!post) return notFound();
 
