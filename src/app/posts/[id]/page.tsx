@@ -7,16 +7,18 @@ import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 
-// Define explicit type for params
-interface PostPageProps {
-  params: {
-    id: string;
-    type: string;
-  };
+// Define explicit type for route params
+type Params = {
+  id: string;
+  type: string;
+};
+
+interface PageProps {
+  params: Params;
 }
 
-export default function PostPage({ params }: PostPageProps) {
-  // Example static guard (replace with real data fetching)
+export default function PostPage({ params }: PageProps) {
+  // Example guard
   if (!params.id) return notFound();
 
   return (
