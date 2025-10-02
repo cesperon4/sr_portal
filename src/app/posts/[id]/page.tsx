@@ -7,16 +7,13 @@ import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 
-interface PageProps {
-  params: {
-    id: string;
-    type: string;
-  };
-}
-
 // Mark component as async
-export default async function PostPage({ params }: PageProps) {
-  // Optional: fetch post data
+export default async function PostPage({
+  params,
+}: {
+  params: { id: string; type?: string }; // make 'type' optional if not always present
+}) {
+  // Example: optional post fetch
   // const post = await fetchPost(params.id);
   // if (!post) return notFound();
 
