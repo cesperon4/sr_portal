@@ -4,7 +4,7 @@ import Header from "./header";
 import { useGetPostsQuery } from "../../../generated/graphql";
 
 function Feed() {
-  const { data, loading, error, refetch } = useGetPostsQuery();
+  const { data, loading, error } = useGetPostsQuery();
 
   if (loading) {
     return <div>Loading...</div>;
