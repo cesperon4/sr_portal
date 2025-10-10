@@ -11,6 +11,7 @@ import { IoMdBook } from "react-icons/io";
 import { IoMapOutline } from "react-icons/io5";
 import { CiSettings } from "react-icons/ci";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { MdOutlineAddBox } from "react-icons/md";
 
 import { useLogoutMutation } from "../../generated/graphql";
 
@@ -19,6 +20,8 @@ import { useUserContext } from "@/context/UserContext";
 import { signOut } from "next-auth/react";
 
 import Image from "next/image";
+
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   view: HeaderSelect;
@@ -36,6 +39,7 @@ export function Header({
 }: HeaderProps) {
   const { loggedUser, clearLoggedUser } = useUserContext();
   const [logoutMutation] = useLogoutMutation();
+  const router = useRouter();
   return (
     <header className="dashboard-header font-medium">
       <div className="header-main">
@@ -101,6 +105,18 @@ export function Header({
         )}
 
         <div className="flex gap-2 items-center ml-auto">
+          {view === "Community" && (
+            <button
+              className="flex items-center gap-2 hover:bg-gray-100 rounded-xl p-2 cursor-pointer ml-auto"
+              onClick={() => {
+                router.push("/community/submit");
+              }}
+            >
+              <MdOutlineAddBox size={24} />
+
+              <span>create</span>
+            </button>
+          )}
           <span className="font-medium">
             {loggedUser.username ? loggedUser.username : loggedUser.role}
           </span>
