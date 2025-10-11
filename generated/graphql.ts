@@ -94,6 +94,8 @@ export type CreatePostCommentInput = {
 export type CreatePostInput = {
   arrestLogId?: InputMaybe<Scalars['ID']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
+  imageBase64?: InputMaybe<Scalars['String']['input']>;
+  imageName?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
@@ -240,6 +242,7 @@ export type Post = {
   body?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
   postComments?: Maybe<Array<Maybe<PostComment>>>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -372,12 +375,12 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
 
 export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null }> };
+export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null }> };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -393,6 +396,13 @@ export type UpdatePostMutationVariables = Exact<{
 
 
 export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id?: string | null } };
+
+export type CreatePostCommentMutationVariables = Exact<{
+  data: CreatePostCommentInput;
+}>;
+
+
+export type CreatePostCommentMutation = { __typename?: 'Mutation', createPostComment: { __typename?: 'PostComment', id?: string | null, postId?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -515,6 +525,11 @@ export const GetPostDocument = gql`
       createdAt
       updatedAt
     }
+    user {
+      id
+      username
+    }
+    imageUrl
   }
 }
     `;
@@ -561,6 +576,7 @@ export const GetPostsDocument = gql`
     createdAt
     updatedAt
     arrestLogId
+    imageUrl
     postComments {
       id
       body
@@ -593,6 +609,10 @@ export const GetPostsDocument = gql`
       UNIQUEKEY
       createdAt
       updatedAt
+    }
+    user {
+      id
+      username
     }
   }
 }
@@ -696,6 +716,43 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
+export const CreatePostCommentDocument = gql`
+    mutation CreatePostComment($data: CreatePostCommentInput!) {
+  createPostComment(data: $data) {
+    id
+    postId
+    body
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreatePostCommentMutationFn = Apollo.MutationFunction<CreatePostCommentMutation, CreatePostCommentMutationVariables>;
+
+/**
+ * __useCreatePostCommentMutation__
+ *
+ * To run a mutation, you first call `useCreatePostCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostCommentMutation, { data, loading, error }] = useCreatePostCommentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePostCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostCommentMutation, CreatePostCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePostCommentMutation, CreatePostCommentMutationVariables>(CreatePostCommentDocument, options);
+      }
+export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePostCommentMutation>;
+export type CreatePostCommentMutationResult = Apollo.MutationResult<CreatePostCommentMutation>;
+export type CreatePostCommentMutationOptions = Apollo.BaseMutationOptions<CreatePostCommentMutation, CreatePostCommentMutationVariables>;
 export const GetUserDocument = gql`
     query GetUser($id: ID!) {
   user(id: $id) {

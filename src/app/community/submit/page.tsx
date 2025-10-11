@@ -5,32 +5,51 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUserContext } from "@/context/UserContext";
 import { useCreatePostMutation } from "../../../../generated/graphql";
+import { useGetPostsQuery } from "../../../../generated/graphql";
+import { toast } from "react-toastify";
+import clsx from "clsx";
 
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type PostType = "post" | "image" | "link";
+
+interface PostImage {
+  imageName: string | null;
+  imageBase64: string | null;
+}
+
 export default function Submit() {
-  //   const router = useRouter();
+  const { refetch } = useGetPostsQuery();
+  const router = useRouter();
   const [createPost] = useCreatePostMutation();
   const { loggedUser } = useUserContext();
   const [activeTab, setActiveTab] = useState<PostType>("post");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<PostImage>({
+    imageName: null,
+    imageBase64: null,
+  });
   const [linkUrl, setLinkUrl] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
-      console.log("loggedUser: ", loggedUser.id);
-      const data =
-        activeTab === "post"
-          ? { title, body: content }
-          : activeTab === "image"
-          ? { type: "image", title, image }
-          : { type: "link", title, linkUrl };
 
-      console.log("Submitted:", data);
+      if (!loggedUser.id) {
+        toast("You must be logged in to submit a post", {
+          type: "warning",
+          autoClose: 2000,
+          position: "top-right",
+        });
+        return;
+      }
+      const data = {
+        title,
+        body: content,
+        imageBase64: image.imageBase64,
+        imageName: image.imageName,
+      };
 
       await createPost({
         variables: {
@@ -39,14 +58,14 @@ export default function Submit() {
             userId: loggedUser.id,
           },
         },
-        onCompleted: (data) => {
-          console.log("Post created successfully: ", data);
+        onCompleted: () => {
+          refetch();
+          router.push("/dashboard?view=Community");
         },
         onError: (error) => {
           console.log("Error creating post: ", error);
         },
       });
-      // router.push("/dashboard?view=Community");
     } catch (err) {
       console.log(err);
     }
@@ -54,10 +73,17 @@ export default function Submit() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    setImage((prev) => ({
+      ...prev,
+      imageName: file?.name || "",
+    }));
+
     if (!file) return;
     const reader = new FileReader();
-    reader.onloadend = () => setImage(reader.result as string);
-    reader.readAsDataURL(file);
+
+    reader.onloadend = () =>
+      setImage((prev) => ({ ...prev, imageBase64: reader.result as string })); //tell reader what to do after reading the file
+    reader.readAsDataURL(file); //envoke reading the file
   };
 
   return (
@@ -79,11 +105,13 @@ export default function Submit() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab as PostType)}
-            className={`flex-1 py-2 text-center font-medium border-b-2 capitalize cursor-pointer ${
-              activeTab === tab
-                ? "border-blue-600 text-blue-400"
-                : "border-transparent text-gray-500 hover:text-blue-400"
-            }`}
+            className={clsx(
+              "flex-1 py-2 text-center font-medium border-b-2 capitalize cursor-pointer",
+              {
+                "border-blue-600 text-blue-400": activeTab === tab,
+                "border-transparent text-gray-500": activeTab !== tab,
+              }
+            )}
           >
             {tab}
           </button>
@@ -129,13 +157,13 @@ export default function Submit() {
               onChange={handleImageUpload}
               className="hidden"
             />
-            {!image ? (
+            {!image.imageBase64 ? (
               <p className="text-gray-500">Click or drag to upload an image</p>
             ) : (
               <div className="relative flex justify-center">
                 <div className="relative w-full max-w-md h-64">
                   <Image
-                    src={image}
+                    src={image.imageBase64 || ""}
                     alt="Preview"
                     fill
                     className="object-contain rounded-lg"
@@ -144,7 +172,9 @@ export default function Submit() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setImage(null)}
+                  onClick={() =>
+                    setImage(() => ({ imageBase64: null, imageName: null }))
+                  }
                   className="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-md"
                 >
                   Remove
@@ -184,7 +214,11 @@ export default function Submit() {
 
         <button
           type="submit"
-          className="w-full bg-blue-400 hover:bg-blue-700 text-white py-2 px-4 rounded font-medium transition-colors cursor-pointer"
+          className={clsx(
+            "w-full text-white py-2 px-4 rounded font-medium transition-colors cursor-pointer",
+            { "bg-gray-400 cursor-not-allowed": !loggedUser.id },
+            { "bg-blue-600 hover:bg-blue-700": loggedUser.id }
+          )}
         >
           Submit
         </button>

@@ -40,6 +40,11 @@ query GetPost($id: ID!) {
       createdAt
       updatedAt
     }
+    user {
+      id
+      username
+    }
+    imageUrl
   }
 }
 
@@ -52,6 +57,7 @@ query GetPosts {
     createdAt
     updatedAt
     arrestLogId
+    imageUrl
     postComments {
       id
       body
@@ -85,6 +91,10 @@ query GetPosts {
       createdAt
       updatedAt
     }
+    user {
+      id
+      username
+    }
   }
 }
 
@@ -97,5 +107,15 @@ mutation CreatePost($data: CreatePostInput!) {
 mutation UpdatePost($id: ID!, $data: UpdatePostInput!) {
   updatePost(id: $id, data: $data) {
     id
+  }
+}
+
+mutation CreatePostComment($data: CreatePostCommentInput!) {
+  createPostComment(data: $data) {
+    id
+    postId
+    body
+    createdAt
+    updatedAt
   }
 }
