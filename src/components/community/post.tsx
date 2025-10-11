@@ -12,7 +12,7 @@ type PostProps = { post: PostType };
 
 function Post({ post }: PostProps) {
   return (
-    <Link href={`/posts/${44}`} className="block">
+    <Link href={`/posts/${post.id}`} className="block">
       <div className="shadow w-full cursor-pointer px-8 py-2 border-gray-300">
         <div className="post-header flex gap-2 items-center">
           <FiShield size={18} />
@@ -21,17 +21,18 @@ function Post({ post }: PostProps) {
 
           <HiDotsHorizontal size={18} className="ml-auto" />
         </div>
+        <span>{post.user?.username}</span>
         <h2 className="font-medium text-lg">{post.title}</h2>
         <Image
           aria-hidden
-          src={"/police_img.jpg"}
+          src={post.imageUrl || "/police_img.jpg"}
           alt="Window icon"
           width={500}
           height={200}
-          className="w-full my-4 rounded-3xl mx-auto shadow-md border border-gray-300"
+          className="w-full h-150 my-4 rounded-3xl mx-auto shadow-md border border-gray-300"
         />
 
-        <PostFooter />
+        <PostFooter commentCount={post.postComments?.length || 0} />
       </div>
     </Link>
   );

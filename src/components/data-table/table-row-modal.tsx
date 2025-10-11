@@ -46,7 +46,7 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
       }}
     >
       <div
-        className="bg-white rounded-lg p-6 shadow-lg w-280 overflow-auto max-h-160"
+        className="bg-white rounded-lg p-6 shadow-lg w-6/12 overflow-auto max-h-8/12"
         onClick={(e) => {
           e.stopPropagation();
         }}

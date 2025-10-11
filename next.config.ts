@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
   images: {
     remotePatterns: [
@@ -16,6 +15,12 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         port: "",
         pathname: "/**", // allow all paths from this host
+      },
+      {
+        protocol: "https",
+        hostname: "xplwtqeujchlkoedjqto.supabase.co", // 👈 your Supabase storage domain
+        port: "",
+        pathname: "/storage/v1/object/public/**", // allow any object in public buckets
       },
     ],
   },

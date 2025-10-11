@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
 import { useDataContext } from "../../context/DataContext";
 import { TableRowModal } from "@/components/data-table/table-row-modal";
 import { TiArrowSortedUp, TiArrowSortedDown } from "react-icons/ti";
+import clsx from "clsx";
 
 interface ArrestLogType {
   attributes: {
@@ -87,10 +88,6 @@ export function DataTable({
     setTableRow(false);
   };
 
-  useEffect(() => {
-    console.log("headerfilter2: ", headerFilter);
-  }, [headerFilter]);
-
   return (
     <div className={`flex flex-col gap-4 justify-center items-center p-24`}>
       {tableRow && tableRowModalData && (
@@ -109,11 +106,14 @@ export function DataTable({
                       <span>{x.name}</span>
                       <div>
                         <TiArrowSortedUp
-                          className={`hover:text-gray-200 cursor-pointer ${
-                            headerFilter === x.name &&
-                            filterDirection === "ASC" &&
-                            "text-yellow-400"
-                          }`}
+                          className={clsx(
+                            "hover:text-gray-200 cursor-pointer",
+                            {
+                              "text-yellow-400":
+                                headerFilter === x.name &&
+                                filterDirection === "ASC",
+                            }
+                          )}
                           onClick={() => {
                             setHeaderFilter(x.name);
                             setFilterDirection("ASC");
@@ -144,7 +144,7 @@ export function DataTable({
               return (
                 <TableRow
                   key={arrestLog?.attributes.OBJECTID}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-gray-100"
                   onClick={() => {
                     openTableRow(arrestLog);
                   }}
