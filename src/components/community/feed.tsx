@@ -59,7 +59,7 @@ function Feed() {
 
   if (loading && posts.length === 0) return <p>Loading...</p>;
   return (
-    <div className="flex flex-col gap-2 w-11/12 md:w-6/12">
+    <div className="flex flex-col gap-2 w-11/12 md:w-5/12">
       {/* <Header /> */}
       {posts.map((post) => (
         <Post key={post.id} post={post} />

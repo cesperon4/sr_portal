@@ -392,14 +392,14 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
 
 export type GetPostsQueryVariables = Exact<{
   data?: InputMaybe<PostsInput>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } | null> | null }> } };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -514,6 +514,8 @@ export const GetPostDocument = gql`
     postComments {
       id
       body
+      createdAt
+      updatedAt
     }
     arrestLog {
       id
@@ -604,6 +606,8 @@ export const GetPostsDocument = gql`
       postComments {
         id
         body
+        createdAt
+        updatedAt
       }
     }
     cursor

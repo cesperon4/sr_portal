@@ -9,11 +9,15 @@ import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 import { useCreatePostCommentMutation } from "../../../generated/graphql";
+import { timeAgo } from "@/lib/time";
+import { useUserContext } from "@/context/UserContext";
 
 interface PostDetailProps {
   id: string;
 }
+
 function PostDetail({ id }: PostDetailProps) {
+  const { loggedUser } = useUserContext();
   const [createPostComment] = useCreatePostCommentMutation();
   const { data, loading, error, refetch } = useGetPostQuery({
     variables: { id },
@@ -27,7 +31,7 @@ function PostDetail({ id }: PostDetailProps) {
     return <div>Loading...</div>;
   }
 
-  if (!data?.post) {
+  if (!data?.post || !data) {
     return <div>Post not found</div>;
   }
 
@@ -37,7 +41,7 @@ function PostDetail({ id }: PostDetailProps) {
     // Implement comment submission logic here
 
     createPostComment({
-      variables: { data: { postId: data.post.id, body: text } },
+      variables: { data: { postId: loggedUser.id, body: text } },
       onCompleted: (data) => {
         console.log("Comment created: ", data);
         refetch();
@@ -64,7 +68,7 @@ function PostDetail({ id }: PostDetailProps) {
           <span>2 days ago</span>
           <HiDotsHorizontal size={18} className="ml-auto" />
         </div>
-        <span>{data.post.user?.username}</span>
+        <span className="font-semibold">{data.post.user?.username}</span>
 
         <h1 className="text-2xl font-bold">{data.post.title}</h1>
 
@@ -85,8 +89,14 @@ function PostDetail({ id }: PostDetailProps) {
       {data.post?.postComments?.map((comment) => {
         if (!comment) return null; // skip null comments
         return (
-          <div key={comment.id}>
-            <p>{comment.body}</p>
+          <div key={comment.id} className="flex flex-col">
+            <div className="comment-header flex gap-2 items-center">
+              <span className="font-semibold">
+                {data.post?.user?.username ?? ""}
+              </span>
+              <span>{`${timeAgo(comment.updatedAt)}`}</span>
+            </div>
+            <p className="ml-2">{comment.body}</p>
           </div>
         );
       })}
