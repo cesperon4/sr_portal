@@ -152,7 +152,7 @@ export default function Dashboard() {
           />
         )}
         {view === "Map" && (
-          <div className="flex w-full gap-4 p-24">
+          <div className="flex w-full gap-4 h-[60vh]">
             <Filter
               crimeFilterState={crimeFilterState}
               setCrimeFilterState={setCrimeFilterState}

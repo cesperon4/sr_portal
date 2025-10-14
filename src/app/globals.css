@@ -273,6 +273,10 @@
   }
 }
 
+@utility data-card {
+  @apply shadow-md rounded flex flex-col justify-center gap-2 items-center border py-4 px-20 text-gray-700;
+}
+
 @utility cta-wrapper {
   @apply relative z-20 cursor-pointer;
 }

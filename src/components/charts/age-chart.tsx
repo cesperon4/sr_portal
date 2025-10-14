@@ -20,8 +20,8 @@ export function AgeCharts({
   toggleChartModal,
 }: AgeChartsProps) {
   return (
-    <div className="flex gap-8">
-      <div className="w-2/12 flex flex-col gap-4">
+    <div className="flex flex-col items-center mr-4">
+      <div className="flex gap-4 h-[10vh]">
         <ChartCard
           title={"Youngest Arrest Age"}
           stat={youngestArrestAge}
@@ -44,7 +44,7 @@ export function AgeCharts({
         />
       </div>
       <div
-        className="rounded cursor-pointer h-240 w-full"
+        className="rounded cursor-pointer w-full h-[50vh]"
         onClick={() => {
           toggleChartModal(
             <Bar
@@ -85,7 +85,7 @@ export function AgeCharts({
               },
             },
           }}
-          className="cursor-pointer w-full" // Fixed height (adjust as needed)
+          className="cursor-pointer w-full mx-auto" // Fixed height (adjust as needed)
         />
       </div>
     </div>

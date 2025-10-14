@@ -41,7 +41,7 @@ export function Header({
   const [logoutMutation] = useLogoutMutation();
   const router = useRouter();
   return (
-    <header className="dashboard-header font-medium">
+    <header className="dashboard-header font-medium mb-4">
       <div className="header-main">
         <span className="font-semibold">SR PORTAL</span>
         <ModeToggle />

@@ -134,7 +134,7 @@ export function Charts({
   });
 
   const getButtonClass = (key: keyof typeof initialSidebarState) => {
-    return `px-24 text-gray-900 hover:bg-gray-100 ${
+    return `px-24 text-gray-900 hover:bg-gray-100 cursor-pointer rounded-md ${
       sidebarState[key] ? "bg-gray-100" : "bg-white"
     }`;
   };
@@ -145,9 +145,9 @@ export function Charts({
   };
 
   return (
-    <div className="shadow flex gap-4 font-sans p-24">
+    <div className="flex gap-4 font-sans h-[60vh]">
       <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
-      <div className="h-320 w-full">
+      <div className="w-full">
         {sidebarState["Age"] && (
           <AgeCharts
             youngestArrestAge={youngestArrestAge}

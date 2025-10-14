@@ -37,8 +37,8 @@ export function LocationChart({
 
   return (
     <div className="flex gap-2 w-full">
-      <div className="flex flex-col gap-4 w-2/12">
-        <div className="rounded p-4 flex flex-col gap-2 items-start ">
+      <div className="flex flex-col gap-4">
+        <div className="data-card">
           <h2>Location With Highest # of Arrests</h2>
           <Table>
             <TableCaption>{""}</TableCaption>
@@ -76,7 +76,7 @@ export function LocationChart({
         />
       </div>
       <div
-        className="w-10/12 "
+        className="flex justify-center w-full h-[60vh]"
         onClick={() => {
           toggleChartModal(
             <Bar
@@ -106,7 +106,7 @@ export function LocationChart({
               },
             },
           }}
-          className="bg-white cursor-pointer w-full"
+          className="cursor-pointer h-full w-full"
         />
       </div>
     </div>

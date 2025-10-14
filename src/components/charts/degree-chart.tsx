@@ -22,9 +22,9 @@ export function DegreeChart({
     return getMinChartData(barChartDataDegree);
   }, [barChartDataDegree]);
   return (
-    <div className="flex gap-8">
-      <div className="flex flex-col w-2/12">
-        <div className="flex flex-col gap-2">
+    <div className="flex flex-col items-center justify-center gap-8">
+      <div className="flex h-[8vh]">
+        <div className="flex gap-4">
           <ChartCard
             title={"Degree with Most Arrests"}
             stat={highestArrestDegree}
@@ -38,7 +38,7 @@ export function DegreeChart({
         </div>
       </div>
       <div
-        className="p-4 rounded w-10/12"
+        className="p-4 rounded h-[52vh] w-full cursor-pointer"
         onClick={() => {
           toggleChartModal(
             <Bar
@@ -56,7 +56,7 @@ export function DegreeChart({
         <Bar
           data={barChartDataDegree}
           options={{ responsive: true }}
-          className="bg-white cursor-pointer w-full h-80" // Fixed height (adjust as needed)
+          className="bg-white cursor-pointer w-full mx-auto" // Fixed height (adjust as needed)
         />
       </div>
     </div>

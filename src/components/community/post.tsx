@@ -6,7 +6,7 @@ import PostFooter from "./post-footer";
 import { GetPostsQuery } from "../../../generated/graphql";
 import Link from "next/link";
 
-type PostType = GetPostsQuery["posts"][number];
+type PostType = GetPostsQuery["posts"]["posts"][number];
 
 type PostProps = { post: PostType };
 

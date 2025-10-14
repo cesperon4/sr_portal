@@ -36,9 +36,9 @@ export function GenderChart({
   }, [pieChartData]);
 
   return (
-    <div className="h-320 flex gap-12">
-      <div className="flex flex-col w-2/12 gap-4">
-        <div className="rounded p-4 flex flex-col gap-2 items-start ">
+    <div className="flex justify-center gap-8">
+      <div className="flex flex-col items-center justify-center gap-4 h-[60vh]">
+        <div className="data-card">
           <h2>Arrests by Gender</h2>
           <Table>
             <TableCaption>{""}</TableCaption>
@@ -77,7 +77,7 @@ export function GenderChart({
         </div>
       </div>
       <div
-        className="p-4 rounded cursor-pointer w-10/12 "
+        className="p-4 rounded cursor-pointer h-[60vh]"
         onClick={() => {
           toggleChartModal(
             <Pie
@@ -92,13 +92,11 @@ export function GenderChart({
           );
         }}
       >
-        <div className="h-250">
-          <Pie
-            data={pieChartData}
-            options={{ responsive: true }}
-            className="bg-white cursor-pointer" // Fixed height (adjust as needed)
-          />
-        </div>
+        <Pie
+          data={pieChartData}
+          options={{ responsive: true }}
+          className="bg-white cursor-pointer w-full h-full" // Fixed height (adjust as needed)
+        />
       </div>
     </div>
   );

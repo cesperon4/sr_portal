@@ -24,9 +24,9 @@ export function ChargeChart({
     return getMinChartData(lineChartDataChargeDescription);
   }, [lineChartDataChargeDescription]);
   return (
-    <div className="flex gap-8">
-      <div className="flex flex-col gap-4 w-2/12">
-        <div className="shadow rounded p-4 flex flex-col gap-2 items-start border-4 border-red-50">
+    <div className="flex">
+      <div className="flex flex-col gap-4">
+        <div className="data-card">
           <h2>Highest Ocurring Charge</h2>
 
           {highestOccurringCharge?.map((street, index) => {
@@ -50,7 +50,7 @@ export function ChargeChart({
         />
       </div>
       <div
-        className="w-10/12"
+        className="full h-[60vh] mr-4"
         onClick={() => {
           toggleChartModal(
             <Line
@@ -68,7 +68,7 @@ export function ChargeChart({
         <Line
           data={lineChartDataChargeDescription}
           options={{ responsive: true }}
-          className="bg-white cursor-pointer w-full h-80" // Fixed height (adjust as needed)
+          className="bg-white cursor-pointer w-full h-full" // Fixed height (adjust as needed)
         />
       </div>
     </div>

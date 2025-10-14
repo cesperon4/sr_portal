@@ -29,7 +29,7 @@ export function Filter({
   };
 
   return (
-    <div className="shadow border border-gray-50 rounded p-8">
+    <div className="shadow border-2 border-gray-100 rounded p-8 overflow-auto">
       <header className="flex items-center justify-between mb-4">
         <div className="flex gap-1 items-center">
           <h2 className="text-2xl font-bold">Filters</h2>

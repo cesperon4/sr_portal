@@ -260,6 +260,18 @@ export type PostComment = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
+export type PostsInput = {
+  cursor?: InputMaybe<Scalars['Int']['input']>;
+  limit: Scalars['Int']['input'];
+};
+
+export type PostsResponse = {
+  __typename?: 'PostsResponse';
+  cursor?: Maybe<Scalars['Int']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  posts: Array<Post>;
+};
+
 export type Query = {
   __typename?: 'Query';
   arrestLog: ArrestLog;
@@ -269,7 +281,7 @@ export type Query = {
   post: Post;
   postComment: PostComment;
   postComments: Array<PostComment>;
-  posts: Array<Post>;
+  posts: PostsResponse;
   user: User;
   users: Array<User>;
 };
@@ -292,6 +304,11 @@ export type QueryPostArgs = {
 
 export type QueryPostCommentArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryPostsArgs = {
+  data?: InputMaybe<PostsInput>;
 };
 
 
@@ -377,10 +394,12 @@ export type GetPostQueryVariables = Exact<{
 
 export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
 
-export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPostsQueryVariables = Exact<{
+  data?: InputMaybe<PostsInput>;
+}>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null }> };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null } | null> | null }> } };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -567,53 +586,28 @@ export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
 export type GetPostSuspenseQueryHookResult = ReturnType<typeof useGetPostSuspenseQuery>;
 export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
 export const GetPostsDocument = gql`
-    query GetPosts {
-  posts {
-    id
-    title
-    body
-    userId
-    createdAt
-    updatedAt
-    arrestLogId
-    imageUrl
-    postComments {
+    query GetPosts($data: PostsInput) {
+  posts(data: $data) {
+    posts {
       id
+      title
       body
-    }
-    arrestLog {
-      id
-      AGE
-      ARREST_STATUS
-      ArrestLocationAptFlr
-      ArrestLocationCity
-      ArrestLocationStreet
-      ArrestLocationStreetNBR
-      Arrest_Charge
-      Arrest_ID
-      Case_Number
-      Charge_Description
-      Charge_Sequence
-      DATE_ARRESTED
-      DOB
-      Degree
-      FIRSTNAME
-      LASTNAME
-      MIDDLENAME
-      OBJECTID
-      OBJECTID_1
-      RACE
-      SEX
-      SUFFIX
-      TIME_ARREST
-      UNIQUEKEY
+      userId
       createdAt
       updatedAt
+      arrestLogId
+      imageUrl
+      user {
+        id
+        username
+      }
+      postComments {
+        id
+        body
+      }
     }
-    user {
-      id
-      username
-    }
+    cursor
+    hasNextPage
   }
 }
     `;
@@ -630,6 +624,7 @@ export const GetPostsDocument = gql`
  * @example
  * const { data, loading, error } = useGetPostsQuery({
  *   variables: {
+ *      data: // value for 'data'
  *   },
  * });
  */

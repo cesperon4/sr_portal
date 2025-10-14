@@ -20,11 +20,11 @@ interface DataTableProps {
 export function Map({ policeIncidents }: DataTableProps) {
   const center: [number, number] = [38.4404, -122.7141];
   return (
-    <div className="w-full h-[1400px] flex items-center justify-center z-0">
+    <div className="w-full mr-4 flex items-center justify-center z-0">
       <MapContainer
         center={center}
         zoom={13}
-        className="h-[1400px] w-full rounded-lg shadow-md"
+        className="h-full w-full rounded-lg shadow-md bg-white"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

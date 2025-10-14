@@ -48,53 +48,28 @@ query GetPost($id: ID!) {
   }
 }
 
-query GetPosts {
-  posts {
-    id
-    title
-    body
-    userId
-    createdAt
-    updatedAt
-    arrestLogId
-    imageUrl
-    postComments {
+query GetPosts($data: PostsInput) {
+  posts(data: $data) {
+    posts {
       id
+      title
       body
-    }
-    arrestLog {
-      id
-      AGE
-      ARREST_STATUS
-      ArrestLocationAptFlr
-      ArrestLocationCity
-      ArrestLocationStreet
-      ArrestLocationStreetNBR
-      Arrest_Charge
-      Arrest_ID
-      Case_Number
-      Charge_Description
-      Charge_Sequence
-      DATE_ARRESTED
-      DOB
-      Degree
-      FIRSTNAME
-      LASTNAME
-      MIDDLENAME
-      OBJECTID
-      OBJECTID_1
-      RACE
-      SEX
-      SUFFIX
-      TIME_ARREST
-      UNIQUEKEY
+      userId
       createdAt
       updatedAt
+      arrestLogId
+      imageUrl
+      user {
+        id
+        username
+      }
+      postComments {
+        id
+        body
+      }
     }
-    user {
-      id
-      username
-    }
+    cursor
+    hasNextPage
   }
 }
 
