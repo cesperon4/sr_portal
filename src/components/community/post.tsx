@@ -5,6 +5,7 @@ import Image from "next/image";
 import PostFooter from "./post-footer";
 import { GetPostsQuery } from "../../../generated/graphql";
 import Link from "next/link";
+import { timeAgo } from "@/lib/time";
 
 type PostType = GetPostsQuery["posts"]["posts"][number];
 
@@ -15,13 +16,13 @@ function Post({ post }: PostProps) {
     <Link href={`/posts/${post.id}`} className="block">
       <div className="shadow w-full cursor-pointer px-8 py-2 border-gray-300">
         <div className="post-header flex gap-2 items-center">
-          <FiShield size={18} />
-          <span>sr/dui</span>
-          <span>2 days ago</span>
+          <FiShield size={18} className="text-blue-500" />
+          {/* <span>sr/dui</span> */}
+          <span>{`created ${timeAgo(post.createdAt)}`}</span>
 
           <HiDotsHorizontal size={18} className="ml-auto" />
         </div>
-        <span>{post.user?.username}</span>
+        <span className="font-semibold">{post.user?.username}</span>
         <h2 className="font-medium text-lg">{post.title}</h2>
         <Image
           aria-hidden
