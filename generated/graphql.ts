@@ -89,13 +89,14 @@ export type CreateArrestLogInput = {
 export type CreatePostCommentInput = {
   body?: InputMaybe<Scalars['String']['input']>;
   postId?: InputMaybe<Scalars['ID']['input']>;
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreatePostInput = {
   arrestLogId?: InputMaybe<Scalars['ID']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
-  imageBase64?: InputMaybe<Scalars['String']['input']>;
-  imageName?: InputMaybe<Scalars['String']['input']>;
+  imageBase64?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  imageName?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   title?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
@@ -242,7 +243,7 @@ export type Post = {
   body?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  imageUrl?: Maybe<Scalars['String']['output']>;
+  imageUrls?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   postComments?: Maybe<Array<Maybe<PostComment>>>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -258,6 +259,7 @@ export type PostComment = {
   post?: Maybe<Post>;
   postId?: Maybe<Scalars['ID']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  user?: Maybe<User>;
 };
 
 export type PostsInput = {
@@ -392,14 +394,14 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrls?: Array<string | null> | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null } | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
 
 export type GetPostsQueryVariables = Exact<{
   data?: InputMaybe<PostsInput>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrl?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } | null> | null }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrls?: Array<string | null> | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null } | null } | null> | null }> } };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -513,6 +515,9 @@ export const GetPostDocument = gql`
     arrestLogId
     postComments {
       id
+      user {
+        username
+      }
       body
       createdAt
       updatedAt
@@ -550,7 +555,7 @@ export const GetPostDocument = gql`
       id
       username
     }
-    imageUrl
+    imageUrls
   }
 }
     `;
@@ -598,13 +603,16 @@ export const GetPostsDocument = gql`
       createdAt
       updatedAt
       arrestLogId
-      imageUrl
+      imageUrls
       user {
         id
         username
       }
       postComments {
         id
+        user {
+          username
+        }
         body
         createdAt
         updatedAt

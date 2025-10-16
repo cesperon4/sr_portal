@@ -4,86 +4,112 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useUserContext } from "@/context/UserContext";
-import { useCreatePostMutation } from "../../../../generated/graphql";
-import { useGetPostsQuery } from "../../../../generated/graphql";
+import {
+  useCreatePostMutation,
+  useGetPostsQuery,
+} from "../../../../generated/graphql";
 import { toast } from "react-toastify";
 import clsx from "clsx";
-
 import { useRouter } from "next/navigation";
+import imageCompression from "browser-image-compression";
 
 type PostType = "post" | "image" | "link";
 
 interface PostImage {
-  imageName: string | null;
-  imageBase64: string | null;
+  imageName: string;
+  imageBase64: string;
 }
 
 export default function Submit() {
-  const { refetch } = useGetPostsQuery();
+  const { refetch } = useGetPostsQuery({
+    variables: { data: { limit: 5, cursor: null } },
+  });
   const router = useRouter();
   const [createPost] = useCreatePostMutation();
   const { loggedUser } = useUserContext();
+
   const [activeTab, setActiveTab] = useState<PostType>("post");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState<PostImage>({
-    imageName: null,
-    imageBase64: null,
-  });
+  const [images, setImages] = useState<PostImage[]>([]);
   const [linkUrl, setLinkUrl] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    try {
-      e.preventDefault();
-
-      if (!loggedUser.id) {
-        toast("You must be logged in to submit a post", {
-          type: "warning",
-          autoClose: 2000,
-          position: "top-right",
-        });
-        return;
-      }
-      const data = {
-        title,
-        body: content,
-        imageBase64: image.imageBase64,
-        imageName: image.imageName,
-      };
-
-      await createPost({
-        variables: {
-          data: {
-            ...data,
-            userId: loggedUser.id,
-          },
-        },
-        onCompleted: () => {
-          refetch();
-          router.push("/dashboard?view=Community");
-        },
-        onError: (error) => {
-          console.log("Error creating post: ", error);
-        },
+    e.preventDefault();
+    if (!loggedUser.id) {
+      toast("You must be logged in to submit a post", {
+        type: "warning",
+        autoClose: 2000,
+        position: "top-right",
       });
-    } catch (err) {
-      console.log(err);
+      return;
+    }
+
+    const data = {
+      title,
+      body: content,
+      imageBase64: images.map((img) => img.imageBase64),
+      imageName: images.map((img) => img.imageName),
+    };
+
+    await createPost({
+      variables: {
+        data: {
+          ...data,
+          userId: loggedUser.id,
+        },
+      },
+      onCompleted: () => {
+        console.log("completed");
+        refetch();
+        router.push("/dashboard?view=Community");
+      },
+      onError: (error) => {
+        console.error("Error creating post:", error);
+      },
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const options = {
+      maxSizeMB: 1, // compress images to around 1MB
+      maxWidthOrHeight: 1280, // resize large images (keeps aspect ratio)
+      useWebWorker: true,
+    };
+
+    try {
+      const compressedImages = await Promise.all(
+        Array.from(files).map(async (file) => {
+          // Compress each file
+          const compressedFile = await imageCompression(file, options);
+
+          // Convert to Base64
+          return new Promise<{ imageName: string; imageBase64: string }>(
+            (resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                resolve({
+                  imageName: compressedFile.name,
+                  imageBase64: reader.result as string,
+                });
+              };
+              reader.readAsDataURL(compressedFile);
+            }
+          );
+        })
+      );
+
+      setImages((prev) => [...prev, ...compressedImages]);
+    } catch (error) {
+      console.error("Image compression failed:", error);
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    setImage((prev) => ({
-      ...prev,
-      imageName: file?.name || "",
-    }));
-
-    if (!file) return;
-    const reader = new FileReader();
-
-    reader.onloadend = () =>
-      setImage((prev) => ({ ...prev, imageBase64: reader.result as string })); //tell reader what to do after reading the file
-    reader.readAsDataURL(file); //envoke reading the file
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -121,16 +147,14 @@ export default function Submit() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
-        <div>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
 
         {/* POST TAB */}
         {activeTab === "post" && (
@@ -146,38 +170,56 @@ export default function Submit() {
 
         {/* IMAGE TAB */}
         {activeTab === "image" && (
-          <div
-            className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
-            onClick={() => document.getElementById("imageUpload")?.click()}
-          >
+          <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center transition hover:bg-gray-50 dark:hover:bg-neutral-800">
             <input
               id="imageUpload"
               type="file"
               accept="image/*"
+              multiple
               onChange={handleImageUpload}
               className="hidden"
             />
-            {!image.imageBase64 ? (
-              <p className="text-gray-500">Click or drag to upload an image</p>
+
+            {images.length === 0 ? (
+              <div
+                className="cursor-pointer"
+                onClick={() => document.getElementById("imageUpload")?.click()}
+              >
+                <p className="text-gray-500">Click or drag to upload images</p>
+              </div>
             ) : (
-              <div className="relative flex justify-center">
-                <div className="relative w-full max-w-md h-64">
-                  <Image
-                    src={image.imageBase64 || ""}
-                    alt="Preview"
-                    fill
-                    className="object-contain rounded-lg"
-                    sizes="(max-width: 768px) 100vw, 700px"
-                  />
+              <div className="space-y-4">
+                {/* Preview grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {images.map((img, i) => (
+                    <div key={i} className="relative group">
+                      <Image
+                        src={img.imageBase64 || ""}
+                        alt={`Image ${i + 1}`}
+                        width={300}
+                        height={200}
+                        className="object-cover rounded-lg w-full h-40"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
+
+                {/* Upload more button */}
                 <button
                   type="button"
                   onClick={() =>
-                    setImage(() => ({ imageBase64: null, imageName: null }))
+                    document.getElementById("imageUpload")?.click()
                   }
-                  className="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-md"
+                  className="inline-flex items-center px-4 py-2 text-sm text-blue-600 border border-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-neutral-800 transition"
                 >
-                  Remove
+                  ➕ Upload more
                 </button>
               </div>
             )}
@@ -212,6 +254,7 @@ export default function Submit() {
           </div>
         )}
 
+        {/* Submit Button */}
         <button
           type="submit"
           className={clsx(

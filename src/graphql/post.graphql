@@ -9,6 +9,9 @@ query GetPost($id: ID!) {
     arrestLogId
     postComments {
       id
+      user {
+        username
+      }
       body
       createdAt
       updatedAt
@@ -46,7 +49,7 @@ query GetPost($id: ID!) {
       id
       username
     }
-    imageUrl
+    imageUrls
   }
 }
 
@@ -60,13 +63,16 @@ query GetPosts($data: PostsInput) {
       createdAt
       updatedAt
       arrestLogId
-      imageUrl
+      imageUrls
       user {
         id
         username
       }
       postComments {
         id
+        user {
+          username
+        }
         body
         createdAt
         updatedAt
