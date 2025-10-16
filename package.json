@@ -27,6 +27,7 @@
     "@types/leaflet": "^1.9.16",
     "axios": "^1.7.9",
     "bfg": "^0.3.0",
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
