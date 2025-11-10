@@ -10,8 +10,7 @@ function Feed() {
   const LIMIT = 5;
   const { data, loading, error, fetchMore } = useGetPostsQuery({
     variables: { data: { limit: LIMIT, cursor: null } },
-    fetchPolicy: "cache-and-network",
-
+    fetchPolicy: "cache-first", // only fetch if cache is empty
   }); //refetch the posts using refetch { data, loading, error, refetch}}
 
   const posts = useMemo(() => data?.posts.posts ?? [], [data]); //useMemo ensures that posts only changes when data changes, not on every render.
