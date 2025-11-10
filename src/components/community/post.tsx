@@ -1,37 +1,47 @@
 import React from "react";
 import { FiShield } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
-import PostFooter from "./post-footer";
-import { GetPostsQuery } from "../../../generated/graphql";
 import Link from "next/link";
+import { GetPostsQuery } from "../../../generated/graphql";
 import { timeAgo } from "@/lib/time";
 import { ImageCarousel } from "../ui/image-carousel";
+import PostFooter from "./post-footer";
 
 type PostType = GetPostsQuery["posts"]["posts"][number];
 
-type PostProps = { post: PostType };
+interface PostProps {
+  post: PostType;
+}
 
-function Post({ post }: PostProps) {
+const Post: React.FC<PostProps> = ({ post }) => {
   const images = post.imageUrls || [];
 
   return (
     <Link href={`/posts/${post.id}`} className="block h-[50vh]">
-      <div className="shadow w-full cursor-pointer px-4 py-2 border border-gray-300 rounded-xl h-full">
-        <div className="post-header flex gap-2 items-center mb-2">
+      <article className="flex flex-col h-full w-full cursor-pointer border border-gray-300 rounded-xl shadow-sm px-4 py-3 hover:shadow-md transition-shadow duration-200">
+        {/* Post Header */}
+        <header className="flex items-center gap-2 mb-2">
           <FiShield size={18} className="text-blue-500" />
-          <span>{`created ${timeAgo(post.createdAt)}`}</span>
-          <HiDotsHorizontal size={18} className="ml-auto" />
+          <span className="text-sm text-gray-500">{`created ${timeAgo(post.createdAt)}`}</span>
+          <HiDotsHorizontal size={18} className="ml-auto text-gray-500" />
+        </header>
+
+        {/* User and Title */}
+        <div className="mb-2">
+          <span className="font-semibold text-gray-800">{post.user?.username}</span>
+          <h2 className="font-medium text-lg text-gray-900">{post.title}</h2>
         </div>
 
-        <span className="font-semibold">{post.user?.username}</span>
-        <h2 className="font-medium text-lg">{post.title}</h2>
+        {/* Images */}
+        {images.length > 0 && <ImageCarousel images={images} title={post.title} />}
 
-        <ImageCarousel images={images} title={post.title} />
-
-        <PostFooter commentCount={post.postComments?.length || 0} />
-      </div>
+        {/* Post Footer */}
+        <footer className="mt-auto">
+          <PostFooter commentCount={post.postComments?.length || 0} />
+        </footer>
+      </article>
     </Link>
   );
-}
+};
 
 export default Post;
