@@ -17,7 +17,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const images = post.imageUrls || [];
 
   return (
-    <Link href={`/posts/${post.id}`} className="block h-[50vh]">
+    <Link href={`/posts/${post.id}`} className="block">
       <article className="flex flex-col h-full w-full cursor-pointer border border-gray-300 rounded-xl shadow-sm px-4 py-3 hover:shadow-md transition-shadow duration-200">
         {/* Post Header */}
         <header className="flex items-center gap-2 mb-2">
