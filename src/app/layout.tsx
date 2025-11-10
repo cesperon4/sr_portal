@@ -4,6 +4,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 import "react-toastify/dist/ReactToastify.css";
+import "leaflet/dist/leaflet.css";
+import "react-leaflet-markercluster/styles";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

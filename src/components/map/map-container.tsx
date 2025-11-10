@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet/dist/leaflet.css";
-import "react-leaflet-markercluster/styles";
+// import "leaflet/dist/leaflet.css";
+// import "react-leaflet-markercluster/styles";
 import { Icon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { PoliceIncidentType } from "@/types/map.interface";
+
 const customIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
   iconSize: [38, 38], // size of the icon

@@ -1,32 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { FiShield } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
-import Image from "next/image";
 import PostFooter from "./post-footer";
 import { GetPostsQuery } from "../../../generated/graphql";
 import Link from "next/link";
 import { timeAgo } from "@/lib/time";
+import { ImageCarousel } from "../ui/image-carousel";
 
 type PostType = GetPostsQuery["posts"]["posts"][number];
 
 type PostProps = { post: PostType };
 
 function Post({ post }: PostProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const handlePrevImage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? (post.imageUrls?.length || 1) - 1 : prev - 1
-    );
-  };
-
-  const handleNextImage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentImageIndex((prev) =>
-      prev === (post.imageUrls?.length || 1) - 1 ? 0 : prev + 1
-    );
-  };
+  const images = post.imageUrls || [];
 
   return (
     <Link href={`/posts/${post.id}`} className="block h-[50vh]">
@@ -40,36 +26,7 @@ function Post({ post }: PostProps) {
         <span className="font-semibold">{post.user?.username}</span>
         <h2 className="font-medium text-lg">{post.title}</h2>
 
-        {post.imageUrls && post.imageUrls.length > 0 && (
-          <div className="relative w-full h-[35vh] my-4 rounded-xl overflow-hidden shadow-md border border-gray-300">
-            <Image
-              src={post.imageUrls[currentImageIndex] ?? ""}
-              alt={post.title || "Post image"}
-              fill
-              className="object-cover w-full h-full"
-            />
-
-            {post.imageUrls.length > 1 && (
-              <>
-                {/* Previous Button */}
-                <button
-                  onClick={handlePrevImage}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full p-2 hover:bg-opacity-60 transition"
-                >
-                  ◀
-                </button>
-
-                {/* Next Button */}
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 text-white rounded-full p-2 hover:bg-opacity-60 transition"
-                >
-                  ▶
-                </button>
-              </>
-            )}
-          </div>
-        )}
+        <ImageCarousel images={images} title={post.title} />
 
         <PostFooter commentCount={post.postComments?.length || 0} />
       </div>

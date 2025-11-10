@@ -1,19 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   useGetPostQuery,
   useCreatePostCommentMutation,
 } from "../../../generated/graphql";
 import { FiShield } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
 import PostFooter from "../../components/community/post-footer";
 import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 import CommentBox from "@/components/community/comment-box";
 import { timeAgo } from "@/lib/time";
 import { useUserContext } from "@/context/UserContext";
+import { ImageCarousel } from "../ui/image-carousel";
 
 interface PostDetailProps {
   id: string;
@@ -26,24 +25,13 @@ function PostDetail({ id }: PostDetailProps) {
     variables: { id },
   });
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   if (error) return <div>Error: {error.message}</div>;
   if (loading) return <div>Loading...</div>;
   if (!data?.post) return <div>Post not found</div>;
 
   const images = data.post.imageUrls || [];
 
-  const nextImage = () => {
-    setCurrentImageIndex((i) => (i + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
-  };
-
   const submitComment = (text: string) => {
-    console.log("on submit user id: ", loggedUser.id);
     createPostComment({
       variables: {
         data: { postId: data.post.id, userId: loggedUser.id, body: text },
@@ -78,43 +66,7 @@ function PostDetail({ id }: PostDetailProps) {
         <h1 className="text-2xl font-bold mb-3">{data.post.title}</h1>
 
         {/* Image Carousel */}
-        {images.length > 0 && (
-          <div className="relative w-full flex items-center justify-center mb-4">
-            <div className="relative w-full h-96 rounded-xl overflow-hidden mx-auto shadow-md border border-gray-300 dark:border-gray-700">
-              <Image
-                src={images[currentImageIndex] || "/police_img.jpg"}
-                alt={data.post.title || "Post image"}
-                fill
-                className="object-cover w-full h-full"
-              />
-            </div>
-
-            {/* Navigation buttons */}
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-3 bg-black/50 text-white p-2 rounded-full hover:bg-black transition"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-3 bg-black/50 text-white p-2 rounded-full hover:bg-black transition"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </>
-            )}
-
-            {/* Image Counter */}
-            {images.length > 1 && (
-              <p className="absolute bottom-3 right-3 text-xs bg-black/60 text-white px-2 py-1 rounded-lg">
-                {currentImageIndex + 1}/{images.length}
-              </p>
-            )}
-          </div>
-        )}
+        <ImageCarousel images={images} title={data.post.title} />
 
         {/* Body */}
         {data.post.body && (
@@ -132,7 +84,6 @@ function PostDetail({ id }: PostDetailProps) {
       {/* Comments */}
       <div className="flex flex-col gap-4">
         {data.post?.postComments?.map((comment) => {
-          console.log("comment: ", comment);
           if (!comment) return null;
           return (
             <div
