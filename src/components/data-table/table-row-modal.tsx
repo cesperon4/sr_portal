@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { Backdrop } from "../backdrop";
-import { TABLE_ROW_CLASSES } from "@/lib/constants";
+// import { TABLE_ROW_CLASSES } from "@/lib/constants";
+import { X } from "lucide-react";
 
 interface ArrestLogType {
   attributes: {
@@ -39,6 +40,70 @@ interface DataTableProps {
 }
 
 export function TableRowModal({ data, handleClose }: DataTableProps) {
+  // Handle escape key
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [handleClose]);
+
+  const sections = [
+    {
+      title: "Identification",
+      fields: [
+        { label: "Object ID", value: data.attributes.OBJECTID },
+        { label: "Arrest ID", value: data.attributes.Arrest_ID },
+        { label: "Unique Key", value: data.attributes.UNIQUEKEY },
+        { label: "Case Number", value: data.attributes.Case_Number },
+      ],
+    },
+    {
+      title: "Personal Information",
+      fields: [
+        { label: "First Name", value: data.attributes.FIRSTNAME },
+        { label: "Middle Name", value: data.attributes.MIDDLENAME },
+        { label: "Last Name", value: data.attributes.LASTNAME },
+        { label: "Suffix", value: data.attributes.SUFFIX },
+        { label: "Date of Birth", value: data.attributes.DOB },
+        { label: "Age", value: data.attributes.AGE },
+        { label: "Sex", value: data.attributes.SEX },
+        { label: "Race", value: data.attributes.RACE },
+      ],
+    },
+    {
+      title: "Arrest Details",
+      fields: [
+        { label: "Date Arrested", value: data.attributes.DATE_ARRESTED },
+        { label: "Time of Arrest", value: data.attributes.TIME_ARREST },
+        { label: "Arrest Status", value: data.attributes.ARREST_STATUS },
+        { label: "Arrest Charge", value: data.attributes.Arrest_Charge },
+        {
+          label: "Charge Description",
+          value: data.attributes.Charge_Description,
+        },
+        { label: "Charge Sequence", value: data.attributes.Charge_Sequence },
+        { label: "Degree", value: data.attributes.Degree },
+      ],
+    },
+    {
+      title: "Location Information",
+      fields: [
+        {
+          label: "Street Number",
+          value: data.attributes.ArrestLocationStreetNBR,
+        },
+        { label: "Street", value: data.attributes.ArrestLocationStreet },
+        {
+          label: "Apartment/Floor",
+          value: data.attributes.ArrestLocationAptFlr,
+        },
+        { label: "City", value: data.attributes.ArrestLocationCity },
+      ],
+    },
+  ];
+
   return (
     <Backdrop
       onClick={() => {
@@ -46,218 +111,61 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
       }}
     >
       <div
-        className="bg-white rounded-lg p-6 shadow-lg w-6/12 overflow-auto max-h-8/12"
+        className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col m-4"
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 border-b">
-          Arrest Log Details
-        </h2>
-        <form>
-          <div className="grid grid-cols-1 items-center gap-4 px-4">
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Object ID </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.OBJECTID || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Arrest ID </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.Arrest_ID || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Arrest Status{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.ARREST_STATUS || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Arrest Location Apartment Floor{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.ArrestLocationAptFlr || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Arrest Location City{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.ArrestLocationCity || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Age </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.AGE || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Arrest Location Street{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.ArrestLocationStreet || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Date Arrested{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.DATE_ARRESTED || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Arrest Location Street Number{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.ArrestLocationStreetNBR || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Arrest Charge{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.Arrest_Charge || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Case Number{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.Case_Number || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Case Number{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.Charge_Description || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Charge Sequence{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.Charge_Sequence || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>D.O.B </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.DOB || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Degree </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.Degree || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                First Name{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.FIRSTNAME || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>
-                Middle Name{" "}
-              </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.MIDDLENAME || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Last Name </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.LASTNAME || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Suffix </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.SUFFIX || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Race </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.RACE || "n/a"}
-              />
-            </div>
-            <div className={TABLE_ROW_CLASSES.form_row}>
-              <label className={TABLE_ROW_CLASSES.form_label}>Sex </label>
-              <input
-                className={TABLE_ROW_CLASSES.form_input}
-                disabled
-                value={data.attributes.SEX || "n/a"}
-              />
-            </div>
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Arrest Log Details
+          </h2>
+          <button
+            onClick={handleClose}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-gray-500 hover:text-gray-700"
+            aria-label="Close modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="overflow-y-auto flex-1 px-6 py-6">
+          <div className="space-y-8">
+            {sections.map((section, sectionIdx) => (
+              <div key={sectionIdx}>
+                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">
+                  {section.title}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {section.fields.map((field, fieldIdx) => (
+                    <div key={fieldIdx} className="space-y-1.5">
+                      <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        {field.label}
+                      </label>
+                      <div className="px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900">
+                        {field.value || (
+                          <span className="text-gray-400 italic">N/A</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-        </form>
-        <button
-          onClick={() => {
-            handleClose();
-          }}
-          className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
-        >
-          Close
-        </button>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl flex-shrink-0">
+          <button
+            onClick={handleClose}
+            className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </Backdrop>
   );

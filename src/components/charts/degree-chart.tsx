@@ -14,6 +14,8 @@ export function DegreeChart({
 }: DegreeChartProps) {
   const highestArrestDegree = useMemo(() => {
     if (!barChartDataDegree) return null;
+    console.log("bardc: ", barChartDataDegree)
+    console.log("highest degree: ", getMaxChartData(barChartDataDegree))
     return getMaxChartData(barChartDataDegree);
   }, [barChartDataDegree]);
 

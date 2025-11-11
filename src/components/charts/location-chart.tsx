@@ -38,31 +38,45 @@ export function LocationChart({
   return (
     <div className="flex gap-2 w-full">
       <div className="flex flex-col gap-4">
-        <div className="data-card">
-          <h2>Location With Highest # of Arrests</h2>
-          <Table>
-            <TableCaption>{""}</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Street Name</TableHead>
-                <TableHead>Total Arrests</TableHead>
+      <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
+      {/* Card Title */}
+      <h2 className="text-sm font-medium text-gray-600 mb-3">
+        Location With Highest # of Arrests
+      </h2>
+
+      {/* Table wrapper for responsive scroll */}
+      <div className="overflow-x-auto">
+        <Table className="w-full table-auto border-collapse">
+          <TableCaption className="sr-only">{""}</TableCaption>
+
+          {/* Table Header */}
+          <TableHeader>
+            <TableRow className="">
+              <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">Street Name</TableHead>
+              <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">Total Arrests</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          {/* Table Body */}
+          <TableBody>
+            {highestArrestStreet?.map((street, index) => (
+              <TableRow
+                key={index}
+                className="hover:bg-gray-100 cursor-pointer transition-colors duration-150"
+              >
+                <TableCell className="px-4 py-2 text-gray-700 text-sm font-medium">
+                  {street[0]}
+                </TableCell>
+                <TableCell className="px-4 py-2 text-gray-700 text-sm font-medium">
+                  {street[1]}
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {highestArrestStreet?.map((street, index) => {
-                return (
-                  <TableRow
-                    key={index}
-                    className="hover:bg-gray-100 cursor-pointer"
-                  >
-                    <TableCell>{street[0]}</TableCell>
-                    <TableCell>{street[1]}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+
         <ChartCard
           title={"Street with Most Arrests"}
           stat={maxArrestStreet}

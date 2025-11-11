@@ -7,7 +7,7 @@ import { timeAgo } from "@/lib/time";
 import { ImageCarousel } from "../ui/image-carousel";
 import PostFooter from "./post-footer";
 
-type PostType = GetPostsQuery["posts"]["posts"][number];
+type PostType = GetPostsQuery["posts"]["data"]["posts"][number];
 
 interface PostProps {
   post: PostType;
@@ -22,18 +22,24 @@ const Post: React.FC<PostProps> = ({ post }) => {
         {/* Post Header */}
         <header className="flex items-center gap-2 mb-2">
           <FiShield size={18} className="text-blue-500" />
-          <span className="text-sm text-gray-500">{`created ${timeAgo(post.createdAt)}`}</span>
+          <span className="text-sm text-gray-500">{`created ${timeAgo(
+            post.createdAt
+          )}`}</span>
           <HiDotsHorizontal size={18} className="ml-auto text-gray-500" />
         </header>
 
         {/* User and Title */}
         <div className="mb-2">
-          <span className="font-semibold text-gray-800">{post.user?.username}</span>
+          <span className="font-semibold text-gray-800">
+            {post.user?.username}
+          </span>
           <h2 className="font-medium text-lg text-gray-900">{post.title}</h2>
         </div>
 
         {/* Images */}
-        {images.length > 0 && <ImageCarousel images={images} title={post.title} />}
+        {images.length > 0 && (
+          <ImageCarousel images={images} title={post.title} />
+        )}
 
         {/* Post Footer */}
         <footer className="mt-auto">

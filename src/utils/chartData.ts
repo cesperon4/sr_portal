@@ -273,15 +273,15 @@ export function getMaxChartData( //takes in chart data an returns label with the
     return null;
   }
 
-  // Extract the first dataset (assuming it contains the number of arrests per age)
-  const labels = chartData.labels as number[];
+  // Extract the first dataset (assuming it contains the number of arrests per age)?
+  const labels = chartData.labels as string[];
   const dataset = chartData.datasets[0];
   const counts = dataset.data as number[];
 
   let max = 0;
   let maxIndex = 0;
   counts.forEach((x, index) => {
-    if (x > max && index !== 0) {
+    if (x > max) {
       max = x;
       maxIndex = index;
     }

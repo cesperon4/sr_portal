@@ -19,6 +19,20 @@ export type Scalars = {
   Token: { input: any; output: any; }
 };
 
+export type ApiArrestLogResponse = {
+  __typename?: 'ApiArrestLogResponse';
+  data?: Maybe<ArrestLog>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ApiArrestLogsResponse = {
+  __typename?: 'ApiArrestLogsResponse';
+  data?: Maybe<Array<Maybe<ArrestLog>>>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type ArrestLog = {
   __typename?: 'ArrestLog';
   AGE?: Maybe<Scalars['String']['output']>;
@@ -267,17 +281,24 @@ export type PostsInput = {
   limit: Scalars['Int']['input'];
 };
 
-export type PostsResponse = {
-  __typename?: 'PostsResponse';
+export type PostsPage = {
+  __typename?: 'PostsPage';
   cursor?: Maybe<Scalars['Int']['output']>;
   hasNextPage: Scalars['Boolean']['output'];
   posts: Array<Post>;
 };
 
+export type PostsResponse = {
+  __typename?: 'PostsResponse';
+  data?: Maybe<PostsPage>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
-  arrestLog: ArrestLog;
-  arrestLogs: Array<ArrestLog>;
+  arrestLog?: Maybe<ApiArrestLogResponse>;
+  arrestLogs?: Maybe<ApiArrestLogsResponse>;
   chatBotResponse: Scalars['String']['output'];
   me: User;
   post: Post;
@@ -290,7 +311,7 @@ export type Query = {
 
 
 export type QueryArrestLogArgs = {
-  id: Scalars['ID']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -401,7 +422,7 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrls?: Array<string | null> | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null } | null } | null> | null }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrls?: Array<string | null> | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null } | null } | null> | null }> } | null } };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -595,31 +616,35 @@ export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVa
 export const GetPostsDocument = gql`
     query GetPosts($data: PostsInput) {
   posts(data: $data) {
-    posts {
-      id
-      title
-      body
-      userId
-      createdAt
-      updatedAt
-      arrestLogId
-      imageUrls
-      user {
+    status
+    message
+    data {
+      posts {
         id
-        username
-      }
-      postComments {
-        id
-        user {
-          username
-        }
+        title
         body
+        userId
         createdAt
         updatedAt
+        arrestLogId
+        imageUrls
+        user {
+          id
+          username
+        }
+        postComments {
+          id
+          user {
+            username
+          }
+          body
+          createdAt
+          updatedAt
+        }
       }
+      cursor
+      hasNextPage
     }
-    cursor
-    hasNextPage
   }
 }
     `;

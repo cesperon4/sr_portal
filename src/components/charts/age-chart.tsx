@@ -22,6 +22,9 @@ export function AgeCharts({
   return (
     <div className="flex flex-col items-center mr-4">
       <div className="flex gap-4 h-[10vh]">
+        
+       
+
         <ChartCard
           title={"Youngest Arrest Age"}
           stat={youngestArrestAge}

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { useDataContext } from "../../context/DataContext";
 import { TableRowModal } from "@/components/data-table/table-row-modal";
-import { TiArrowSortedUp, TiArrowSortedDown } from "react-icons/ti";
+import { ArrowUp, ArrowDown, Database } from "lucide-react";
 import clsx from "clsx";
 
 interface ArrestLogType {
@@ -84,95 +84,158 @@ export function DataTable({
     setTableRow(true);
     setTableRowModalData(arrestLog);
   };
+
   const closeTableRow = () => {
     setTableRow(false);
   };
 
   return (
-    <div className={`flex flex-col gap-4 justify-center items-center p-24`}>
+    <div className="flex flex-col gap-6 p-6 lg:p-12 mx-auto">
       {tableRow && tableRowModalData && (
         <TableRowModal handleClose={closeTableRow} data={tableRowModalData} />
       )}
-      <span className="mr-auto font-semibold">{`${arrestLogCount} records`}</span>
-      <Table className={``}>
-        <TableCaption>{""}</TableCaption>
-        <TableHeader>
-          <TableRow>
-            {arrestLogFields?.map((x: ArrestLogField) => {
-              if (visibleColumns[x.name])
-                return (
-                  <TableHead key={x.name}>
-                    <div className="flex gap-2 items-center">
-                      <span>{x.name}</span>
-                      <div>
-                        <TiArrowSortedUp
-                          className={clsx(
-                            "hover:text-gray-200 cursor-pointer",
-                            {
-                              "text-yellow-400":
-                                headerFilter === x.name &&
-                                filterDirection === "ASC",
-                            }
-                          )}
-                          onClick={() => {
-                            setHeaderFilter(x.name);
-                            setFilterDirection("ASC");
-                          }}
-                        />
 
-                        <TiArrowSortedDown
-                          className={`hover:text-gray-200 cursor-pointer ${
-                            headerFilter === x.name &&
-                            filterDirection === "DESC" &&
-                            "text-yellow-400"
-                          }`}
-                          onClick={() => {
-                            setHeaderFilter(x.name);
-                            setFilterDirection("DESC");
-                          }}
-                        />
-                      </div>
+      {/* Header Section */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-blue-50 rounded-lg">
+            <Database className="w-5 h-5 text-blue-600" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Arrest Logs
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">
+              {arrestLogCount.toLocaleString()}{" "}
+              {arrestLogCount === 1 ? "record" : "records"}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Table Container */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableCaption>{""}</TableCaption>
+            <TableHeader>
+              <TableRow className="bg-gray-50 hover:bg-gray-50">
+                {arrestLogFields?.map((x: ArrestLogField) => {
+                  if (visibleColumns[x.name])
+                    return (
+                      <TableHead
+                        key={x.name}
+                        className="font-semibold text-gray-700"
+                      >
+                        <div className="flex gap-2 items-center whitespace-nowrap">
+                          <span>{x.name}</span>
+                          <div className="flex flex-col">
+                            <button
+                              onClick={() => {
+                                setHeaderFilter(x.name);
+                                setFilterDirection("ASC");
+                              }}
+                              className={clsx(
+                                "p-0.5 rounded transition-colors hover:bg-gray-200",
+                                {
+                                  "text-blue-600":
+                                    headerFilter === x.name &&
+                                    filterDirection === "ASC",
+                                  "text-gray-400":
+                                    headerFilter !== x.name ||
+                                    filterDirection !== "ASC",
+                                }
+                              )}
+                              aria-label={`Sort ${x.name} ascending`}
+                            >
+                              <ArrowUp className="w-3.5 h-3.5" />
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setHeaderFilter(x.name);
+                                setFilterDirection("DESC");
+                              }}
+                              className={clsx(
+                                "p-0.5 rounded transition-colors hover:bg-gray-200",
+                                {
+                                  "text-blue-600":
+                                    headerFilter === x.name &&
+                                    filterDirection === "DESC",
+                                  "text-gray-400":
+                                    headerFilter !== x.name ||
+                                    filterDirection !== "DESC",
+                                }
+                              )}
+                              aria-label={`Sort ${x.name} descending`}
+                            >
+                              <ArrowDown className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </TableHead>
+                    );
+                })}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {arrestLogs.length > 0 ? (
+                arrestLogs.map((arrestLog) => {
+                  return (
+                    <TableRow
+                      key={arrestLog?.attributes.OBJECTID}
+                      className="cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => {
+                        openTableRow(arrestLog);
+                      }}
+                    >
+                      {Object.keys(visibleColumns).map((columnKey) => {
+                        if (
+                          visibleColumns[
+                            columnKey as keyof typeof visibleColumns
+                          ]
+                        ) {
+                          const key =
+                            columnKey as keyof typeof arrestLog.attributes;
+                          return (
+                            <TableCell key={key} className="text-gray-700">
+                              {arrestLog.attributes[key] || (
+                                <span className="text-gray-400 italic text-sm">
+                                  —
+                                </span>
+                              )}
+                            </TableCell>
+                          );
+                        }
+                        return null;
+                      })}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow className="hover:bg-white">
+                  <TableCell
+                    colSpan={arrestLogFields?.length}
+                    className="text-center py-12"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <Database className="w-12 h-12 text-gray-300" />
+                      <p className="text-gray-500 font-medium">
+                        No records found
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Try adjusting your filters
+                      </p>
                     </div>
-                  </TableHead>
-                );
-            })}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {arrestLogs.length > 0 ? (
-            arrestLogs.map((arrestLog) => {
-              return (
-                <TableRow
-                  key={arrestLog?.attributes.OBJECTID}
-                  className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => {
-                    openTableRow(arrestLog);
-                  }}
-                >
-                  {Object.keys(visibleColumns).map((columnKey) => {
-                    if (
-                      visibleColumns[columnKey as keyof typeof visibleColumns]
-                    ) {
-                      const key =
-                        columnKey as keyof typeof arrestLog.attributes; // Ensure type safety
-                      return (
-                        <TableCell key={key}>
-                          {arrestLog.attributes[key]}{" "}
-                        </TableCell>
-                      );
-                    }
-                    return null;
-                  })}
+                  </TableCell>
                 </TableRow>
-              );
-            })
-          ) : (
-            <TableRow>
-              <TableCell>0 logs returned</TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* Pagination placeholder */}
       {/* <Paginate /> */}
     </div>
   );

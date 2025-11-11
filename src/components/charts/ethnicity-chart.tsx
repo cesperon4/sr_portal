@@ -29,17 +29,22 @@ export function EthnicityChart({
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-4">
-        <div className="data-card">
-          <h2>Highest Arrested Ethnicity</h2>
+      <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
+        {/* Card Title */}
+        <h2 className="text-sm font-medium text-gray-600 mb-3">Highest Arrested Ethnicity</h2>
 
-          {highestOccurringRace?.map((street, index) => {
-            return (
-              <span key={index}>{`${index + 1}. ${street[0]} - ${
-                street[1]
-              } arrests`}</span>
-            );
-          })}
-        </div>
+        {/* List of results */}
+        <ul className="space-y-1">
+          {highestOccurringRace?.map((race, index) => (
+            <li
+              key={index}
+              className="text-gray-700 text-sm font-medium"
+            >
+              <span className="font-semibold">{index + 1}.</span> {race[0]} - {race[1]} arrests
+            </li>
+          ))}
+        </ul>
+      </div>
 
         <ChartCard
           title={"Ethnicity with Most Arrests"}

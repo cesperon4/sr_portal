@@ -55,31 +55,35 @@ query GetPost($id: ID!) {
 
 query GetPosts($data: PostsInput) {
   posts(data: $data) {
-    posts {
-      id
-      title
-      body
-      userId
-      createdAt
-      updatedAt
-      arrestLogId
-      imageUrls
-      user {
+    status
+    message
+    data {
+      posts {
         id
-        username
-      }
-      postComments {
-        id
-        user {
-          username
-        }
+        title
         body
+        userId
         createdAt
         updatedAt
+        arrestLogId
+        imageUrls
+        user {
+          id
+          username
+        }
+        postComments {
+          id
+          user {
+            username
+          }
+          body
+          createdAt
+          updatedAt
+        }
       }
+      cursor
+      hasNextPage
     }
-    cursor
-    hasNextPage
   }
 }
 
