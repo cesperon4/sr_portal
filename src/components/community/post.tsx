@@ -7,7 +7,10 @@ import { timeAgo } from "@/lib/time";
 import { ImageCarousel } from "../ui/image-carousel";
 import PostFooter from "./post-footer";
 
-type PostType = GetPostsQuery["posts"]["data"]["posts"][number];
+// type PostType = GetPostsQuery["posts"]["data"]["posts"][number];
+type PostType = NonNullable<
+  NonNullable<GetPostsQuery["posts"]>["data"]
+>["posts"][number];
 
 interface PostProps {
   post: PostType;
