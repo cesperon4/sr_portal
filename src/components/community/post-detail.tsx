@@ -27,7 +27,7 @@ function PostDetail({ id }: PostDetailProps) {
   });
 
   if (error) return <div>Error: {error.message}</div>;
-  if (loading) return <Loader />;
+  if (loading) return <Loader text={"Fetching post details ..."} />;
   if (!data?.post) return <div>Post not found</div>;
 
   const images = data.post.imageUrls || [];
