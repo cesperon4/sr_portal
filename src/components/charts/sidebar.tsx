@@ -30,7 +30,7 @@ export function Sidebar({ getButtonClass, updateSidebar }: SidebarProps) {
     <aside className="bg-white shadow-sm border border-gray-200 rounded-xl p-4 h-fit sticky top-24">
       {/* Header */}
       <div className="flex items-center gap-2 pb-4 mb-4 border-b border-gray-200">
-        <div className="p-2 bg-blue-50 rounded-lg">
+        <div className="p-2 bg-gray-100 rounded-lg">
           <BarChart3 className="w-5 h-5 text-blue-600" />
         </div>
         <div>
@@ -47,7 +47,7 @@ export function Sidebar({ getButtonClass, updateSidebar }: SidebarProps) {
             variant="ghost"
             className={`
               justify-start gap-3 h-auto py-3 px-3
-              hover:bg-blue-50 hover:text-blue-700
+              hover:bg-gray-100 hover:text-blue-700
               transition-all duration-200
               ${getButtonClass(key)}
             `}

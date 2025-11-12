@@ -50,17 +50,17 @@ export default function LandingPage() {
           <div className="absolute bottom-0 right-0 w-64 h-64 bg-green-200 rounded-full -z-10 animate-pulse-slow opacity-30"></div>
           <Image
             aria-hidden
-            src="/landing1.svg"
+            src="/sr_portal1.png"
             alt="Illustration"
-            width={500}
-            height={500}
-            className="relative z-10 animate-fadeIn"
+            width={1000}
+            height={1000}
+            className="relative z-10 animate-fadeIn rounded-xl"
           />
         </div>
       </div>
 
       {/* Optional: Feature Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white h-screen">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-3 gap-12 text-center">
           <div className="space-y-4">
             <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">

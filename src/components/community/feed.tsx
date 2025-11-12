@@ -5,6 +5,7 @@ import Post from "./post";
 // import Header from "./header";
 import { useGetPostsQuery } from "../../../generated/graphql";
 import { useEffect, useMemo } from "react";
+import { Loader } from "../ui/loader";
 
 function Feed() {
   const LIMIT = 5;
@@ -62,13 +63,22 @@ function Feed() {
   }, [posts]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white w-full ">
+        <Loader text={"Fetching posts ..."} />
+      </div>
+    );
   }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  if (loading && posts.length === 0) return <p>Loading...</p>;
+  if (loading && posts.length === 0)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white w-full ">
+        <Loader text={"Fetching posts ..."} />
+      </div>
+    );
   return (
     <div className="flex flex-col gap-2 w-11/12 md:w-4/12">
       {/* <Header /> */}

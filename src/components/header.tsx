@@ -43,7 +43,15 @@ export function Header({
   return (
     <header className="dashboard-header font-medium mb-4">
       <div className="header-main">
-        <span className="font-semibold">SR PORTAL</span>
+        <Image
+          aria-hidden
+          src="/logo4.png"
+          alt="Illustration"
+          width={50}
+          height={50}
+          className="relative z-10 animate-fadeIn rounded-xl"
+        />
+        <span className="font-semibold">SR Portal</span>
         <ModeToggle />
         <div className="flex gap-4">
           <UnderlineButton
@@ -91,12 +99,13 @@ export function Header({
           </UnderlineButton>
         </div>
         {view === "Table" && (
-          <div className={`flex gap-2 items-center ml-12`}>
+          <div className={`flex gap-2 items-center ml-auto`}>
             <Button
               variant="outline"
               onClick={() => {
                 openSelectColumns();
               }}
+              className="rounded border-1 border-gray-400 hover:bg-gray-50"
             >
               Select Columns
             </Button>

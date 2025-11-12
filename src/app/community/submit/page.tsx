@@ -217,7 +217,7 @@ export default function Submit() {
                   onClick={() =>
                     document.getElementById("imageUpload")?.click()
                   }
-                  className="inline-flex items-center px-4 py-2 text-sm text-blue-600 border border-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-neutral-800 transition"
+                  className="inline-flex items-center px-4 py-2 text-sm text-blue-600 border border-blue-400 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-800 transition"
                 >
                   ➕ Upload more
                 </button>

@@ -21,6 +21,8 @@ export function useLogin(openVerificationModal?: () => void) {
   const [loginMutation] = useLoginMutation();
   const [loginGuestMutation] = useLoginGuestMutation();
 
+  const [redirecting, setRedirecting] = useState(false);
+
   const handleLogin = () => {
     const { email, password } = loginParams;
 
@@ -37,6 +39,7 @@ export function useLogin(openVerificationModal?: () => void) {
         },
       },
       onCompleted: (data) => {
+        setRedirecting(true);
         setLoggedUser({
           id: data.login.user.id || "",
           username: data.login.user.username || "",
@@ -90,5 +93,12 @@ export function useLogin(openVerificationModal?: () => void) {
     });
   };
 
-  return { setLoginParams, handleLogin, handleGuestLogin, loginParams };
+  return {
+    setLoginParams,
+    handleLogin,
+    handleGuestLogin,
+    loginParams,
+    redirecting,
+    setRedirecting,
+  };
 }

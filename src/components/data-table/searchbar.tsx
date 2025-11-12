@@ -58,7 +58,12 @@ function Searchbar({ handleChange }: DataTableProps) {
     <div className={`flex p-1rounded`}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Search by</Button>
+          <Button
+            variant="outline"
+            className="border-1 border-gray-400 rounded"
+          >
+            Search by
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>Filter By</DropdownMenuLabel>
@@ -79,6 +84,7 @@ function Searchbar({ handleChange }: DataTableProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <Input
+        className="border-1 border-gray-400 rounded"
         onChange={(e) => {
           setFilterText(e.target.value);
         }}

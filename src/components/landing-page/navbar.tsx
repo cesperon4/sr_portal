@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { navLinks } from "@/lib/constants";
 import { motion, AnimatePresence } from "framer-motion";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
-import { FiShield } from "react-icons/fi";
-
+import Image from "next/image";
 import UnderlineButton from "../ui/underline-button";
 
 export function Navbar() {
@@ -16,8 +15,15 @@ export function Navbar() {
   return (
     <header className={`navbar`}>
       <div className="inner">
-        <a className="logo" href="#hero">
-          <FiShield className="inline-block mr-2 text-blue-500" size={28} />
+        <a className="logo flex items-center gap-2" href="#hero">
+          <Image
+            aria-hidden
+            src="/logo4.png"
+            alt="Illustration"
+            width={50}
+            height={50}
+            className="relative z-10 animate-fadeIn rounded-xl"
+          />
           SR Portal
         </a>
 

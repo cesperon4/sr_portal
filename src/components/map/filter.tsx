@@ -44,7 +44,7 @@ export function Filter({
       <div className="p-6 border-b border-gray-200 bg-gray-50 flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-50 rounded-lg">
+            <div className="p-2 bg-gray-100 rounded-lg">
               <FilterIcon className="w-5 h-5 text-blue-600" />
             </div>
             <div>
@@ -71,7 +71,7 @@ export function Filter({
           )}
         </div>
 
-        <div className="flex items-start gap-2 text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-100">
+        <div className="flex items-start gap-2 text-sm text-gray-600 bg-gray-100 p-3 rounded-lg border border-blue-100">
           <MapPin className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
           <p>Click on the map to view details of police incidents.</p>
         </div>

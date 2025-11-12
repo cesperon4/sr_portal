@@ -13,6 +13,7 @@ import CommentBox from "@/components/community/comment-box";
 import { timeAgo } from "@/lib/time";
 import { useUserContext } from "@/context/UserContext";
 import { ImageCarousel } from "../ui/image-carousel";
+import { Loader } from "../ui/loader";
 
 interface PostDetailProps {
   id: string;
@@ -26,7 +27,7 @@ function PostDetail({ id }: PostDetailProps) {
   });
 
   if (error) return <div>Error: {error.message}</div>;
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
   if (!data?.post) return <div>Post not found</div>;
 
   const images = data.post.imageUrls || [];

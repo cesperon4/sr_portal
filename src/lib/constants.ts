@@ -7,7 +7,7 @@ export const TABLE_ROW_CLASSES = {
 };
 
 export const HEADER_CLASSES = {
-  view_button: "bg-blue-500 text-white rounded",
+  view_button: "bg-gray-100 text-white rounded",
 };
 
 interface CrimeFilters {

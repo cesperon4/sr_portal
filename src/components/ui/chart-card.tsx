@@ -3,7 +3,7 @@ import React from "react";
 interface ChartCardProps {
   title: string;
   stat: number | string | null;
-  color: string; // expects tailwind color class like "bg-blue-500"
+  color: string; // expects tailwind color class like "bg-gray-100"
 }
 
 export function ChartCard({ title, stat, color }: ChartCardProps) {

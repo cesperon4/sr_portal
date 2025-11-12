@@ -38,7 +38,7 @@ export default function CommentBox({
           <button
             onClick={handleSubmit}
             disabled={!value.trim()}
-            className="rounded-md bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600 disabled:opacity-50 cursor-pointer"
+            className="rounded-md bg-gray-100 px-3 py-1 text-sm text-white hover:bg-blue-600 disabled:opacity-50 cursor-pointer"
           >
             Comment
           </button>

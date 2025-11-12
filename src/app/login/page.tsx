@@ -13,15 +13,21 @@ import { LoginParams } from "@/types/user.interface";
 import UnderlineButton from "@/components/ui/underline-button";
 import { SignupModal } from "@/components/landing-page/signup-modal";
 import EmailVerificationModal from "@/components/login/email-verification-modal";
+import { Loader } from "@/components/ui/loader";
 
 export default function Login() {
   const signupModal = useModal();
   const verificationModal = useModal();
 
-  const { setLoginParams, handleLogin, loginParams } = useLogin(
-    verificationModal.openModal
-  );
+  const {
+    setLoginParams,
+    handleLogin,
+    loginParams,
+    redirecting,
+    setRedirecting,
+  } = useLogin(verificationModal.openModal);
 
+  if (redirecting) return <Loader text={"Getting Portal Ready..."} />;
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4 md:px-0">
       {/* Modals */}
@@ -51,7 +57,9 @@ export default function Login() {
           handleLogin();
         }}
       >
-        <h2 className="text-2xl font-semibold text-gray-900 text-center">SR Portal Login</h2>
+        <h2 className="text-2xl font-semibold text-gray-900 text-center">
+          SR Portal Login
+        </h2>
 
         {/* Input Fields */}
         <input
@@ -104,7 +112,10 @@ export default function Login() {
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition"
             type="button"
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => {
+              setRedirecting(true);
+              signIn("google", { callbackUrl: "/dashboard" });
+            }}
           >
             <FcGoogle size={24} />
             Google
