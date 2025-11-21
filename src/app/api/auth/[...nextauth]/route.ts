@@ -23,15 +23,19 @@ const handler = NextAuth({
             lastname: "${user.name?.split(" ")[1] || ""}",
             email: "${user.email}"
           }) {
-            token
-            user{
-                id
-                email
-                username
-                firstname
-                lastname
-                role
+            data {
+              token
+              user{
+                  id
+                  email
+                  username
+                  firstname
+                  lastname
+                  role
+              }
             }
+            message
+            status
           }
         }
       `;
@@ -52,9 +56,9 @@ const handler = NextAuth({
         const response = await res.json();
 
         if (response.data) {
-          const token = response.data.upsertUser.token;
+          const token = response.data.upsertUser.data.token;
           const { id, email, username, firstname, lastname, role } =
-            response.data.upsertUser.user;
+            response.data.upsertUser.data.user;
 
           Object.assign(user, {
             backendToken: token,

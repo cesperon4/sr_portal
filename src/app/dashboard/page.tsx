@@ -133,7 +133,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen pb-20 gap-8 font-(family-name:--font-geist-sans)">
+    <div className="grid grid-rows-1 items-center justify-items-center gap-10 font-(family-name:--font-geist-sans)">
       {isProfileSettingsOpen && (
         <ProfileSettings setIsProfileSettingsOpen={setIsProfileSettingsOpen} />
       )}
@@ -152,7 +152,7 @@ export default function Dashboard() {
           />
         )}
         {view === "Map" && (
-          <div className="flex w-full gap-4 h-[60vh]">
+          <div className="flex w-full gap-4">
             <Filter
               crimeFilterState={crimeFilterState}
               setCrimeFilterState={setCrimeFilterState}

@@ -12,15 +12,9 @@ import { IoMapOutline } from "react-icons/io5";
 import { CiSettings } from "react-icons/ci";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdOutlineAddBox } from "react-icons/md";
-
-import { useLogoutMutation } from "../../generated/graphql";
-
 import { useUserContext } from "@/context/UserContext";
-
 import { signOut } from "next-auth/react";
-
 import Image from "next/image";
-
 import { useRouter } from "next/navigation";
 
 interface HeaderProps {
@@ -38,10 +32,15 @@ export function Header({
   setIsProfileSettingsOpen,
 }: HeaderProps) {
   const { loggedUser, clearLoggedUser } = useUserContext();
-  const [logoutMutation] = useLogoutMutation();
   const router = useRouter();
+  const handleLogout = async () => {
+    clearLoggedUser();
+    await signOut({ redirect: false });
+
+    router.replace("/");
+  };
   return (
-    <header className="dashboard-header font-medium mb-4">
+    <header className="dashboard-header font-medium mb-4 h-2/12">
       <div className="header-main">
         <Image
           aria-hidden
@@ -151,15 +150,7 @@ export function Header({
         </div>
 
         <div className="logout-wrapper">
-          <UnderlineButton
-            clickMethod={async () => {
-              await logoutMutation();
-              signOut({ callbackUrl: "/" });
-              clearLoggedUser();
-            }}
-          >
-            Logout
-          </UnderlineButton>
+          <UnderlineButton clickMethod={handleLogout}>Logout</UnderlineButton>
         </div>
       </div>
     </header>

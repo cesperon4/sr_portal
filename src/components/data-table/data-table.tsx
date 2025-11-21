@@ -90,7 +90,7 @@ export function DataTable({
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 lg:p-12 mx-auto">
+    <div className="flex flex-col gap-2 p-6 lg:p-12">
       {tableRow && tableRowModalData && (
         <TableRowModal handleClose={closeTableRow} data={tableRowModalData} />
       )}

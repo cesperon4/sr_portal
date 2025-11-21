@@ -3,7 +3,7 @@ import Feed from "./feed";
 
 function CommunityContainer() {
   return (
-    <div className="flex justify-center w-full mt-12">
+    <div className="flex justify-center w-full">
       <Feed />
     </div>
   );

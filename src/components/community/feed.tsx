@@ -19,14 +19,10 @@ function Feed() {
   const loadMore = async () => {
     if (data?.posts?.data?.hasNextPage === false) return; // No more posts to load
 
-    console.log("limit: ", LIMIT);
-    console.log("cursor: ", data?.posts?.data?.cursor);
     await fetchMore({
       variables: { data: { limit: LIMIT, cursor: data?.posts?.data?.cursor } },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult?.posts?.data?.posts) return prev;
-        console.log("prev: ", prev);
-        console.log("fetch more results: ", fetchMoreResult);
 
         return {
           posts: {
