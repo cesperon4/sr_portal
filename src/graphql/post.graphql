@@ -1,4 +1,4 @@
-query GetPost($id: ID!) {
+query GetPost($id: Int!) {
   post(id: $id) {
     id
     title
@@ -11,8 +11,17 @@ query GetPost($id: ID!) {
       id
       user {
         username
+        role
       }
       body
+      createdAt
+      updatedAt
+    }
+    likes {
+      id
+      postId
+      userId
+      isActive
       createdAt
       updatedAt
     }
@@ -48,6 +57,7 @@ query GetPost($id: ID!) {
     user {
       id
       username
+      role
     }
     imageUrls
   }
@@ -70,13 +80,23 @@ query GetPosts($data: PostsInput) {
         user {
           id
           username
+          role
         }
         postComments {
           id
           user {
             username
+            role
           }
           body
+          createdAt
+          updatedAt
+        }
+        likes {
+          id
+          postId
+          userId
+          isActive
           createdAt
           updatedAt
         }
@@ -93,7 +113,7 @@ mutation CreatePost($data: CreatePostInput!) {
   }
 }
 
-mutation UpdatePost($id: ID!, $data: UpdatePostInput!) {
+mutation UpdatePost($id: Int!, $data: UpdatePostInput!) {
   updatePost(id: $id, data: $data) {
     id
   }

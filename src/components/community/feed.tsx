@@ -16,6 +16,8 @@ function Feed() {
   }); //refetch the posts using refetch { data, loading, error, refetch}}
 
   const posts = useMemo(() => data?.posts?.data?.posts ?? [], [data]); //useMemo ensures that posts only changes when data changes, not on every render.
+
+  console.log("posts: ", posts);
   const loadMore = async () => {
     if (data?.posts?.data?.hasNextPage === false) return; // No more posts to load
 

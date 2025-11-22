@@ -33,6 +33,27 @@ export type ApiArrestLogsResponse = {
   status?: Maybe<Scalars['Int']['output']>;
 };
 
+export type ApiLikeResponse = {
+  __typename?: 'ApiLikeResponse';
+  data?: Maybe<Like>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ApiUpsertUserResponse = {
+  __typename?: 'ApiUpsertUserResponse';
+  data?: Maybe<UpsertUserData>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ApiUsersResponse = {
+  __typename?: 'ApiUsersResponse';
+  data?: Maybe<Array<Maybe<User>>>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type ArrestLog = {
   __typename?: 'ArrestLog';
   AGE?: Maybe<Scalars['String']['output']>;
@@ -60,9 +81,9 @@ export type ArrestLog = {
   TIME_ARREST?: Maybe<Scalars['String']['output']>;
   UNIQUEKEY?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
   post?: Maybe<Post>;
-  postId?: Maybe<Scalars['ID']['output']>;
+  postId?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -97,17 +118,22 @@ export type CreateArrestLogInput = {
   SUFFIX?: InputMaybe<Scalars['String']['input']>;
   TIME_ARREST?: InputMaybe<Scalars['String']['input']>;
   UNIQUEKEY?: InputMaybe<Scalars['String']['input']>;
-  postId?: InputMaybe<Scalars['ID']['input']>;
+  postId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CreateLikeInput = {
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreatePostCommentInput = {
   body?: InputMaybe<Scalars['String']['input']>;
-  postId?: InputMaybe<Scalars['ID']['input']>;
+  postId?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreatePostInput = {
-  arrestLogId?: InputMaybe<Scalars['ID']['input']>;
+  arrestLogId?: InputMaybe<Scalars['Int']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   imageBase64?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   imageName?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -139,6 +165,18 @@ export type GuestPayload = {
   token: Scalars['Token']['output'];
 };
 
+export type Like = {
+  __typename?: 'Like';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  isActive?: Maybe<Scalars['Boolean']['output']>;
+  post?: Maybe<Post>;
+  postId?: Maybe<Scalars['Int']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -147,6 +185,7 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createArrestLog: ArrestLog;
+  createLike?: Maybe<ApiLikeResponse>;
   createPost: Post;
   createPostComment: PostComment;
   deleteArrestLog: ArrestLog;
@@ -158,17 +197,24 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   registerUser: Scalars['Boolean']['output'];
   resendVerificationEmail: Scalars['Boolean']['output'];
+  toggleLike?: Maybe<ApiLikeResponse>;
   updateArrestLog: ArrestLog;
+  updateLike?: Maybe<ApiLikeResponse>;
   updatePost: Post;
   updatePostComment: PostComment;
   updateUser: User;
-  upsertUser: AuthPayload;
+  upsertUser?: Maybe<ApiUpsertUserResponse>;
   verifyEmail: Scalars['Boolean']['output'];
 };
 
 
 export type MutationCreateArrestLogArgs = {
   data?: InputMaybe<CreateArrestLogInput>;
+};
+
+
+export type MutationCreateLikeArgs = {
+  data?: InputMaybe<CreateLikeInput>;
 };
 
 
@@ -183,17 +229,17 @@ export type MutationCreatePostCommentArgs = {
 
 
 export type MutationDeleteArrestLogArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
 export type MutationDeletePostArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
 export type MutationDeletePostCommentArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
@@ -217,21 +263,31 @@ export type MutationResendVerificationEmailArgs = {
 };
 
 
+export type MutationToggleLikeArgs = {
+  data?: InputMaybe<ToggleLikeInput>;
+};
+
+
 export type MutationUpdateArrestLogArgs = {
   data?: InputMaybe<UpdateArrestLogInput>;
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateLikeArgs = {
+  data?: InputMaybe<UpdateLikeInput>;
 };
 
 
 export type MutationUpdatePostArgs = {
   data?: InputMaybe<UpdatePostInput>;
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
 export type MutationUpdatePostCommentArgs = {
   data?: InputMaybe<UpdatePostCommentInput>;
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
@@ -253,12 +309,13 @@ export type MutationVerifyEmailArgs = {
 export type Post = {
   __typename?: 'Post';
   arrestLog?: Maybe<ArrestLog>;
-  arrestLogId?: Maybe<Scalars['ID']['output']>;
+  arrestLogId?: Maybe<Scalars['Int']['output']>;
   body?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['Int']['output'];
   imageUrls?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  postComments?: Maybe<Array<Maybe<PostComment>>>;
+  likes: Array<Like>;
+  postComments: Array<PostComment>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
@@ -269,9 +326,9 @@ export type PostComment = {
   __typename?: 'PostComment';
   body?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['Int']['output'];
   post?: Maybe<Post>;
-  postId?: Maybe<Scalars['ID']['output']>;
+  postId?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
 };
@@ -306,7 +363,7 @@ export type Query = {
   postComments: Array<PostComment>;
   posts: PostsResponse;
   user: User;
-  users: Array<User>;
+  users?: Maybe<ApiUsersResponse>;
 };
 
 
@@ -321,12 +378,12 @@ export type QueryChatBotResponseArgs = {
 
 
 export type QueryPostArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
 export type QueryPostCommentArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
 };
 
 
@@ -343,6 +400,11 @@ export enum Role {
   Guest = 'GUEST',
   User = 'USER'
 }
+
+export type ToggleLikeInput = {
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type UpdateArrestLogInput = {
   AGE?: InputMaybe<Scalars['String']['input']>;
@@ -371,6 +433,11 @@ export type UpdateArrestLogInput = {
   UNIQUEKEY?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateLikeInput = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type UpdatePostCommentInput = {
   body?: InputMaybe<Scalars['String']['input']>;
 };
@@ -386,6 +453,12 @@ export type UpdateUserInput = {
   lastname?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpsertUserData = {
+  __typename?: 'UpsertUserData';
+  token?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
 };
 
 export type UpsertUserInput = {
@@ -410,41 +483,48 @@ export type User = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
-export type GetPostQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+export type ToggleLikeMutationVariables = Exact<{
+  data: ToggleLikeInput;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrls?: Array<string | null> | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null } | null } | null> | null, arrestLog?: { __typename?: 'ArrestLog', id?: string | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null } };
+export type ToggleLikeMutation = { __typename?: 'Mutation', toggleLike?: { __typename?: 'ApiLikeResponse', status?: number | null, message?: string | null, data?: { __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null } | null } | null };
+
+export type GetPostQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }>, arrestLog?: { __typename?: 'ArrestLog', id?: number | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null } };
 
 export type GetPostsQueryVariables = Exact<{
   data?: InputMaybe<PostsInput>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id?: string | null, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: string | null, imageUrls?: Array<string | null> | null, user?: { __typename?: 'User', id?: string | null, username?: string | null } | null, postComments?: Array<{ __typename?: 'PostComment', id?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null } | null } | null> | null }> } | null } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }> }> } | null } };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id?: string | null } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number } };
 
 export type UpdatePostMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: Scalars['Int']['input'];
   data: UpdatePostInput;
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id?: string | null } };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: number } };
 
 export type CreatePostCommentMutationVariables = Exact<{
   data: CreatePostCommentInput;
 }>;
 
 
-export type CreatePostCommentMutation = { __typename?: 'Mutation', createPostComment: { __typename?: 'PostComment', id?: string | null, postId?: string | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } };
+export type CreatePostCommentMutation = { __typename?: 'Mutation', createPostComment: { __typename?: 'PostComment', id: number, postId?: number | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -456,7 +536,7 @@ export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null }> };
+export type GetUsersQuery = { __typename?: 'Query', users?: { __typename?: 'ApiUsersResponse', status?: number | null, message?: string | null, data?: Array<{ __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } | null> | null } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -489,7 +569,7 @@ export type UpsertUserMutationVariables = Exact<{
 }>;
 
 
-export type UpsertUserMutation = { __typename?: 'Mutation', upsertUser: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', firstname?: string | null, lastname?: string | null, email?: string | null } } };
+export type UpsertUserMutation = { __typename?: 'Mutation', upsertUser?: { __typename?: 'ApiUpsertUserResponse', status?: number | null, message?: string | null, data?: { __typename?: 'UpsertUserData', token?: string | null, user?: { __typename?: 'User', firstname?: string | null, lastname?: string | null, email?: string | null } | null } | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -524,8 +604,50 @@ export type LoginGuestMutationVariables = Exact<{ [key: string]: never; }>;
 export type LoginGuestMutation = { __typename?: 'Mutation', loginGuest: { __typename?: 'GuestPayload', token: any } };
 
 
+export const ToggleLikeDocument = gql`
+    mutation ToggleLike($data: ToggleLikeInput!) {
+  toggleLike(data: $data) {
+    data {
+      id
+      postId
+      userId
+      isActive
+      createdAt
+      updatedAt
+    }
+    status
+    message
+  }
+}
+    `;
+export type ToggleLikeMutationFn = Apollo.MutationFunction<ToggleLikeMutation, ToggleLikeMutationVariables>;
+
+/**
+ * __useToggleLikeMutation__
+ *
+ * To run a mutation, you first call `useToggleLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleLikeMutation, { data, loading, error }] = useToggleLikeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useToggleLikeMutation(baseOptions?: Apollo.MutationHookOptions<ToggleLikeMutation, ToggleLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ToggleLikeMutation, ToggleLikeMutationVariables>(ToggleLikeDocument, options);
+      }
+export type ToggleLikeMutationHookResult = ReturnType<typeof useToggleLikeMutation>;
+export type ToggleLikeMutationResult = Apollo.MutationResult<ToggleLikeMutation>;
+export type ToggleLikeMutationOptions = Apollo.BaseMutationOptions<ToggleLikeMutation, ToggleLikeMutationVariables>;
 export const GetPostDocument = gql`
-    query GetPost($id: ID!) {
+    query GetPost($id: Int!) {
   post(id: $id) {
     id
     title
@@ -538,8 +660,17 @@ export const GetPostDocument = gql`
       id
       user {
         username
+        role
       }
       body
+      createdAt
+      updatedAt
+    }
+    likes {
+      id
+      postId
+      userId
+      isActive
       createdAt
       updatedAt
     }
@@ -575,6 +706,7 @@ export const GetPostDocument = gql`
     user {
       id
       username
+      role
     }
     imageUrls
   }
@@ -631,13 +763,23 @@ export const GetPostsDocument = gql`
         user {
           id
           username
+          role
         }
         postComments {
           id
           user {
             username
+            role
           }
           body
+          createdAt
+          updatedAt
+        }
+        likes {
+          id
+          postId
+          userId
+          isActive
           createdAt
           updatedAt
         }
@@ -715,7 +857,7 @@ export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutati
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
 export const UpdatePostDocument = gql`
-    mutation UpdatePost($id: ID!, $data: UpdatePostInput!) {
+    mutation UpdatePost($id: Int!, $data: UpdatePostInput!) {
   updatePost(id: $id, data: $data) {
     id
   }
@@ -836,15 +978,19 @@ export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVa
 export const GetUsersDocument = gql`
     query GetUsers {
   users {
-    id
-    firstname
-    lastname
-    email
-    username
-    password
-    role
-    createdAt
-    updatedAt
+    data {
+      id
+      firstname
+      lastname
+      email
+      username
+      password
+      role
+      createdAt
+      updatedAt
+    }
+    status
+    message
   }
 }
     `;
@@ -1022,12 +1168,16 @@ export type ResendVerificationEmailMutationOptions = Apollo.BaseMutationOptions<
 export const UpsertUserDocument = gql`
     mutation UpsertUser($data: UpsertUserInput!) {
   upsertUser(data: $data) {
-    user {
-      firstname
-      lastname
-      email
+    data {
+      user {
+        firstname
+        lastname
+        email
+      }
+      token
     }
-    token
+    status
+    message
   }
 }
     `;

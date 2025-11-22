@@ -13,5 +13,5 @@ export default async function PostPage({ params }: { params: Params }) {
   // const post = await fetchPost(id);
   // if (!post) return notFound();
 
-  return <PostDetail id={id} />;
+  return <PostDetail id={parseInt(id, 10)} />;
 }

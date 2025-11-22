@@ -15,15 +15,19 @@ query GetUser($id: ID!) {
 
 query GetUsers {
   users {
-    id
-    firstname
-    lastname
-    email
-    username
-    password
-    role
-    createdAt
-    updatedAt
+    data {
+      id
+      firstname
+      lastname
+      email
+      username
+      password
+      role
+      createdAt
+      updatedAt
+    }
+    status
+    message
   }
 }
 
@@ -54,12 +58,16 @@ mutation resendVerificationEmail($email: String!) {
 
 mutation UpsertUser($data: UpsertUserInput!) {
   upsertUser(data: $data) {
-    user {
-      firstname
-      lastname
-      email
+    data {
+      user {
+        firstname
+        lastname
+        email
+      }
+      token
     }
-    token
+    status
+    message
   }
 }
 

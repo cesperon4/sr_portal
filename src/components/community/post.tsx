@@ -30,7 +30,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
           )}`}</span>
           <HiDotsHorizontal size={18} className="ml-auto text-gray-500" />
         </header>
-
         {/* User and Title */}
         <div className="mb-2">
           <span className="font-semibold text-gray-800">
@@ -38,15 +37,13 @@ const Post: React.FC<PostProps> = ({ post }) => {
           </span>
           <h2 className="font-medium text-lg text-gray-900">{post.title}</h2>
         </div>
-
         {/* Images */}
         {images.length > 0 && (
           <ImageCarousel images={images} title={post.title} />
         )}
-
         {/* Post Footer */}
         <footer className="mt-auto">
-          <PostFooter commentCount={post.postComments?.length || 0} />
+          <PostFooter post={post} />
         </footer>
       </article>
     </Link>

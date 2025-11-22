@@ -16,7 +16,7 @@ import { ImageCarousel } from "../ui/image-carousel";
 import { Loader } from "../ui/loader";
 
 interface PostDetailProps {
-  id: string;
+  id: number;
 }
 
 function PostDetail({ id }: PostDetailProps) {
@@ -76,7 +76,7 @@ function PostDetail({ id }: PostDetailProps) {
           </p>
         )}
 
-        <PostFooter commentCount={data.post?.postComments?.length || 0} />
+        <PostFooter post={data.post} />
       </div>
 
       {/* Comment Box */}

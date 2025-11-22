@@ -1,0 +1,14 @@
+mutation ToggleLike($data: ToggleLikeInput!) {
+  toggleLike(data: $data) {
+    data {
+      id
+      postId
+      userId
+      isActive
+      createdAt
+      updatedAt
+    }
+    status
+    message
+  }
+}
