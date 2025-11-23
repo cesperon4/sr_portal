@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "xplwtqeujchlkoedjqto.supabase.co", // 👈 your Supabase storage domain
+        hostname: "luunravqjnesbsmiziqh.supabase.co", // 👈 your Supabase storage domain
         port: "",
         pathname: "/storage/v1/object/public/**", // allow any object in public buckets
       },
