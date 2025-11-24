@@ -7,7 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { PoliceIncidentType } from "@/types/map.interface";
-
+import SearchBox from "./SearchBox";
 const customIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
   iconSize: [38, 38], // size of the icon
@@ -26,6 +26,8 @@ export function Map({ policeIncidents }: DataTableProps) {
         zoom={13}
         className="h-full w-full rounded-lg shadow-md bg-white"
       >
+        <SearchBox />
+
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
