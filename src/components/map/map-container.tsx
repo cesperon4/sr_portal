@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-// import "leaflet/dist/leaflet.css";
-// import "react-leaflet-markercluster/styles";
 import { Icon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { PoliceIncidentType } from "@/types/map.interface";
 import SearchBox from "./SearchBox";
+
 const customIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
   iconSize: [38, 38], // size of the icon
@@ -15,9 +14,10 @@ const customIcon = new Icon({
 
 interface DataTableProps {
   policeIncidents: PoliceIncidentType[];
+  openMapModal: (incident: PoliceIncidentType) => void;
 }
 
-export function Map({ policeIncidents }: DataTableProps) {
+export function Map({ policeIncidents, openMapModal }: DataTableProps) {
   const center: [number, number] = [38.4404, -122.7141];
   return (
     <div className="w-full mr-4 flex items-center justify-center z-0">
@@ -40,14 +40,17 @@ export function Map({ policeIncidents }: DataTableProps) {
               key={index}
             >
               <div className={`cursor-pointer`}>
+                (
                 <Popup>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
+                      openMapModal(incident);
                     }}
                     className={`cursor-pointer`}
                   >{`${incident.attributes.StatuteDescription}, ${incident.attributes.DateOccurred}`}</div>
                 </Popup>
+                )
               </div>
             </Marker>
           ))}

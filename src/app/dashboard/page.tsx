@@ -27,6 +27,8 @@ import { useSession } from "next-auth/react";
 
 import { useSearchParams } from "next/navigation";
 
+import { MapModal } from "@/components/map/map-modal";
+
 export default function Dashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -49,8 +51,6 @@ export default function Dashboard() {
     }
   }, [loading, isAuthenticated, router, session]);
 
-  //export default only required for pages
-  //Table search
   const { searchArrestLogs, arrestLogSearchParams } = useArrestLogSearch();
 
   //Table filters
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
   const toggleView = (view: HeaderSelect) => setView(view);
 
-  const { renderMap } = useRenderMap({
+  const { renderMap, mapModal, closeMapModal, modalData } = useRenderMap({
     isPoliceIncidentsLoading,
     policeIncidentsError,
     policeIncidents: policeIncidents?.features,
@@ -153,6 +153,9 @@ export default function Dashboard() {
         )}
         {view === "Map" && (
           <div className="flex w-full gap-4">
+            {mapModal && modalData && (
+              <MapModal incident={modalData} closeMapModal={closeMapModal} />
+            )}
             <Filter
               crimeFilterState={crimeFilterState}
               setCrimeFilterState={setCrimeFilterState}
