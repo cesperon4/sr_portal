@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { HeaderSelect } from "@/types/header.interface";
 import Searchbar from "@/components/data-table/searchbar";
 import UnderlineButton from "./ui/underline-button";
-
 import { MdInsights } from "react-icons/md";
 import { IoMdBook } from "react-icons/io";
 import { IoMapOutline } from "react-icons/io5";
@@ -20,14 +19,12 @@ import { useRouter } from "next/navigation";
 interface HeaderProps {
   view: HeaderSelect;
   toggleView: (view: HeaderSelect) => void;
-  searchArrestLogs: (e: string, filter: string) => void;
   openSelectColumns: () => void;
   setIsProfileSettingsOpen: (arg: boolean) => void;
 }
 export function Header({
   view,
   toggleView,
-  searchArrestLogs,
   openSelectColumns,
   setIsProfileSettingsOpen,
 }: HeaderProps) {
@@ -108,7 +105,7 @@ export function Header({
             >
               Select Columns
             </Button>
-            <Searchbar handleChange={searchArrestLogs} />
+            <Searchbar />
           </div>
         )}
 

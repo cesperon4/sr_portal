@@ -1,4 +1,4 @@
-"use client"; // required in next.js 13+ which uses server side rendering
+// "use client"; // required in next.js 13+ which uses server side rendering
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { initialCrimeFilterState } from "@/lib/constants";

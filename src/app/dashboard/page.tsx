@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useQueryBuilder } from "../../api/queryBuilder"; // Adjust the import path
 import { Header } from "@/components/header";
 import { SelectColumnModal } from "@/components/data-table/select-column-modal";
@@ -10,9 +10,9 @@ import CommunityContainer from "@/components/community/community-container";
 import { Filter } from "@/components/map/filter";
 //hooks
 import { useRenderMap } from "@/hooks/map/useRenderMap";
-import { useArrestLogSearch } from "@/hooks/data-table/useArrestLogSearch";
+// import { useArrestLogSearch } from "@/hooks/data-table/useArrestLogSearch";
+import { useArrestLogContext } from "@/context/ArrestLogContext";
 import { useRenderCharts } from "@/hooks/charts/useRenderCharts";
-import { useRenderTable } from "@/hooks/data-table/useRenderTable";
 import { useTableHeaderFilter } from "@/hooks/data-table/useTableHeaderFilter";
 
 import { HeaderSelect } from "@/types/header.interface";
@@ -26,15 +26,16 @@ import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { useSession } from "next-auth/react";
 
 import { useSearchParams } from "next/navigation";
+import { Loader } from "../../components/ui/loader";
 
-import { MapModal } from "@/components/map/map-modal";
+import DataTableWrapper from "../../components/data-table/data-table-wrapper";
+
+const MapModal = React.lazy(() => import("@/components/map/map-modal"));
 
 export default function Dashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const { data: session } = useSession();
-
   const { loading, isAuthenticated } = useAuth();
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
@@ -51,7 +52,7 @@ export default function Dashboard() {
     }
   }, [loading, isAuthenticated, router, session]);
 
-  const { searchArrestLogs, arrestLogSearchParams } = useArrestLogSearch();
+  const { arrestLogSearchParams } = useArrestLogContext();
 
   //Table filters
   const {
@@ -112,18 +113,6 @@ export default function Dashboard() {
     arrestLogs: arrestLogs?.features,
   });
 
-  const { renderDataTable } = useRenderTable({
-    isArrestLogsLoading,
-    arrestLogsError,
-    arrestLogs: arrestLogs?.features,
-    arrestLogFields: arrestLogs?.fields,
-    arrestLogCount: arrestLogs?.features.length,
-    headerFilter,
-    setHeaderFilter,
-    filterDirection,
-    setFilterDirection,
-  });
-
   const [selectColumns, setSelectColumns] = useState<boolean>(false);
   const openSelectColumns = () => {
     setSelectColumns(true);
@@ -140,7 +129,6 @@ export default function Dashboard() {
       <Header
         view={view}
         toggleView={toggleView}
-        searchArrestLogs={searchArrestLogs}
         openSelectColumns={openSelectColumns}
         setIsProfileSettingsOpen={setIsProfileSettingsOpen}
       />
@@ -154,7 +142,11 @@ export default function Dashboard() {
         {view === "Map" && (
           <div className="flex w-full gap-4">
             {mapModal && modalData && (
-              <MapModal incident={modalData} closeMapModal={closeMapModal} />
+              <Suspense
+                fallback={<Loader text={"Fetching incident data..."} />}
+              >
+                <MapModal incident={modalData} closeMapModal={closeMapModal} />
+              </Suspense>
             )}
             <Filter
               crimeFilterState={crimeFilterState}
@@ -164,9 +156,27 @@ export default function Dashboard() {
             {renderMap()}
           </div>
         )}
-        {view === "Table" && renderDataTable()}
+        {view === "Table" && (
+          <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>
+            <DataTableWrapper
+              isArrestLogsLoading={isArrestLogsLoading}
+              arrestLogsError={arrestLogsError}
+              arrestLogs={arrestLogs?.features}
+              arrestLogFields={arrestLogs?.fields}
+              arrestLogCount={arrestLogs?.features.length}
+              headerFilter={headerFilter}
+              setHeaderFilter={setHeaderFilter}
+              filterDirection={filterDirection}
+              setFilterDirection={setFilterDirection}
+            />
+          </Suspense>
+        )}
         {view === "Chart" && renderCharts()}
-        {view === "Community" && <CommunityContainer />}
+        {view === "Community" && (
+          <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>
+            <CommunityContainer />
+          </Suspense>
+        )}
       </main>
     </div>
   );

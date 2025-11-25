@@ -234,9 +234,6 @@ export function DataTable({
           </Table>
         </div>
       </div>
-
-      {/* Pagination placeholder */}
-      {/* <Paginate /> */}
     </div>
   );
 }

@@ -11,10 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-interface DataTableProps {
-  handleChange: (e: string, filter: string) => void;
-}
+import { useArrestLogContext } from "@/context/ArrestLogContext";
 
 const filters = [
   "First Name",
@@ -27,9 +24,9 @@ const filters = [
   "Date Arrested",
 ];
 
-function Searchbar({ handleChange }: DataTableProps) {
+function Searchbar() {
   const [filterState, setFilterState] = useState<Record<string, boolean>>({});
-
+  const { searchArrestLogs } = useArrestLogContext();
   const selectedFilter = useMemo(() => {
     const entry = Object.entries(filterState).find(([, value]) => value);
     return entry?.[0];
@@ -39,9 +36,9 @@ function Searchbar({ handleChange }: DataTableProps) {
 
   useEffect(() => {
     if (selectedFilter) {
-      handleChange(filterText, selectedFilter);
+      searchArrestLogs(filterText, selectedFilter);
     }
-  }, [filterText, selectedFilter, handleChange]);
+  }, [filterText, selectedFilter, searchArrestLogs]);
 
   const setShowStatusBar = useCallback((checkedFilter: string) => {
     setFilterState((prev) =>

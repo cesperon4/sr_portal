@@ -16,17 +16,24 @@ export default function VerifyEmailPage() {
       setStatus("no-token");
       return;
     }
+
+    let timeoutId: NodeJS.Timeout;
+
     (async () => {
       try {
         await verify({ variables: { token } });
         setStatus("success");
-        // optionally redirect after a few seconds:
-        setTimeout(() => router.push("/login"), 2000);
+
+        timeoutId = setTimeout(() => router.push("/login"), 2000);
       } catch (err) {
         console.error(err);
         setStatus("error");
       }
     })();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [token]);
 
   return (

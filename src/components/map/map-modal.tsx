@@ -9,9 +9,8 @@ type MapModalProps = {
   closeMapModal: () => void;
 };
 
-export function MapModal({ incident, closeMapModal }: MapModalProps) {
+export default function MapModal({ incident, closeMapModal }: MapModalProps) {
   const a = incident.attributes;
-  console.log("a: ", a);
   return (
     <Backdrop onClick={closeMapModal}>
       <form

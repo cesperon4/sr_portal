@@ -13,14 +13,6 @@ import {
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true); // Set mounted to true once the component has mounted
-  }, []);
-
-  // If the component is not mounted yet, return null to avoid SSR mismatch
-  if (!mounted) return null;
 
   return (
     <DropdownMenu>
