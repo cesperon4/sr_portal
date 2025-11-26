@@ -6,7 +6,6 @@ const buildArrestLogsUrl = ({
   base_url,
   orderBy,
 }: queryBuilderProps) => {
-  console.log("orderBy: ", orderBy);
   let whereClause = "1=1"; // Default filter (no filter)
 
   // If searchParams are provided, create the where clause dynamically

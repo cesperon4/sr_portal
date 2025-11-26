@@ -5,14 +5,11 @@ import { useQueryBuilder } from "../../api/queryBuilder"; // Adjust the import p
 import { Header } from "@/components/header";
 import { SelectColumnModal } from "@/components/data-table/select-column-modal";
 import { ProfileSettings } from "@/components/user/profile-settings";
-import CommunityContainer from "@/components/community/community-container";
 
 import { Filter } from "@/components/map/filter";
 //hooks
 import { useRenderMap } from "@/hooks/map/useRenderMap";
-// import { useArrestLogSearch } from "@/hooks/data-table/useArrestLogSearch";
 import { useArrestLogContext } from "@/context/ArrestLogContext";
-import { useRenderCharts } from "@/hooks/charts/useRenderCharts";
 import { useTableHeaderFilter } from "@/hooks/data-table/useTableHeaderFilter";
 
 import { HeaderSelect } from "@/types/header.interface";
@@ -27,10 +24,16 @@ import { useSession } from "next-auth/react";
 
 import { useSearchParams } from "next/navigation";
 import { Loader } from "../../components/ui/loader";
-
-import DataTableWrapper from "../../components/data-table/data-table-wrapper";
+import { InsightContextProvider } from "@/context/InsightContext";
 
 const MapModal = React.lazy(() => import("@/components/map/map-modal"));
+const DataTableWrapper = React.lazy(
+  () => import("@/components/data-table/data-table-wrapper")
+);
+const Charts = React.lazy(() => import("@/components/charts/charts"));
+const CommunityContainer = React.lazy(
+  () => import("@/components/community/community-container")
+);
 
 export default function Dashboard() {
   const router = useRouter();
@@ -107,12 +110,6 @@ export default function Dashboard() {
     policeIncidents: policeIncidents?.features,
   });
 
-  const { renderCharts } = useRenderCharts({
-    isArrestLogsLoading,
-    arrestLogsError,
-    arrestLogs: arrestLogs?.features,
-  });
-
   const [selectColumns, setSelectColumns] = useState<boolean>(false);
   const openSelectColumns = () => {
     setSelectColumns(true);
@@ -171,7 +168,11 @@ export default function Dashboard() {
             />
           </Suspense>
         )}
-        {view === "Chart" && renderCharts()}
+        {view === "Chart" && (
+          <InsightContextProvider arrestLogs={arrestLogs.features}>
+            <Charts />
+          </InsightContextProvider>
+        )}
         {view === "Community" && (
           <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>
             <CommunityContainer />

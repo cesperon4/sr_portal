@@ -144,7 +144,6 @@ export function getAverageArrestAgeBar(
   if (!chartData || !chartData.labels || !chartData.datasets.length) {
     return null;
   }
-  console.log("calcuating average");
   // Extract the first dataset (assuming it contains the number of arrests per age)
   const dataset = chartData.datasets[0];
   const counts = dataset.data as number[];

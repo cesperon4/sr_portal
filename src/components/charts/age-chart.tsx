@@ -1,24 +1,27 @@
 import React from "react";
-import { ChartData } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { ChartCard } from "../ui/chart-card";
 
+import { useInsightContext } from "@/context/InsightContext";
+import {
+  getAverageArrestAgeBar,
+  getYoungestArrestAge,
+  getOldestArrestAge,
+  getMaxChartData,
+} from "@/utils/chartData";
+
 interface AgeChartsProps {
-  youngestArrestAge: number | null;
-  oldestArrestAge: number | null;
-  averageArrestAge: number | null;
-  highestOccurringArrestAge: number | string | null;
-  chartData: ChartData<"bar">;
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
 }
-export function AgeCharts({
-  youngestArrestAge,
-  oldestArrestAge,
-  averageArrestAge,
-  highestOccurringArrestAge,
-  chartData,
-  toggleChartModal,
-}: AgeChartsProps) {
+export default function AgeChart({ toggleChartModal }: AgeChartsProps) {
+  const { chartData } = useInsightContext();
+  if (!chartData.barChartData) return <div>loading...</div>;
+
+  const averageArrestAge = getAverageArrestAgeBar(chartData.barChartData);
+  const youngestArrestAge = getYoungestArrestAge(chartData.barChartData);
+  const oldestArrestAge = getOldestArrestAge(chartData.barChartData);
+  const highestOccurringArrestAge = getMaxChartData(chartData.barChartData);
+
   return (
     <div className="flex flex-col items-center mr-4">
       <div className="flex gap-4 h-[10vh]">
@@ -43,12 +46,13 @@ export function AgeCharts({
           color={"yellow"}
         />
       </div>
+
       <div
-        className="rounded cursor-pointer w-full h-[50vh]"
+        className="rounded cursor-pointer w-6/12"
         onClick={() => {
           toggleChartModal(
             <Bar
-              data={chartData}
+              data={chartData.barChartData!}
               options={{
                 responsive: true,
                 scales: {
@@ -71,7 +75,7 @@ export function AgeCharts({
         }}
       >
         <Bar
-          data={chartData}
+          data={chartData.barChartData}
           options={{
             responsive: true,
             scales: {

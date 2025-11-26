@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from "react";
-import { ChartData } from "chart.js";
+import React, { useState, useMemo, Suspense } from "react";
 import { Sidebar } from "./sidebar";
-
+import { Loader } from "../../components/ui/loader";
 import {
   Chart as ChartJS,
   BarElement,
@@ -16,25 +15,22 @@ import {
   RadialLinearScale,
 } from "chart.js";
 
+import { useInsightContext } from "@/context/InsightContext";
+
 import { ChartModal } from "./chart-modal";
 import { initialSidebarState } from "@/lib/constants";
 
 import {
-  getYoungestArrestAge,
-  getOldestArrestAge,
-  getAverageArrestAgeBar,
-  getHighestArrestStreetBar,
   getHighestChargeDescriptionLine,
   getHighestRace,
-  getMaxChartData,
 } from "@/utils/chartData";
 
-import { AgeCharts } from "./age-chart";
-import { GenderChart } from "./gender-chart";
-import { LocationChart } from "./location-chart";
-import { EthnicityChart } from "./ethnicity-chart";
-import { DegreeChart } from "./degree-chart";
-import { ChargeChart } from "./charge-chart";
+const AgeChart = React.lazy(() => import("./age-chart"));
+const GenderChart = React.lazy(() => import("./gender-chart"));
+const LocationChart = React.lazy(() => import("./location-chart"));
+const EthnicityChart = React.lazy(() => import("./ethnicity-chart"));
+const DegreeChart = React.lazy(() => import("./degree-chart"));
+const ChargeChart = React.lazy(() => import("./charge-chart"));
 
 ChartJS.register(
   CategoryScale,
@@ -49,33 +45,16 @@ ChartJS.register(
   Legend
 );
 
-interface ChartsProps {
-  chartData: ChartData<"bar">;
-  lineChartData: ChartData<"line">;
-  lineChartDataChargeDescription: ChartData<"line">;
-  barChartDataDegree: ChartData<"bar">;
-  barChartDataStreet: ChartData<"bar">;
-  pieChartData: ChartData<"pie">;
-  doughnutChartData: ChartData<"doughnut">;
-}
-export function Charts({
-  chartData,
-  lineChartData,
-  lineChartDataChargeDescription,
-  barChartDataDegree,
-  pieChartData,
-  doughnutChartData,
-  barChartDataStreet,
-}: ChartsProps) {
+type Size = "lg" | "sm";
+
+export default function Charts() {
+  const { chartData } = useInsightContext();
   const [selectedChart, setSelectedChart] = useState<{
     chart: React.ReactNode | null;
-    size: "lg" | "sm";
+    size: Size;
   }>({ chart: null, size: "lg" });
 
-  const toggleChartModal = (
-    chart: React.ReactNode | null,
-    size: "lg" | "sm"
-  ) => {
+  const toggleChartModal = (chart: React.ReactNode | null, size: Size) => {
     if (chart) {
       setSelectedChart((prev) => ({ ...prev, size, chart }));
     } else {
@@ -83,49 +62,21 @@ export function Charts({
     }
   };
 
-  //Age insights
-  const averageArrestAge = useMemo(() => {
-    if (!chartData) return null;
-
-    return getAverageArrestAgeBar(chartData);
-  }, [chartData]);
-
-  const youngestArrestAge = useMemo(() => {
-    if (!chartData) return null;
-    return getYoungestArrestAge(chartData);
-  }, [chartData]);
-
-  const oldestArrestAge = useMemo(() => {
-    if (!chartData) return null;
-    return getOldestArrestAge(chartData);
-  }, [chartData]);
-
-  const highestOccurringArrestAge = useMemo(() => {
-    if (!chartData) return null;
-
-    return getMaxChartData(chartData);
-  }, [chartData]);
-
-  //Location insights
-  const highestArrestStreet = useMemo(() => {
-    if (!barChartDataStreet) return null;
-
-    return getHighestArrestStreetBar(barChartDataStreet);
-  }, [barChartDataStreet]);
-
   //Charge insights
   const highestOccurringCharge = useMemo(() => {
-    if (!lineChartDataChargeDescription) return null;
+    if (!chartData.lineChartDataChargeDescription) return null;
 
-    return getHighestChargeDescriptionLine(lineChartDataChargeDescription);
-  }, [lineChartDataChargeDescription]);
+    return getHighestChargeDescriptionLine(
+      chartData.lineChartDataChargeDescription
+    );
+  }, [chartData.lineChartDataChargeDescription]);
 
   //Ethnicity insights
   const highestOccurringRace = useMemo(() => {
-    if (!doughnutChartData) return null;
+    if (!chartData.doughnutChartData) return null;
 
-    return getHighestRace(doughnutChartData);
-  }, [doughnutChartData]);
+    return getHighestRace(chartData.doughnutChartData);
+  }, [chartData.doughnutChartData]);
 
   //data insights sidebar
   const [sidebarState, setSidebarState] = useState({
@@ -149,47 +100,40 @@ export function Charts({
       <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
       <div className="w-full">
         {sidebarState["Age"] && (
-          <AgeCharts
-            youngestArrestAge={youngestArrestAge}
-            oldestArrestAge={oldestArrestAge}
-            averageArrestAge={averageArrestAge}
-            highestOccurringArrestAge={highestOccurringArrestAge}
-            chartData={chartData}
-            toggleChartModal={toggleChartModal}
-          />
+          <Suspense fallback={<Loader text={"Fetching age data..."} />}>
+            <AgeChart toggleChartModal={toggleChartModal} />
+          </Suspense>
         )}
-        {sidebarState["Gender"] && (
-          <GenderChart
-            pieChartData={pieChartData}
-            toggleChartModal={toggleChartModal}
-          />
+        {sidebarState["Gender"] && chartData.pieChartData && (
+          <Suspense fallback={<Loader text={"Fetching gender data..."} />}>
+            <GenderChart
+              pieChartData={chartData.pieChartData}
+              toggleChartModal={toggleChartModal}
+            />
+          </Suspense>
         )}
-
-        {sidebarState["Location"] && (
-          <LocationChart
-            barChartDataStreet={barChartDataStreet}
-            highestArrestStreet={highestArrestStreet}
-            toggleChartModal={toggleChartModal}
-          />
+        {sidebarState["Location"] && chartData.barChartDataStreet && (
+          <Suspense fallback={<Loader text={"Fetching gender data..."} />}>
+            <LocationChart toggleChartModal={toggleChartModal} />
+          </Suspense>
         )}
 
         {sidebarState["Ethnicity"] && (
-          <EthnicityChart
-            doughnutChartData={doughnutChartData}
-            highestOccurringRace={highestOccurringRace}
-            lineChartData={lineChartData}
-            toggleChartModal={toggleChartModal}
-          />
+          <Suspense fallback={<Loader text={"Fetching gender data..."} />}>
+            <EthnicityChart toggleChartModal={toggleChartModal} />
+          </Suspense>
         )}
-        {sidebarState["Degree"] && (
+        {sidebarState["Degree"] && chartData.barChartDataDegree && (
           <DegreeChart
-            barChartDataDegree={barChartDataDegree}
+            barChartDataDegree={chartData.barChartDataDegree}
             toggleChartModal={toggleChartModal}
           />
         )}
-        {sidebarState["Charge"] && (
+        {sidebarState["Charge"] && chartData.lineChartDataChargeDescription && (
           <ChargeChart
-            lineChartDataChargeDescription={lineChartDataChargeDescription}
+            lineChartDataChargeDescription={
+              chartData.lineChartDataChargeDescription
+            }
             highestOccurringCharge={highestOccurringCharge}
             toggleChartModal={toggleChartModal}
           />

@@ -1,50 +1,44 @@
-import React, { useMemo } from "react";
-import { ChartData } from "chart.js";
+import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { ChartCard } from "../ui/chart-card";
 import { getMaxChartData, getMinChartData } from "@/utils/chartData";
+import { useInsightContext } from "@/context/InsightContext";
+import { getHighestRace } from "@/utils/chartData";
 
 interface EthnicityChartProps {
-  doughnutChartData: ChartData<"doughnut">;
-  lineChartData: ChartData<"line">;
-  highestOccurringRace: [string, number][] | null;
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
 }
-export function EthnicityChart({
-  doughnutChartData,
-  //   lineChartData,
-  highestOccurringRace,
+export default function EthnicityChart({
   toggleChartModal,
 }: EthnicityChartProps) {
-  const highestArrestEthnicity = useMemo(() => {
-    if (!doughnutChartData) return null;
-    return getMaxChartData(doughnutChartData);
-  }, [doughnutChartData]);
+  const { chartData } = useInsightContext();
 
-  const leastArrestedEthnicity = useMemo(() => {
-    if (!doughnutChartData) return null;
-    return getMinChartData(doughnutChartData);
-  }, [doughnutChartData]);
+  if (!chartData.doughnutChartData || !chartData.lineChartDataChargeDescription)
+    return <div>loading...</div>;
+
+  const highestArrestEthnicity = getMaxChartData(chartData.doughnutChartData);
+  const leastArrestedEthnicity = getMinChartData(chartData.doughnutChartData);
+  const highestOccurringCharge = getHighestRace(chartData.doughnutChartData);
 
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-4">
-      <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-        {/* Card Title */}
-        <h2 className="text-sm font-medium text-gray-600 mb-3">Highest Arrested Ethnicity</h2>
+        <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
+          {/* Card Title */}
+          <h2 className="text-sm font-medium text-gray-600 mb-3">
+            Highest Arrested Ethnicity
+          </h2>
 
-        {/* List of results */}
-        <ul className="space-y-1">
-          {highestOccurringRace?.map((race, index) => (
-            <li
-              key={index}
-              className="text-gray-700 text-sm font-medium"
-            >
-              <span className="font-semibold">{index + 1}.</span> {race[0]} - {race[1]} arrests
-            </li>
-          ))}
-        </ul>
-      </div>
+          {/* List of results */}
+          <ul className="space-y-1">
+            {highestOccurringCharge?.map((race, index) => (
+              <li key={index} className="text-gray-700 text-sm font-medium">
+                <span className="font-semibold">{index + 1}.</span> {race[0]} -{" "}
+                {race[1]} arrests
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <ChartCard
           title={"Ethnicity with Most Arrests"}
@@ -64,7 +58,7 @@ export function EthnicityChart({
           toggleChartModal(
             <div className="p-8 bg-white rounded">
               <Doughnut
-                data={doughnutChartData}
+                data={chartData.doughnutChartData!}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
@@ -77,7 +71,7 @@ export function EthnicityChart({
         }}
       >
         <Doughnut
-          data={doughnutChartData}
+          data={chartData.doughnutChartData}
           options={{
             responsive: true,
             maintainAspectRatio: false,

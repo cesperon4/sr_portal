@@ -1,10 +1,9 @@
-import React, { useMemo } from "react";
-import { ChartData } from "chart.js";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import { ChartCard } from "../ui/chart-card";
-
 import { getMaxChartData, getMinChartData } from "@/utils/chartData";
-
+import { useInsightContext } from "@/context/InsightContext";
+import { getHighestArrestStreetBar } from "@/utils/chartData";
 import {
   Table,
   TableBody,
@@ -16,66 +15,66 @@ import {
 } from "@/components/ui/table";
 
 interface LocationChartProps {
-  barChartDataStreet: ChartData<"bar">;
-  highestArrestStreet: [string, number][] | null;
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
 }
-export function LocationChart({
-  barChartDataStreet,
-  highestArrestStreet,
+export default function LocationChart({
   toggleChartModal,
 }: LocationChartProps) {
-  const maxArrestStreet = useMemo(() => {
-    if (!barChartDataStreet) return null;
-    return getMaxChartData(barChartDataStreet);
-  }, [barChartDataStreet]);
+  const { chartData } = useInsightContext();
 
-  const minArrestStreet = useMemo(() => {
-    if (!barChartDataStreet) return null;
-    return getMinChartData(barChartDataStreet);
-  }, [barChartDataStreet]);
+  if (!chartData.barChartDataStreet) return <div>loading...</div>;
+
+  const highestArrestStreet = getHighestArrestStreetBar(
+    chartData.barChartDataStreet
+  );
+  const maxArrestStreet = getMaxChartData(chartData.barChartDataStreet);
+  const minArrestStreet = getMinChartData(chartData.barChartDataStreet);
 
   return (
     <div className="flex gap-2 w-full">
       <div className="flex flex-col gap-4">
-      <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-      {/* Card Title */}
-      <h2 className="text-sm font-medium text-gray-600 mb-3">
-        Location With Highest # of Arrests
-      </h2>
+        <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
+          {/* Card Title */}
+          <h2 className="text-sm font-medium text-gray-600 mb-3">
+            Location With Highest # of Arrests
+          </h2>
 
-      {/* Table wrapper for responsive scroll */}
-      <div className="overflow-x-auto">
-        <Table className="w-full table-auto border-collapse">
-          <TableCaption className="sr-only">{""}</TableCaption>
+          {/* Table wrapper for responsive scroll */}
+          <div className="overflow-x-auto">
+            <Table className="w-full table-auto border-collapse">
+              <TableCaption className="sr-only">{""}</TableCaption>
 
-          {/* Table Header */}
-          <TableHeader>
-            <TableRow className="">
-              <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">Street Name</TableHead>
-              <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">Total Arrests</TableHead>
-            </TableRow>
-          </TableHeader>
+              {/* Table Header */}
+              <TableHeader>
+                <TableRow className="">
+                  <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">
+                    Street Name
+                  </TableHead>
+                  <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">
+                    Total Arrests
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
 
-          {/* Table Body */}
-          <TableBody>
-            {highestArrestStreet?.map((street, index) => (
-              <TableRow
-                key={index}
-                className="hover:bg-gray-100 cursor-pointer transition-colors duration-150"
-              >
-                <TableCell className="px-4 py-2 text-gray-700 text-sm font-medium">
-                  {street[0]}
-                </TableCell>
-                <TableCell className="px-4 py-2 text-gray-700 text-sm font-medium">
-                  {street[1]}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+              {/* Table Body */}
+              <TableBody>
+                {highestArrestStreet?.map((street, index) => (
+                  <TableRow
+                    key={index}
+                    className="hover:bg-gray-100 cursor-pointer transition-colors duration-150"
+                  >
+                    <TableCell className="px-4 py-2 text-gray-700 text-sm font-medium">
+                      {street[0]}
+                    </TableCell>
+                    <TableCell className="px-4 py-2 text-gray-700 text-sm font-medium">
+                      {street[1]}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
 
         <ChartCard
           title={"Street with Most Arrests"}
@@ -94,7 +93,7 @@ export function LocationChart({
         onClick={() => {
           toggleChartModal(
             <Bar
-              data={barChartDataStreet}
+              data={chartData.barChartDataStreet!}
               options={{ responsive: true }}
               className="bg-white p-8 rounded" // Fixed height (adjust as needed)
               onClick={(e) => {
@@ -106,7 +105,7 @@ export function LocationChart({
         }}
       >
         <Bar
-          data={barChartDataStreet}
+          data={chartData.barChartDataStreet}
           options={{
             responsive: true,
             scales: {
