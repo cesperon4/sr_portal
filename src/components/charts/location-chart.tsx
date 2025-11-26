@@ -89,7 +89,7 @@ export default function LocationChart({
         />
       </div>
       <div
-        className="flex justify-center w-full h-[60vh]"
+        className="flex justify-center w-6/12 h-[60vh]"
         onClick={() => {
           toggleChartModal(
             <Bar

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { Sidebar } from "./sidebar";
 import { Loader } from "../../components/ui/loader";
 import {
@@ -16,14 +16,7 @@ import {
 } from "chart.js";
 
 import { useInsightContext } from "@/context/InsightContext";
-
-import { ChartModal } from "./chart-modal";
 import { initialSidebarState } from "@/lib/constants";
-
-import {
-  getHighestChargeDescriptionLine,
-  getHighestRace,
-} from "@/utils/chartData";
 
 const AgeChart = React.lazy(() => import("./age-chart"));
 const GenderChart = React.lazy(() => import("./gender-chart"));
@@ -31,6 +24,7 @@ const LocationChart = React.lazy(() => import("./location-chart"));
 const EthnicityChart = React.lazy(() => import("./ethnicity-chart"));
 const DegreeChart = React.lazy(() => import("./degree-chart"));
 const ChargeChart = React.lazy(() => import("./charge-chart"));
+const ChartModal = React.lazy(() => import("./chart-modal"));
 
 ChartJS.register(
   CategoryScale,
@@ -61,22 +55,6 @@ export default function Charts() {
       setSelectedChart((prev) => ({ ...prev, chart: null }));
     }
   };
-
-  //Charge insights
-  const highestOccurringCharge = useMemo(() => {
-    if (!chartData.lineChartDataChargeDescription) return null;
-
-    return getHighestChargeDescriptionLine(
-      chartData.lineChartDataChargeDescription
-    );
-  }, [chartData.lineChartDataChargeDescription]);
-
-  //Ethnicity insights
-  const highestOccurringRace = useMemo(() => {
-    if (!chartData.doughnutChartData) return null;
-
-    return getHighestRace(chartData.doughnutChartData);
-  }, [chartData.doughnutChartData]);
 
   //data insights sidebar
   const [sidebarState, setSidebarState] = useState({
@@ -113,34 +91,31 @@ export default function Charts() {
           </Suspense>
         )}
         {sidebarState["Location"] && chartData.barChartDataStreet && (
-          <Suspense fallback={<Loader text={"Fetching gender data..."} />}>
+          <Suspense fallback={<Loader text={"Fetching location data..."} />}>
             <LocationChart toggleChartModal={toggleChartModal} />
           </Suspense>
         )}
 
         {sidebarState["Ethnicity"] && (
-          <Suspense fallback={<Loader text={"Fetching gender data..."} />}>
+          <Suspense fallback={<Loader text={"Fetching ethnicity data..."} />}>
             <EthnicityChart toggleChartModal={toggleChartModal} />
           </Suspense>
         )}
         {sidebarState["Degree"] && chartData.barChartDataDegree && (
-          <DegreeChart
-            barChartDataDegree={chartData.barChartDataDegree}
-            toggleChartModal={toggleChartModal}
-          />
+          <Suspense fallback={<Loader text={"Fetching degree data..."} />}>
+            <DegreeChart toggleChartModal={toggleChartModal} />
+          </Suspense>
         )}
         {sidebarState["Charge"] && chartData.lineChartDataChargeDescription && (
-          <ChargeChart
-            lineChartDataChargeDescription={
-              chartData.lineChartDataChargeDescription
-            }
-            highestOccurringCharge={highestOccurringCharge}
-            toggleChartModal={toggleChartModal}
-          />
+          <Suspense fallback={<Loader text={"Fetching charge data..."} />}>
+            <ChargeChart toggleChartModal={toggleChartModal} />
+          </Suspense>
         )}
 
         {selectedChart.chart && (
-          <ChartModal chart={selectedChart} handleClose={toggleChartModal} />
+          <Suspense fallback={<Loader text={"Fetching modal data..."} />}>
+            <ChartModal chart={selectedChart} handleClose={toggleChartModal} />
+          </Suspense>
         )}
       </div>
     </div>

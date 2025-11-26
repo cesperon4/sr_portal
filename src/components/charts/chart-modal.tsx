@@ -8,7 +8,7 @@ interface DataTableProps {
   handleClose: (chart: React.ReactNode | null, size: "lg" | "sm") => void;
 }
 
-export function ChartModal({ chart, handleClose }: DataTableProps) {
+export default function ChartModal({ chart, handleClose }: DataTableProps) {
   return (
     <Backdrop
       onClick={() => {

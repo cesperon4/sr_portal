@@ -18,7 +18,7 @@ export default function EthnicityChart({
 
   const highestArrestEthnicity = getMaxChartData(chartData.doughnutChartData);
   const leastArrestedEthnicity = getMinChartData(chartData.doughnutChartData);
-  const highestOccurringCharge = getHighestRace(chartData.doughnutChartData);
+  const highestOccurringRace = getHighestRace(chartData.doughnutChartData);
 
   return (
     <div className="flex justify-center">
@@ -31,7 +31,7 @@ export default function EthnicityChart({
 
           {/* List of results */}
           <ul className="space-y-1">
-            {highestOccurringCharge?.map((race, index) => (
+            {highestOccurringRace?.map((race, index) => (
               <li key={index} className="text-gray-700 text-sm font-medium">
                 <span className="font-semibold">{index + 1}.</span> {race[0]} -{" "}
                 {race[1]} arrests

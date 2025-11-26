@@ -1,38 +1,40 @@
-import React, { useMemo } from "react";
-import { ChartData } from "chart.js";
+import React from "react";
 import { Line } from "react-chartjs-2";
-
-import { getMaxChartData, getMinChartData } from "@/utils/chartData";
+import {
+  getMaxChartData,
+  getMinChartData,
+  getHighestChargeDescriptionLine,
+} from "@/utils/chartData";
 import { ChartCard } from "../ui/chart-card";
 
+import { useInsightContext } from "@/context/InsightContext";
+
 interface ChargeChartProps {
-  lineChartDataChargeDescription: ChartData<"line">;
-  highestOccurringCharge: [string, number][] | null;
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
 }
-export default function ChargeChart({
-  lineChartDataChargeDescription,
-  highestOccurringCharge,
-  toggleChartModal,
-}: ChargeChartProps) {
-  const highestChargeArrests = useMemo(() => {
-    if (!lineChartDataChargeDescription) return null;
-    return getMaxChartData(lineChartDataChargeDescription);
-  }, [lineChartDataChargeDescription]);
-  const leastChargeArrests = useMemo(() => {
-    if (!lineChartDataChargeDescription) return null;
-    return getMinChartData(lineChartDataChargeDescription);
-  }, [lineChartDataChargeDescription]);
+export default function ChargeChart({ toggleChartModal }: ChargeChartProps) {
+  const { chartData } = useInsightContext();
+
+  if (!chartData.lineChartDataChargeDescription)
+    return <div>Missing line chart data charge description...</div>;
+
+  const highestChargeArrests = getMaxChartData(
+    chartData.lineChartDataChargeDescription
+  );
+  const leastChargeArrests = getMinChartData(
+    chartData.lineChartDataChargeDescription
+  );
+  const highestOccurringCharge = getHighestChargeDescriptionLine(
+    chartData.lineChartDataChargeDescription
+  );
   return (
     <div className="flex">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-          {/* Card Title */}
           <h2 className="text-sm font-medium text-gray-600 mb-3">
             Highest Occurring Charge
           </h2>
 
-          {/* List of Charges */}
           <ul className="space-y-1">
             {highestOccurringCharge?.map((charge, index) => (
               <li
@@ -65,7 +67,7 @@ export default function ChargeChart({
         onClick={() => {
           toggleChartModal(
             <Line
-              data={lineChartDataChargeDescription}
+              data={chartData.lineChartDataChargeDescription!}
               options={{ responsive: true }}
               className="bg-white p-8 rounded" // Fixed height (adjust as needed)
               onClick={(e) => {
@@ -77,7 +79,7 @@ export default function ChargeChart({
         }}
       >
         <Line
-          data={lineChartDataChargeDescription}
+          data={chartData.lineChartDataChargeDescription}
           options={{ responsive: true }}
           className="bg-white cursor-pointer w-full h-full" // Fixed height (adjust as needed)
         />

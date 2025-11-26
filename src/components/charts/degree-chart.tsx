@@ -1,28 +1,20 @@
-import React, { useMemo } from "react";
-import { ChartData } from "chart.js";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import { getMaxChartData, getMinChartData } from "@/utils/chartData";
 import { ChartCard } from "../ui/chart-card";
 import { useInsightContext } from "@/context/InsightContext";
 
 interface DegreeChartProps {
-  barChartDataDegree: ChartData<"bar">;
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
 }
-export default function DegreeChart({
-  barChartDataDegree,
-  toggleChartModal,
-}: DegreeChartProps) {
+export default function DegreeChart({ toggleChartModal }: DegreeChartProps) {
   const { chartData } = useInsightContext();
-  const highestArrestDegree = useMemo(() => {
-    if (!barChartDataDegree) return null;
-    return getMaxChartData(barChartDataDegree);
-  }, [barChartDataDegree]);
 
-  const leastArrestedDegree = useMemo(() => {
-    if (!barChartDataDegree) return null;
-    return getMinChartData(barChartDataDegree);
-  }, [barChartDataDegree]);
+  if (!chartData.barChartDataDegree)
+    return <div>loading bar chart data degree...</div>;
+
+  const highestArrestDegree = getMaxChartData(chartData.barChartDataDegree);
+  const leastArrestedDegree = getMinChartData(chartData.barChartDataDegree);
 
   return (
     <div className="flex flex-col items-center justify-center gap-8">
@@ -45,7 +37,7 @@ export default function DegreeChart({
         onClick={() => {
           toggleChartModal(
             <Bar
-              data={barChartDataDegree}
+              data={chartData.barChartDataDegree!}
               options={{ responsive: true }}
               className="bg-white p-8 rounded" // Fixed height (adjust as needed)
               onClick={(e) => {
@@ -57,7 +49,7 @@ export default function DegreeChart({
         }}
       >
         <Bar
-          data={barChartDataDegree}
+          data={chartData.barChartDataDegree}
           options={{ responsive: true }}
           className="bg-white cursor-pointer w-full mx-auto" // Fixed height (adjust as needed)
         />
