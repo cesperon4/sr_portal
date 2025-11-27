@@ -5,9 +5,9 @@ import { ChartCard } from "../ui/chart-card";
 import { useInsightContext } from "@/context/InsightContext";
 import {
   getAverageArrestAgeBar,
-  getYoungestArrestAge,
-  getOldestArrestAge,
   getMaxChartData,
+  getOldestArrestAge,
+  getYoungestArrestAge,
 } from "@/utils/chartData";
 
 interface AgeChartsProps {

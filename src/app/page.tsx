@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useLogin } from "@/hooks/landing-page/useLogin";
 import { SignupModal } from "@/components/landing-page/signup-modal";
-import { useSignupModal } from "@/hooks/landing-page/useSignupModalToggle";
 import { Navbar } from "@/components/landing-page/navbar";
+import { useSignupModal } from "@/hooks/landing-page/useSignupModalToggle";
 
 export default function LandingPage() {
   const { handleGuestLogin } = useLogin();

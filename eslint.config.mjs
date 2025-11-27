@@ -9,8 +9,18 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+export default [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
 
-export default eslintConfig;
+  {
+    plugins: {
+      "simple-import-sort": await import("eslint-plugin-simple-import-sort"),
+    },
+
+    rules: {
+      // Sort imports alphabetically + by groups
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+    },
+  },
+];
