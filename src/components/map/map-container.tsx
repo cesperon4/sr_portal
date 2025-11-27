@@ -1,9 +1,7 @@
 "use client";
 
-import { buildOpenWeatherUrl } from "@/api/queryBuilder";
 import { PoliceIncidentType } from "@/types/map.interface";
 import { Icon } from "leaflet";
-import { useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import SearchBox from "./SearchBox";
@@ -21,14 +19,6 @@ interface DataTableProps {
 export function Map({ policeIncidents, openMapModal }: DataTableProps) {
   const center: [number, number] = [38.4404, -122.7141];
 
-  useEffect(() => {
-    const url = buildOpenWeatherUrl({
-      lat: center[0].toString(),
-      lon: center[1].toString(),
-    });
-
-    console.log("openweather url: ", url);
-  }, []);
   return (
     <div className="w-full mr-4 flex items-center justify-center z-0">
       <MapContainer
