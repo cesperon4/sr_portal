@@ -1,20 +1,19 @@
 "use client";
-import React from "react";
-import { ModeToggle } from "../components/mode-toggle";
-import { Button } from "@/components/ui/button";
-import { HeaderSelect } from "@/types/header.interface";
 import Searchbar from "@/components/data-table/searchbar";
-import UnderlineButton from "./ui/underline-button";
-import { MdInsights } from "react-icons/md";
-import { IoMdBook } from "react-icons/io";
-import { IoMapOutline } from "react-icons/io5";
-import { CiSettings } from "react-icons/ci";
-import { FaPeopleGroup } from "react-icons/fa6";
-import { MdOutlineAddBox } from "react-icons/md";
+import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
+import { HeaderSelect } from "@/types/header.interface";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { CiSettings } from "react-icons/ci";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { IoMdBook } from "react-icons/io";
+import { IoMapOutline } from "react-icons/io5";
+import { MdInsights, MdOutlineAddBox } from "react-icons/md";
+import { ModeToggle } from "../components/mode-toggle";
+import UnderlineButton from "./ui/underline-button";
+import WeatherWrapper from "./weather/weather-wrapper";
 
 interface HeaderProps {
   view: HeaderSelect;
@@ -122,6 +121,8 @@ export function Header({
               <span>create</span>
             </button>
           )}
+          <WeatherWrapper />
+
           <span className="font-medium">
             {loggedUser.username ? loggedUser.username : loggedUser.role}
           </span>

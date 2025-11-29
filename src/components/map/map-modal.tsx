@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
+import { type PoliceIncidentMapType } from "@/types/map.interface";
 import { Backdrop } from "../backdrop";
-import { type PoliceIncidentType } from "@/types/map.interface";
 
 type MapModalProps = {
-  incident: PoliceIncidentType;
+  incident: PoliceIncidentMapType;
   closeMapModal: () => void;
 };
 

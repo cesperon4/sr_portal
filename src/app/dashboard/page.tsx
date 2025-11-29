@@ -12,9 +12,12 @@ import { useTableHeaderFilter } from "@/hooks/data-table/useTableHeaderFilter";
 import { useRenderMap } from "@/hooks/map/useRenderMap";
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { initialCrimeFilterState } from "@/lib/constants";
-import { HeaderSelect } from "@/types/header.interface";
-import { CrimeFilterState } from "@/types/map.interface";
-import { kelvinToFahrenheit } from "@/utils/convertWeather";
+import { type ArrestLogResponse } from "@/types/arrestLog.interface";
+import { type HeaderSelect } from "@/types/header.interface";
+import {
+  type CrimeFilterState,
+  type PoliceIncidentMapResponse,
+} from "@/types/map.interface";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryBuilder } from "../../api/queryBuilder"; // Adjust the import path
@@ -73,7 +76,7 @@ export default function Dashboard() {
     data: arrestLogs,
     isLoading: isArrestLogsLoading,
     error: arrestLogsError,
-  } = useQueryBuilder({
+  } = useQueryBuilder<ArrestLogResponse>({
     searchParams: arrestLogSearchParams,
     filterParams: undefined,
     base_url: process.env.NEXT_PUBLIC_ARREST_LOG_URL,
@@ -85,35 +88,12 @@ export default function Dashboard() {
     data: policeIncidents,
     isLoading: isPoliceIncidentsLoading,
     error: policeIncidentsError,
-  } = useQueryBuilder({
+  } = useQueryBuilder<PoliceIncidentMapResponse>({
     searchParams: undefined,
     filterParams: crimeFilterState,
     base_url: process.env.NEXT_PUBLIC_POLICE_INCIDENT_URL,
     type: "police_incident",
   });
-
-  const {
-    data: weatherData,
-    isLoading: isWeatherDataLoading,
-    error: weatherDataError,
-  } = useQueryBuilder({
-    searchParams: { lat: (38.4404).toString(), lon: -(122.7141).toString() },
-    base_url: process.env.NEXT_PUBLIC_OPEN_WEATHER_BASE_URL,
-    type: "weather",
-  });
-
-  useEffect(() => {
-    if (weatherData?.main) {
-      console.log("weather data: ", weatherData);
-      console.log("weather attributes: ", weatherData.weather);
-      console.log("location: ", weatherData.name);
-      console.log("weather: ", kelvinToFahrenheit(weatherData.main.temp));
-      console.log("high: ", kelvinToFahrenheit(weatherData.main.temp_max));
-      console.log("low: ", kelvinToFahrenheit(weatherData.main.temp_min));
-      console.log("humidity: ", `${weatherData.main.humidity}%`);
-      console.log("wind speed: ", weatherData.wind.speed);
-    }
-  }, [weatherData]);
 
   const [view, setView] = useState<HeaderSelect>(selectedView as HeaderSelect);
 
@@ -126,7 +106,7 @@ export default function Dashboard() {
   const { renderMap, mapModal, closeMapModal, modalData } = useRenderMap({
     isPoliceIncidentsLoading,
     policeIncidentsError,
-    policeIncidents: policeIncidents?.features,
+    policeIncidents: policeIncidents?.features || [],
   });
 
   const [selectColumns, setSelectColumns] = useState<boolean>(false);
@@ -149,7 +129,7 @@ export default function Dashboard() {
         setIsProfileSettingsOpen={setIsProfileSettingsOpen}
       />
       <main className="flex flex-col gap-8 w-full">
-        {selectColumns && (
+        {selectColumns && arrestLogs && (
           <SelectColumnModal
             handleClose={closeSelectColumns}
             arrestLogFields={arrestLogs.fields}
@@ -174,28 +154,36 @@ export default function Dashboard() {
         )}
         {view === "Table" && (
           <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>
-            <DataTableWrapper
-              isArrestLogsLoading={isArrestLogsLoading}
-              arrestLogsError={arrestLogsError}
-              arrestLogs={arrestLogs?.features}
-              arrestLogFields={arrestLogs?.fields}
-              arrestLogCount={arrestLogs?.features.length}
-              headerFilter={headerFilter}
-              setHeaderFilter={setHeaderFilter}
-              filterDirection={filterDirection}
-              setFilterDirection={setFilterDirection}
-            />
+            {isArrestLogsLoading && <Loader text="Fetching arrest logs..." />}
+            {arrestLogsError && <span>Failded to load arrest logs</span>}
+            {arrestLogs && (
+              <DataTableWrapper
+                isArrestLogsLoading={isArrestLogsLoading}
+                arrestLogsError={arrestLogsError}
+                arrestLogs={arrestLogs?.features}
+                arrestLogFields={arrestLogs?.fields}
+                arrestLogCount={arrestLogs?.features.length}
+                headerFilter={headerFilter}
+                setHeaderFilter={setHeaderFilter}
+                filterDirection={filterDirection}
+                setFilterDirection={setFilterDirection}
+              />
+            )}
           </Suspense>
         )}
         {view === "Chart" && (
           <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>
-            <InsightContextProvider arrestLogs={arrestLogs.features}>
-              <Charts />
-            </InsightContextProvider>
+            {isArrestLogsLoading && <Loader text="Fetching arrest logs..." />}
+            {arrestLogsError && <span>Failded to load arrest logs</span>}
+            {arrestLogs && (
+              <InsightContextProvider arrestLogs={arrestLogs.features}>
+                <Charts />
+              </InsightContextProvider>
+            )}
           </Suspense>
         )}
         {view === "Community" && (
-          <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>
+          <Suspense fallback={<Loader text={"Loading community feed ..."} />}>
             <CommunityContainer />
           </Suspense>
         )}

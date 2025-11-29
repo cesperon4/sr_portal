@@ -57,3 +57,16 @@ export interface ArrestLogField {
   sqlType: string | null;
   type: string | null;
 }
+
+type UniqueField = {
+  name: string;
+  isSystemMaintained: boolean;
+};
+
+export type ArrestLogResponse = {
+  features: ArrestLogType[];
+  fields: ArrestLogField[];
+  globalIdFieldName: string;
+  objectIdFieldName: string;
+  uniqueField: UniqueField;
+};

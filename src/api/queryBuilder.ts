@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 interface QueryBuilderProps {
   searchParams: Record<string, string | number> | undefined;
@@ -88,18 +88,18 @@ export const buildOpenWeatherUrl = ({
   return url;
 };
 
-// Custom hook for fetching arrest logs
-export function useQueryBuilder({
+export function useQueryBuilder<T>({
   searchParams,
   filterParams,
   base_url,
   orderBy,
   type,
-}: QueryBuilderProps) {
-  return useQuery({
-    queryKey: [base_url, searchParams, filterParams, orderBy], // Key includes search params for caching
+}: QueryBuilderProps): UseQueryResult<T> {
+  return useQuery<T>({
+    queryKey: [base_url, searchParams, filterParams, orderBy],
     queryFn: async () => {
       let url = "";
+
       switch (type) {
         case "arrest_log":
           url = buildArrestLogsUrl({
@@ -109,6 +109,7 @@ export function useQueryBuilder({
             orderBy,
           });
           break;
+
         case "police_incident":
           url = buildArrestLogsUrl({
             searchParams,
@@ -120,22 +121,22 @@ export function useQueryBuilder({
         case "weather":
           url = buildOpenWeatherUrl({
             searchParams,
-            base_url: base_url,
+            base_url,
           });
-          break;
-        default:
           break;
       }
 
-      if (!url) return;
+      if (!url) throw new Error("URL not generated");
 
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return response.json();
+      return (await response.json()) as T;
     },
-    staleTime: 300000, // Cache data for 5 minutes
+
+    refetchInterval: 1000 * 60 * 60,
+    staleTime: 300000,
   });
 }

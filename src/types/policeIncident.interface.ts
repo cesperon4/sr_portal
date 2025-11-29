@@ -30,3 +30,33 @@ export interface PoliceIncidentType {
     y: string | null;
   };
 }
+
+type PoliceIncidentField = {
+  alias: string | null;
+  defaultValue: string | null;
+  domain: string | null;
+  name: string | null;
+  sqlType: string | null;
+  type: string | null;
+};
+
+type SpatialReference = {
+  wkid: number;
+  latestWkid: number;
+};
+
+type UniqueIdField = {
+  name: string;
+  isSystemMaintained: string;
+};
+
+export type PoliceIncidentResponse = {
+  exceededTransferLimit: boolean;
+  features: PoliceIncidentType[];
+  fields: PoliceIncidentField[];
+  geometryType: string;
+  globalFieldName: string;
+  objectIdFieldName: string;
+  spatialReference: SpatialReference;
+  uniqueIdField: UniqueIdField;
+};

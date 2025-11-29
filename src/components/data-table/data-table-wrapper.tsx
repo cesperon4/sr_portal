@@ -1,16 +1,19 @@
+import {
+  ArrestLogType,
+  type ArrestLogField,
+} from "@/types/arrestLog.interface";
 import { DataTable } from "../../components/data-table/data-table";
-import { ArrestLogType } from "@/types/arrestLog.interface";
 import { Paginate } from "../../components/paginate";
 import { useArrestLogTable } from "../../hooks/data-table/useArrestLogTable";
 
-type ArrestLogField = {
-  alias: string;
-  defaultValue: string;
-  domain: string;
-  name: string;
-  sqlType: string;
-  type: string;
-};
+// type ArrestLogField = {
+//   alias: string;
+//   defaultValue: string;
+//   domain: string;
+//   name: string;
+//   sqlType: string;
+//   type: string;
+// };
 
 type DataTableWrapperProps = {
   isArrestLogsLoading: boolean;
