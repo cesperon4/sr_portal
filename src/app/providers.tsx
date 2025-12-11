@@ -1,14 +1,14 @@
 // app/providers.tsx
 "use client";
 
-import { SessionProvider } from "next-auth/react"; // ✅ add this
-import { ApolloWrapper } from "@/lib/ApolloWrapper";
 import { UserProvider } from "@/context/UserContext";
-import { ThemeProvider } from "../providers/theme-provider";
+import { ApolloWrapper } from "@/lib/ApolloWrapper";
+import { SessionProvider } from "next-auth/react"; // ✅ add this
+import { ToastContainer } from "react-toastify";
 import { DataProvider } from "../context/DataContext";
 import ReactQueryProvider from "../providers/ReactQueryProvider"; // Adjust path if needed
-import { ToastContainer } from "react-toastify";
-import { ArrestLogProvider } from "@/context/ArrestLogContext";
+import { ThemeProvider } from "../providers/theme-provider";
+// import { ArrestLogProvider } from "@/context/ArrestLogContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -19,12 +19,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <UserProvider>
           <ReactQueryProvider>
             <DataProvider>
-              <ArrestLogProvider>
-                <ApolloWrapper>
-                  {children}
-                  <ToastContainer />
-                </ApolloWrapper>
-              </ArrestLogProvider>
+              {/* <ArrestLogProvider> */}
+              <ApolloWrapper>
+                {children}
+                <ToastContainer />
+              </ApolloWrapper>
+              {/* </ArrestLogProvider> */}
             </DataProvider>
           </ReactQueryProvider>
         </UserProvider>

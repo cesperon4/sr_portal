@@ -1,15 +1,15 @@
 // chartDataUtils.ts
+import { ArrestLogFeature, AttributeTypes } from "@/types/arrestLog.interface";
 import { ChartData } from "chart.js";
-import { ArrestLogType, AttributeTypes } from "@/types/arrestLog.interface";
 
 export function getBarChartData(
-  arrestLogs: ArrestLogType[],
+  arrestLogs: ArrestLogFeature[],
   attribute: AttributeTypes
 ): ChartData<"bar"> | null {
   if (!arrestLogs || arrestLogs.length === 0) return null;
 
   const attributeCounts: Record<string, number> = {};
-  arrestLogs.forEach((log: ArrestLogType) => {
+  arrestLogs.forEach((log: ArrestLogFeature) => {
     const attributeValue = log.attributes[attribute] || "Unknown";
     attributeCounts[attributeValue] =
       (attributeCounts[attributeValue] || 0) + 1;
@@ -30,13 +30,13 @@ export function getBarChartData(
 }
 
 export function getLineChartData(
-  arrestLogs: ArrestLogType[],
+  arrestLogs: ArrestLogFeature[],
   attribute: AttributeTypes
 ): ChartData<"line"> | null {
   if (!arrestLogs || arrestLogs.length === 0) return null;
 
   const attributeCount: Record<string, number> = {};
-  arrestLogs.forEach((log: ArrestLogType) => {
+  arrestLogs.forEach((log: ArrestLogFeature) => {
     const date = log.attributes[attribute] || "Unknown";
     attributeCount[date] = (attributeCount[date] || 0) + 1;
   });
@@ -57,13 +57,13 @@ export function getLineChartData(
 }
 
 export function getPieChartData(
-  arrestLogs: ArrestLogType[],
+  arrestLogs: ArrestLogFeature[],
   attribute: AttributeTypes
 ): ChartData<"pie"> | null {
   if (!arrestLogs || arrestLogs.length === 0) return null;
 
   const attributeCounts: Record<string, number> = {};
-  arrestLogs.forEach((log: ArrestLogType) => {
+  arrestLogs.forEach((log: ArrestLogFeature) => {
     const city = log.attributes[attribute] || "Unknown";
     attributeCounts[city] = (attributeCounts[city] || 0) + 1;
   });
@@ -98,13 +98,13 @@ export function getPieChartData(
 }
 
 export function getDoughnutChartData(
-  arrestLogs: ArrestLogType[],
+  arrestLogs: ArrestLogFeature[],
   attribute: AttributeTypes
 ): ChartData<"doughnut"> | null {
   if (!arrestLogs || arrestLogs.length === 0) return null;
 
   const attributeCounts: Record<string, number> = {};
-  arrestLogs.forEach((log: ArrestLogType) => {
+  arrestLogs.forEach((log: ArrestLogFeature) => {
     const city = log.attributes[attribute] || "Unknown";
     attributeCounts[city] = (attributeCounts[city] || 0) + 1;
   });

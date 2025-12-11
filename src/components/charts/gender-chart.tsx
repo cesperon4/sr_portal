@@ -1,8 +1,3 @@
-import React from "react";
-import { ChartCard } from "../ui/chart-card";
-import { ChartData } from "chart.js";
-import { Pie } from "react-chartjs-2";
-import { getMaxChartData, getMinChartData } from "@/utils/chartData";
 import {
   Table,
   TableBody,
@@ -12,18 +7,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useInsightContext } from "@/context/InsightContext";
+import { type ChartsData } from "@/types/charts.interface";
+import { getMaxChartData, getMinChartData } from "@/utils/chartData";
+import React from "react";
+import { Pie } from "react-chartjs-2";
+import { ChartCard } from "../ui/chart-card";
 
 interface GenderChartProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
-  pieChartData: ChartData<"pie">;
+  chartData: ChartsData["pieChartData"];
 }
-export default function GenderChart({ toggleChartModal }: GenderChartProps) {
-  const { chartData } = useInsightContext();
-  if (!chartData.pieChartData) return <div>loading...</div>;
+export default function GenderChart({
+  toggleChartModal,
+  chartData,
+}: GenderChartProps) {
+  if (!chartData) return <div>loading...</div>;
 
-  const highestGenderArrests = getMaxChartData(chartData.pieChartData);
-  const lowestGenderArrests = getMinChartData(chartData.pieChartData);
+  const highestGenderArrests = getMaxChartData(chartData);
+  const lowestGenderArrests = getMinChartData(chartData);
 
   return (
     <div className="flex justify-center gap-8">
@@ -56,7 +57,7 @@ export default function GenderChart({ toggleChartModal }: GenderChartProps) {
 
               {/* Table Body */}
               <TableBody>
-                {chartData.pieChartData.datasets?.map((dataset, index) => (
+                {chartData.datasets?.map((dataset, index) => (
                   <TableRow
                     key={index}
                     className="hover:bg-gray-100 cursor-pointer transition-colors duration-150"
@@ -94,7 +95,7 @@ export default function GenderChart({ toggleChartModal }: GenderChartProps) {
         onClick={() => {
           toggleChartModal(
             <Pie
-              data={chartData.pieChartData!}
+              data={chartData!}
               options={{ responsive: true }}
               className="bg-white rounded" // Fixed height (adjust as needed)
               onClick={(e) => {
@@ -111,7 +112,7 @@ export default function GenderChart({ toggleChartModal }: GenderChartProps) {
           </h2>
           <div className="w-full h-[400px] flex items-center justify-center">
             <Pie
-              data={chartData.pieChartData}
+              data={chartData}
               options={{
                 responsive: true,
                 plugins: {

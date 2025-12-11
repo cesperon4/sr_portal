@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Backdrop } from "../backdrop";
 
-import { useResendVerificationEmailMutation } from "../../../generated/graphql";
 import { LoginParams } from "@/types/user.interface";
+import { useResendVerificationEmailMutation } from "../../../generated/graphql";
 
 interface EmailVerificationProps {
   closeVerificationModal: () => void;
@@ -49,7 +49,6 @@ function EmailVerificationModal({
             resendEmailVerificationMutation({
               variables: { email: loginParams.email },
               onCompleted: (data) => {
-                console.log("resend verification email success: ", data);
                 setResendError(false);
                 setResendSuccess(true);
               },
@@ -57,7 +56,6 @@ function EmailVerificationModal({
                 setResendSuccess(false);
                 setResendError(true);
                 setResendErrorMessage(error.message);
-                console.log("resend verification email error: ", error);
               },
             });
           }}

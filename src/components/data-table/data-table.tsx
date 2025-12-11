@@ -1,173 +1,148 @@
 "use client";
 
-import React, { useState } from "react";
+import { TableRowModal } from "@/components/data-table/table-row-modal";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useDataContext } from "../../context/DataContext";
-import { TableRowModal } from "@/components/data-table/table-row-modal";
-import { ArrowUp, ArrowDown, Database } from "lucide-react";
 import clsx from "clsx";
-
-interface ArrestLogType {
-  attributes: {
-    AGE: string | null;
-    ARREST_STATUS: string | null;
-    ArrestLocationAptFlr: string | null;
-    ArrestLocationCity: string | null;
-    ArrestLocationStreet: string | null;
-    ArrestLocationStreetNBR: string | null;
-    Arrest_Charge: string | null;
-    Arrest_ID: string | null;
-    Case_Number: string | null;
-    Charge_Description: string | null;
-    Charge_Sequence: string | null;
-    DATE_ARRESTED: string | null;
-    DOB: string | null;
-    Degree: string | null;
-    FIRSTNAME: string | null;
-    LASTNAME: string | null;
-    MIDDLENAME: string | null;
-    OBJECTID: number | null;
-    OBJECTID_1: number | null;
-    RACE: string | null;
-    SEX: string | null;
-    SUFFIX: string | null;
-    TIME_ARREST: string | null;
-    UNIQUEKEY: string | null;
-  };
-}
-
-interface ArrestLogField {
-  alias: string | null;
-  defaultValue: string | null;
-  domain: string | null;
-  name: string;
-  sqlType: string | null;
-  type: string | null;
-}
+import { ArrowDown, ArrowUp, Database } from "lucide-react";
+import { useState } from "react";
+import {
+  type DisplayLog,
+  type Field,
+  type VisibleFields,
+} from "../../types/openDataPortal.type";
 
 interface DataTableProps {
-  arrestLogs: ArrestLogType[];
-  arrestLogFields: ArrestLogField[];
-  arrestLogCount: number;
+  displayLogs: DisplayLog[];
+  displayFields: Field[];
+  count: number;
   currentPage: number;
   numOfPages: number;
-  headerFilter: string | null;
-  setHeaderFilter: (value: string | null) => void;
-  filterDirection: string | null;
-  setFilterDirection: (value: string | null) => void;
+  filterText: { header: string; direction: string };
+  setFilterText: React.Dispatch<
+    React.SetStateAction<{ header: string; direction: string }>
+  >;
+  activeLoading: boolean;
+  visibleColumns?: VisibleFields;
 }
 
 export function DataTable({
-  arrestLogs,
-  arrestLogFields,
-  arrestLogCount,
-  headerFilter,
-  setHeaderFilter,
-  filterDirection,
-  setFilterDirection,
+  displayLogs,
+  displayFields,
+  count,
+  filterText,
+  setFilterText,
+  activeLoading,
+  visibleColumns,
 }: DataTableProps) {
-  const { visibleColumns } = useDataContext();
   const [tableRow, setTableRow] = useState(false);
   const [tableRowModalData, setTableRowModalData] = useState<
-    ArrestLogType | undefined
+    DisplayLog | undefined
   >(undefined);
 
-  const openTableRow = (arrestLog: ArrestLogType) => {
+  const openTableRow = (log: DisplayLog) => {
     setTableRow(true);
-    setTableRowModalData(arrestLog);
+    setTableRowModalData(log);
   };
 
   const closeTableRow = () => {
     setTableRow(false);
   };
 
+  if (activeLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-gray-500">Loading table...</p>
+      </div>
+    );
+  }
+
+  if (!visibleColumns) {
+    return null;
+  }
+
   return (
-    <div className="flex flex-col gap-2 p-6 lg:p-12">
+    <div className="flex flex-col gap-2 px-6 lg:px-12">
       {tableRow && tableRowModalData && (
         <TableRowModal handleClose={closeTableRow} data={tableRowModalData} />
       )}
 
-      {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-gray-100 rounded-lg">
             <Database className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Arrest Logs
-            </h2>
             <p className="text-sm text-gray-500 mt-0.5">
-              {arrestLogCount.toLocaleString()}{" "}
-              {arrestLogCount === 1 ? "record" : "records"}
+              {count.toLocaleString()} {count === 1 ? "record" : "records"}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Table Container */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableCaption>{""}</TableCaption>
             <TableHeader>
               <TableRow className="bg-gray-50 hover:bg-gray-50">
-                {arrestLogFields?.map((x: ArrestLogField) => {
-                  if (visibleColumns[x.name])
+                {Object.entries(visibleColumns)?.map(([key, value]) => {
+                  if (value)
                     return (
                       <TableHead
-                        key={x.name}
+                        key={key}
                         className="font-semibold text-gray-700"
                       >
                         <div className="flex gap-2 items-center whitespace-nowrap">
-                          <span>{x.name}</span>
+                          <span>{key}</span>
                           <div className="flex flex-col">
                             <button
                               onClick={() => {
-                                setHeaderFilter(x.name);
-                                setFilterDirection("ASC");
+                                setFilterText(() => ({
+                                  header: key,
+                                  direction: "ASC",
+                                }));
                               }}
                               className={clsx(
                                 "p-0.5 rounded transition-colors hover:bg-gray-200",
                                 {
                                   "text-blue-600":
-                                    headerFilter === x.name &&
-                                    filterDirection === "ASC",
+                                    filterText.header === key &&
+                                    filterText.direction === "ASC",
                                   "text-gray-400":
-                                    headerFilter !== x.name ||
-                                    filterDirection !== "ASC",
+                                    filterText.header !== key ||
+                                    filterText.direction !== "ASC",
                                 }
                               )}
-                              aria-label={`Sort ${x.name} ascending`}
+                              aria-label={`Sort ${key} ascending`}
                             >
                               <ArrowUp className="w-3.5 h-3.5" />
                             </button>
 
                             <button
                               onClick={() => {
-                                setHeaderFilter(x.name);
-                                setFilterDirection("DESC");
+                                setFilterText(() => ({
+                                  header: key,
+                                  direction: "DESC",
+                                }));
                               }}
                               className={clsx(
                                 "p-0.5 rounded transition-colors hover:bg-gray-200",
                                 {
                                   "text-blue-600":
-                                    headerFilter === x.name &&
-                                    filterDirection === "DESC",
+                                    filterText.header === key &&
+                                    filterText.direction === "DESC",
                                   "text-gray-400":
-                                    headerFilter !== x.name ||
-                                    filterDirection !== "DESC",
+                                    filterText.header !== key ||
+                                    filterText.direction !== "DESC",
                                 }
                               )}
-                              aria-label={`Sort ${x.name} descending`}
+                              aria-label={`Sort ${key} descending`}
                             >
                               <ArrowDown className="w-3.5 h-3.5" />
                             </button>
@@ -179,14 +154,14 @@ export function DataTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {arrestLogs.length > 0 ? (
-                arrestLogs.map((arrestLog) => {
+              {displayLogs.length > 0 ? (
+                displayLogs.map((displayLog) => {
                   return (
                     <TableRow
-                      key={arrestLog?.attributes.OBJECTID}
+                      key={displayLog?.attributes.OBJECTID}
                       className="cursor-pointer hover:bg-gray-50 transition-colors"
                       onClick={() => {
-                        openTableRow(arrestLog);
+                        openTableRow(displayLog);
                       }}
                     >
                       {Object.keys(visibleColumns).map((columnKey) => {
@@ -196,10 +171,10 @@ export function DataTable({
                           ]
                         ) {
                           const key =
-                            columnKey as keyof typeof arrestLog.attributes;
+                            columnKey as keyof typeof displayLog.attributes;
                           return (
                             <TableCell key={key} className="text-gray-700">
-                              {arrestLog.attributes[key] || (
+                              {displayLog.attributes[key] || (
                                 <span className="text-gray-400 italic text-sm">
                                   —
                                 </span>
@@ -215,7 +190,7 @@ export function DataTable({
               ) : (
                 <TableRow className="hover:bg-white">
                   <TableCell
-                    colSpan={arrestLogFields?.length}
+                    colSpan={displayFields?.length}
                     className="text-center py-12"
                   >
                     <div className="flex flex-col items-center gap-2">

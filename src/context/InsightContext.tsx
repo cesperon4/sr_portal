@@ -1,13 +1,12 @@
-import { createContext, useContext, ReactNode, useMemo } from "react";
+import { type ArrestLogFeature } from "@/types/arrestLog.interface";
 import {
   getBarChartData,
-  getPieChartData,
-  getLineChartData,
   getDoughnutChartData,
+  getLineChartData,
+  getPieChartData,
 } from "@/utils/chartData";
-import { type ChartData } from "chart.js";
-import { type ArrestLogType } from "@/types/arrestLog.interface";
-import { type Point } from "chart.js";
+import { type ChartData, type Point } from "chart.js";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 
 type ChartsDataType = {
   barChartData: ChartData<
@@ -40,7 +39,7 @@ type InsightContextType = {
 
 type InsightContextProviderProps = {
   children: ReactNode;
-  arrestLogs: ArrestLogType[];
+  arrestLogs: ArrestLogFeature[];
 };
 
 const InsightContext = createContext<InsightContextType | undefined>(undefined);

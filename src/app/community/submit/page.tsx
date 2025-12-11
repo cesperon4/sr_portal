@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { useUserContext } from "@/context/UserContext";
+import imageCompression from "browser-image-compression";
+import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   useCreatePostMutation,
   useGetPostsQuery,
 } from "../../../../generated/graphql";
-import { toast } from "react-toastify";
-import clsx from "clsx";
-import { useRouter } from "next/navigation";
-import imageCompression from "browser-image-compression";
 
 type PostType = "post" | "image" | "link";
 
@@ -60,7 +60,6 @@ export default function Submit() {
         },
       },
       onCompleted: () => {
-        console.log("completed");
         refetch();
         router.push("/dashboard?view=Community");
       },

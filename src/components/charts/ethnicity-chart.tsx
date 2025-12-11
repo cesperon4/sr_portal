@@ -1,35 +1,35 @@
+import { type ChartsData } from "@/types/charts.interface";
+import {
+  getHighestRace,
+  getMaxChartData,
+  getMinChartData,
+} from "@/utils/chartData";
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { ChartCard } from "../ui/chart-card";
-import { getMaxChartData, getMinChartData } from "@/utils/chartData";
-import { useInsightContext } from "@/context/InsightContext";
-import { getHighestRace } from "@/utils/chartData";
 
 interface EthnicityChartProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
+  chartData: ChartsData["doughnutChartData"];
 }
 export default function EthnicityChart({
   toggleChartModal,
+  chartData,
 }: EthnicityChartProps) {
-  const { chartData } = useInsightContext();
+  if (!chartData) return <div>loading...</div>;
 
-  if (!chartData.doughnutChartData || !chartData.lineChartDataChargeDescription)
-    return <div>loading...</div>;
-
-  const highestArrestEthnicity = getMaxChartData(chartData.doughnutChartData);
-  const leastArrestedEthnicity = getMinChartData(chartData.doughnutChartData);
-  const highestOccurringRace = getHighestRace(chartData.doughnutChartData);
+  const highestArrestEthnicity = getMaxChartData(chartData);
+  const leastArrestedEthnicity = getMinChartData(chartData);
+  const highestOccurringRace = getHighestRace(chartData);
 
   return (
     <div className="flex justify-center">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-          {/* Card Title */}
           <h2 className="text-sm font-medium text-gray-600 mb-3">
             Highest Arrested Ethnicity
           </h2>
 
-          {/* List of results */}
           <ul className="space-y-1">
             {highestOccurringRace?.map((race, index) => (
               <li key={index} className="text-gray-700 text-sm font-medium">
@@ -58,7 +58,7 @@ export default function EthnicityChart({
           toggleChartModal(
             <div className="p-8 bg-white rounded">
               <Doughnut
-                data={chartData.doughnutChartData!}
+                data={chartData}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
@@ -71,7 +71,7 @@ export default function EthnicityChart({
         }}
       >
         <Doughnut
-          data={chartData.doughnutChartData}
+          data={chartData}
           options={{
             responsive: true,
             maintainAspectRatio: false,

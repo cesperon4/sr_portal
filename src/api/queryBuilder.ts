@@ -5,7 +5,8 @@ interface QueryBuilderProps {
   filterParams?: Record<string, boolean> | undefined;
   base_url: string | undefined;
   orderBy?: string;
-  type: "arrest_log" | "weather" | "police_incident";
+  type: "open_data" | "weather";
+  enabled?: boolean;
 }
 
 type BuildArrestLogParams = Omit<QueryBuilderProps, "type">;
@@ -94,6 +95,7 @@ export function useQueryBuilder<T>({
   base_url,
   orderBy,
   type,
+  enabled,
 }: QueryBuilderProps): UseQueryResult<T> {
   return useQuery<T>({
     queryKey: [base_url, searchParams, filterParams, orderBy],
@@ -101,7 +103,7 @@ export function useQueryBuilder<T>({
       let url = "";
 
       switch (type) {
-        case "arrest_log":
+        case "open_data":
           url = buildArrestLogsUrl({
             searchParams,
             filterParams,
@@ -110,14 +112,6 @@ export function useQueryBuilder<T>({
           });
           break;
 
-        case "police_incident":
-          url = buildArrestLogsUrl({
-            searchParams,
-            filterParams,
-            base_url,
-            orderBy,
-          });
-          break;
         case "weather":
           url = buildOpenWeatherUrl({
             searchParams,
@@ -138,5 +132,6 @@ export function useQueryBuilder<T>({
 
     refetchInterval: 1000 * 60 * 60,
     staleTime: 300000,
+    enabled,
   });
 }

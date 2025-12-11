@@ -1,0 +1,65 @@
+import { type Feature, type OpenDataResponse } from "./openDataPortal.type";
+
+export type PolicePursuit = {
+  OBJECTID: number;
+  IncidentNumber: number;
+  UniqueKey: string;
+  CaseNumber: string;
+  PursuitNumber: number;
+  OccurredDayOfWeek: string;
+  OccurredDate: number; // Unix timestamp (ms)
+  COUNTY: string;
+  Division: string;
+  Bureau: string;
+  Team: string;
+  Assignment: string;
+  Aborted: string;
+  Accident: string;
+  Arrest: string | null;
+  DamageHR: string | null;
+  DamageOther: string | null;
+  DamagePolice: string | null;
+  DamageParkedVehicle: string | null;
+  DamageProperty: string | null;
+  DamageSuspectVehicle: string | null;
+  Distance: string;
+  Reason: string;
+  TimeOfDay: string;
+  VehicleType: string;
+  MaxSpeed: number;
+  OfficerAge: number | null;
+  YearsOfService: number;
+  OffenderSex: string;
+  OffenderRace: string;
+  CopterAvailable: string;
+  CopterUsed: string;
+  DUIArrest: string;
+  StopDeviceUsed: string;
+  StopDevice: string;
+  JUSTIFIED: string;
+  FollowPolicy: string;
+  WeatherCondition: string;
+  LocationBegan: string;
+  LocationEnded: string;
+  InCarCamAvailable: string;
+  InCarCamUsed: string;
+  TotalTimeMinutes: number;
+  InfluencingFactor: string;
+  VIOLATION: string;
+  AbortedBy: string | null;
+  ConcludedBy: string;
+  DamageType: string;
+  InjuryType: string;
+  InitiatedByAgency: string;
+  ConcludedByAgency: string;
+  LiabilityClaim: string;
+  AssociatedOfficerCount: number;
+  OfficerCondition: string;
+  Count_: number | null;
+  F_first_match: string | null;
+  OBJECTID_1: number;
+};
+
+export type PolicePursuitFeature = Feature<PolicePursuit>;
+
+export type PolicePursuitResponse = OpenDataResponse<PolicePursuitFeature>;

@@ -1,21 +1,21 @@
-import React, { useState, Suspense } from "react";
-import { Sidebar } from "./sidebar";
-import { Loader } from "../../components/ui/loader";
 import {
-  Chart as ChartJS,
+  ArcElement,
   BarElement,
   CategoryScale,
-  LinearScale,
-  Title,
-  Tooltip,
+  Chart as ChartJS,
   Legend,
+  LinearScale,
   LineElement,
   PointElement,
-  ArcElement,
   RadialLinearScale,
+  Title,
+  Tooltip,
 } from "chart.js";
+import React, { Suspense, useState } from "react";
+import { Loader } from "../../components/ui/loader";
+import { Sidebar } from "./sidebar";
 
-import { useInsightContext } from "@/context/InsightContext";
+import { useCharts } from "@/hooks/charts/useCharts";
 import { initialSidebarState } from "@/lib/constants";
 
 const AgeChart = React.lazy(() => import("./age-chart"));
@@ -42,7 +42,7 @@ ChartJS.register(
 type Size = "lg" | "sm";
 
 export default function Charts() {
-  const { chartData } = useInsightContext();
+  const { chartData, isArrestLogsLoading, arrestLogsError } = useCharts();
   const [selectedChart, setSelectedChart] = useState<{
     chart: React.ReactNode | null;
     size: Size;
@@ -56,7 +56,6 @@ export default function Charts() {
     }
   };
 
-  //data insights sidebar
   const [sidebarState, setSidebarState] = useState({
     ...initialSidebarState,
     Age: true,
@@ -73,42 +72,71 @@ export default function Charts() {
     setSidebarState(temp);
   };
 
+  if (isArrestLogsLoading) {
+    return <Loader text={"Loading charts..."} />;
+  }
+
+  if (arrestLogsError) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-red-500">
+          Error loading charts: {arrestLogsError.message}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-4 font-sans h-[60vh]">
       <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
       <div className="w-full">
         {sidebarState["Age"] && (
-          <Suspense fallback={<Loader text={"Fetching age data..."} />}>
-            <AgeChart toggleChartModal={toggleChartModal} />
+          <Suspense fallback={<Loader text={"Loading Age Chart..."} />}>
+            <AgeChart
+              toggleChartModal={toggleChartModal}
+              chartData={chartData.barChartData}
+            />
           </Suspense>
         )}
-        {sidebarState["Gender"] && chartData.pieChartData && (
-          <Suspense fallback={<Loader text={"Fetching gender data..."} />}>
+        {sidebarState["Gender"] && (
+          <Suspense fallback={<Loader text={"Loading Gender Chart..."} />}>
             <GenderChart
-              pieChartData={chartData.pieChartData}
+              chartData={chartData.pieChartData}
               toggleChartModal={toggleChartModal}
             />
           </Suspense>
         )}
-        {sidebarState["Location"] && chartData.barChartDataStreet && (
-          <Suspense fallback={<Loader text={"Fetching location data..."} />}>
-            <LocationChart toggleChartModal={toggleChartModal} />
+        {sidebarState["Location"] && (
+          <Suspense fallback={<Loader text={"Loading Location Chart..."} />}>
+            <LocationChart
+              toggleChartModal={toggleChartModal}
+              chartData={chartData.barChartDataStreet}
+            />
           </Suspense>
         )}
 
         {sidebarState["Ethnicity"] && (
-          <Suspense fallback={<Loader text={"Fetching ethnicity data..."} />}>
-            <EthnicityChart toggleChartModal={toggleChartModal} />
+          <Suspense fallback={<Loader text={"Loading Ethnicity Chart..."} />}>
+            <EthnicityChart
+              toggleChartModal={toggleChartModal}
+              chartData={chartData.doughnutChartData}
+            />
           </Suspense>
         )}
-        {sidebarState["Degree"] && chartData.barChartDataDegree && (
-          <Suspense fallback={<Loader text={"Fetching degree data..."} />}>
-            <DegreeChart toggleChartModal={toggleChartModal} />
+        {sidebarState["Degree"] && (
+          <Suspense fallback={<Loader text={"Loading Degree Chart..."} />}>
+            <DegreeChart
+              toggleChartModal={toggleChartModal}
+              chartData={chartData.barChartDataDegree}
+            />
           </Suspense>
         )}
         {sidebarState["Charge"] && chartData.lineChartDataChargeDescription && (
-          <Suspense fallback={<Loader text={"Fetching charge data..."} />}>
-            <ChargeChart toggleChartModal={toggleChartModal} />
+          <Suspense fallback={<Loader text={"Loading Charge Chart..."} />}>
+            <ChargeChart
+              toggleChartModal={toggleChartModal}
+              chartData={chartData.lineChartDataChargeDescription}
+            />
           </Suspense>
         )}
 

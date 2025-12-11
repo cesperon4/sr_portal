@@ -1,8 +1,8 @@
+import { type ChartsData } from "@/types/charts.interface";
 import React from "react";
 import { Bar } from "react-chartjs-2";
 import { ChartCard } from "../ui/chart-card";
 
-import { useInsightContext } from "@/context/InsightContext";
 import {
   getAverageArrestAgeBar,
   getMaxChartData,
@@ -12,15 +12,18 @@ import {
 
 interface AgeChartsProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
+  chartData: ChartsData["barChartData"];
 }
-export default function AgeChart({ toggleChartModal }: AgeChartsProps) {
-  const { chartData } = useInsightContext();
-  if (!chartData.barChartData) return <div>loading...</div>;
+export default function AgeChart({
+  toggleChartModal,
+  chartData,
+}: AgeChartsProps) {
+  if (!chartData) return <div>loading...</div>;
 
-  const averageArrestAge = getAverageArrestAgeBar(chartData.barChartData);
-  const youngestArrestAge = getYoungestArrestAge(chartData.barChartData);
-  const oldestArrestAge = getOldestArrestAge(chartData.barChartData);
-  const highestOccurringArrestAge = getMaxChartData(chartData.barChartData);
+  const averageArrestAge = getAverageArrestAgeBar(chartData);
+  const youngestArrestAge = getYoungestArrestAge(chartData);
+  const oldestArrestAge = getOldestArrestAge(chartData);
+  const highestOccurringArrestAge = getMaxChartData(chartData);
 
   return (
     <div className="flex flex-col items-center mr-4">
@@ -52,7 +55,7 @@ export default function AgeChart({ toggleChartModal }: AgeChartsProps) {
         onClick={() => {
           toggleChartModal(
             <Bar
-              data={chartData.barChartData!}
+              data={chartData}
               options={{
                 responsive: true,
                 scales: {
@@ -75,7 +78,7 @@ export default function AgeChart({ toggleChartModal }: AgeChartsProps) {
         }}
       >
         <Bar
-          data={chartData.barChartData}
+          data={chartData}
           options={{
             responsive: true,
             scales: {

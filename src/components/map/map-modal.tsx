@@ -1,10 +1,10 @@
 "use client";
 
-import { type PoliceIncidentMapType } from "@/types/map.interface";
+import { type PoliceIncidentMapFeature } from "@/types/map.interface";
 import { Backdrop } from "../backdrop";
 
 type MapModalProps = {
-  incident: PoliceIncidentMapType;
+  incident: PoliceIncidentMapFeature;
   closeMapModal: () => void;
 };
 

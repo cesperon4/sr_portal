@@ -1,32 +1,26 @@
-import React from "react";
-import { Line } from "react-chartjs-2";
+import { type ChartsData } from "@/types/charts.interface";
 import {
+  getHighestChargeDescriptionLine,
   getMaxChartData,
   getMinChartData,
-  getHighestChargeDescriptionLine,
 } from "@/utils/chartData";
+import React from "react";
+import { Line } from "react-chartjs-2";
 import { ChartCard } from "../ui/chart-card";
-
-import { useInsightContext } from "@/context/InsightContext";
 
 interface ChargeChartProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
+  chartData: ChartsData["lineChartDataChargeDescription"];
 }
-export default function ChargeChart({ toggleChartModal }: ChargeChartProps) {
-  const { chartData } = useInsightContext();
+export default function ChargeChart({
+  toggleChartModal,
+  chartData,
+}: ChargeChartProps) {
+  if (!chartData) return <div>loading...</div>;
 
-  if (!chartData.lineChartDataChargeDescription)
-    return <div>Missing line chart data charge description...</div>;
-
-  const highestChargeArrests = getMaxChartData(
-    chartData.lineChartDataChargeDescription
-  );
-  const leastChargeArrests = getMinChartData(
-    chartData.lineChartDataChargeDescription
-  );
-  const highestOccurringCharge = getHighestChargeDescriptionLine(
-    chartData.lineChartDataChargeDescription
-  );
+  const highestChargeArrests = getMaxChartData(chartData);
+  const leastChargeArrests = getMinChartData(chartData);
+  const highestOccurringCharge = getHighestChargeDescriptionLine(chartData);
   return (
     <div className="flex">
       <div className="flex flex-col gap-4">
@@ -67,7 +61,7 @@ export default function ChargeChart({ toggleChartModal }: ChargeChartProps) {
         onClick={() => {
           toggleChartModal(
             <Line
-              data={chartData.lineChartDataChargeDescription!}
+              data={chartData}
               options={{ responsive: true }}
               className="bg-white p-8 rounded" // Fixed height (adjust as needed)
               onClick={(e) => {
@@ -79,7 +73,7 @@ export default function ChargeChart({ toggleChartModal }: ChargeChartProps) {
         }}
       >
         <Line
-          data={chartData.lineChartDataChargeDescription}
+          data={chartData}
           options={{ responsive: true }}
           className="bg-white cursor-pointer w-full h-full" // Fixed height (adjust as needed)
         />

@@ -1,13 +1,24 @@
 "use client";
 
-import * as React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Backdrop } from "../backdrop";
-import { useDataContext } from "../../context/DataContext";
-import { X, Columns3, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  type DataCategory,
+  type VisibleFields,
+} from "@/types/openDataPortal.type";
+import { CheckSquare, Columns3, Square, X } from "lucide-react";
+import * as React from "react";
+import { Backdrop } from "../backdrop";
 
-interface ArrestLogField {
+// type FieldTypes =
+//   | PoliceIncidentAttributes
+//   | PoliceForceAttributes
+//   | PolicePursuit
+//   | ArrestLogType;
+
+// type VisibleFields = Record<keyof FieldTypes, boolean>;
+
+interface DisplayLogField {
   alias: string | null;
   defaultValue: string | null;
   domain: string | null;
@@ -17,24 +28,29 @@ interface ArrestLogField {
 }
 
 interface DataTableProps {
-  arrestLogFields: ArrestLogField[];
+  displayLogFields: DisplayLogField[];
   handleClose: () => void;
+  visibleColumns: VisibleFields;
+  columnSetters: Record<
+    DataCategory,
+    React.Dispatch<React.SetStateAction<VisibleFields>>
+  >;
+  selectedCategory: DataCategory;
+  checkAllVisibleColumns: (group: DataCategory) => void;
+  uncheckAllVisibleColumns: (group: DataCategory) => void;
 }
 
 export function SelectColumnModal({
-  arrestLogFields,
+  displayLogFields,
   handleClose,
+  visibleColumns,
+  columnSetters,
+  selectedCategory,
+  checkAllVisibleColumns,
+  uncheckAllVisibleColumns,
 }: DataTableProps) {
-  const {
-    setVisibleColumns,
-    visibleColumns,
-    uncheckAllVisibleColumns,
-    checkAllVisibleColumns,
-  } = useDataContext();
-
-  // Count selected columns
   const selectedCount = Object.values(visibleColumns).filter(Boolean).length;
-  const totalCount = arrestLogFields.length;
+  const totalCount = displayLogFields.length;
 
   // Handle escape key
   React.useEffect(() => {
@@ -82,7 +98,9 @@ export function SelectColumnModal({
           <Button
             variant="outline"
             size="sm"
-            onClick={checkAllVisibleColumns}
+            onClick={() => {
+              checkAllVisibleColumns(selectedCategory);
+            }}
             className="flex-1 gap-2"
           >
             <CheckSquare className="w-4 h-4" />
@@ -91,7 +109,9 @@ export function SelectColumnModal({
           <Button
             variant="outline"
             size="sm"
-            onClick={uncheckAllVisibleColumns}
+            onClick={() => {
+              uncheckAllVisibleColumns(selectedCategory);
+            }}
             className="flex-1 gap-2"
           >
             <Square className="w-4 h-4" />
@@ -102,8 +122,9 @@ export function SelectColumnModal({
         {/* Column List - Scrollable */}
         <div className="overflow-y-auto flex-1 px-6 py-4">
           <div className="space-y-1">
-            {arrestLogFields.map((field) => {
-              const isChecked = visibleColumns[field.name];
+            {displayLogFields.map((field) => {
+              const isChecked =
+                visibleColumns[field.name as keyof VisibleFields];
               return (
                 <label
                   key={field.name}
@@ -128,10 +149,13 @@ export function SelectColumnModal({
                   <Checkbox
                     checked={isChecked}
                     onCheckedChange={() => {
-                      setVisibleColumns((prev) => ({
-                        ...prev,
-                        [field.name]: !visibleColumns[field.name],
-                      }));
+                      columnSetters[selectedCategory as DataCategory](
+                        (prev) => ({
+                          ...prev,
+                          [field.name]:
+                            !visibleColumns[field.name as keyof VisibleFields],
+                        })
+                      );
                     }}
                   />
                 </label>

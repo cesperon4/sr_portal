@@ -1,11 +1,11 @@
 import { Map } from "@/components/map/map-container";
-import { type PoliceIncidentMapType } from "@/types/map.interface";
+import { type PoliceIncidentMapFeature } from "@/types/map.interface";
 import { useCallback, useState } from "react";
 
 interface UseRenderMapProps {
   isPoliceIncidentsLoading: boolean;
   policeIncidentsError: Error | null;
-  policeIncidents: PoliceIncidentMapType[];
+  policeIncidents: PoliceIncidentMapFeature[];
 }
 export function useRenderMap({
   isPoliceIncidentsLoading,
@@ -13,11 +13,11 @@ export function useRenderMap({
   policeIncidents,
 }: UseRenderMapProps) {
   const [mapModal, setMapModal] = useState(false);
-  const [modalData, setModalData] = useState<PoliceIncidentMapType | null>(
+  const [modalData, setModalData] = useState<PoliceIncidentMapFeature | null>(
     null
   );
 
-  const openMapModal = (incident: PoliceIncidentMapType) => {
+  const openMapModal = (incident: PoliceIncidentMapFeature) => {
     if (!incident) {
       console.log("modal did not open incident does not occur");
       return;

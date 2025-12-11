@@ -1,9 +1,3 @@
-import React from "react";
-import { Bar } from "react-chartjs-2";
-import { ChartCard } from "../ui/chart-card";
-import { getMaxChartData, getMinChartData } from "@/utils/chartData";
-import { useInsightContext } from "@/context/InsightContext";
-import { getHighestArrestStreetBar } from "@/utils/chartData";
 import {
   Table,
   TableBody,
@@ -13,22 +7,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ChartsData } from "@/types/charts.interface";
+import {
+  getHighestArrestStreetBar,
+  getMaxChartData,
+  getMinChartData,
+} from "@/utils/chartData";
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import { ChartCard } from "../ui/chart-card";
 
 interface LocationChartProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
+  chartData: ChartsData["barChartDataStreet"];
 }
 export default function LocationChart({
   toggleChartModal,
+  chartData,
 }: LocationChartProps) {
-  const { chartData } = useInsightContext();
+  if (!chartData) return <div>loading...</div>;
 
-  if (!chartData.barChartDataStreet) return <div>loading...</div>;
-
-  const highestArrestStreet = getHighestArrestStreetBar(
-    chartData.barChartDataStreet
-  );
-  const maxArrestStreet = getMaxChartData(chartData.barChartDataStreet);
-  const minArrestStreet = getMinChartData(chartData.barChartDataStreet);
+  const highestArrestStreet = getHighestArrestStreetBar(chartData);
+  const maxArrestStreet = getMaxChartData(chartData);
+  const minArrestStreet = getMinChartData(chartData);
 
   return (
     <div className="flex gap-2 w-full">
@@ -44,7 +45,6 @@ export default function LocationChart({
             <Table className="w-full table-auto border-collapse">
               <TableCaption className="sr-only">{""}</TableCaption>
 
-              {/* Table Header */}
               <TableHeader>
                 <TableRow className="">
                   <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">
@@ -56,7 +56,6 @@ export default function LocationChart({
                 </TableRow>
               </TableHeader>
 
-              {/* Table Body */}
               <TableBody>
                 {highestArrestStreet?.map((street, index) => (
                   <TableRow
@@ -93,7 +92,7 @@ export default function LocationChart({
         onClick={() => {
           toggleChartModal(
             <Bar
-              data={chartData.barChartDataStreet!}
+              data={chartData}
               options={{ responsive: true }}
               className="bg-white p-8 rounded" // Fixed height (adjust as needed)
               onClick={(e) => {
@@ -105,7 +104,7 @@ export default function LocationChart({
         }}
       >
         <Bar
-          data={chartData.barChartDataStreet}
+          data={chartData}
           options={{
             responsive: true,
             scales: {

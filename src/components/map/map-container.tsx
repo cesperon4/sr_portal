@@ -1,6 +1,6 @@
 "use client";
 
-import { type PoliceIncidentMapType } from "@/types/map.interface";
+import { type PoliceIncidentMapFeature } from "@/types/map.interface";
 import { Icon } from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
@@ -12,8 +12,8 @@ const customIcon = new Icon({
 });
 
 interface DataTableProps {
-  policeIncidents: PoliceIncidentMapType[] | [];
-  openMapModal: (incident: PoliceIncidentMapType) => void;
+  policeIncidents: PoliceIncidentMapFeature[] | [];
+  openMapModal: (incident: PoliceIncidentMapFeature) => void;
 }
 
 export function Map({ policeIncidents, openMapModal }: DataTableProps) {

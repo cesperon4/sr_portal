@@ -1,6 +1,4 @@
 "use client";
-import Searchbar from "@/components/data-table/searchbar";
-import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import { HeaderSelect } from "@/types/header.interface";
 import { signOut } from "next-auth/react";
@@ -18,13 +16,11 @@ import WeatherWrapper from "./weather/weather-wrapper";
 interface HeaderProps {
   view: HeaderSelect;
   toggleView: (view: HeaderSelect) => void;
-  openSelectColumns: () => void;
   setIsProfileSettingsOpen: (arg: boolean) => void;
 }
 export function Header({
   view,
   toggleView,
-  openSelectColumns,
   setIsProfileSettingsOpen,
 }: HeaderProps) {
   const { loggedUser, clearLoggedUser } = useUserContext();
@@ -68,7 +64,7 @@ export function Header({
             currentView={view}
           >
             <IoMdBook />
-            Arrest Log
+            Data Logs
           </UnderlineButton>
 
           <UnderlineButton
@@ -93,7 +89,7 @@ export function Header({
             Community
           </UnderlineButton>
         </div>
-        {view === "Table" && (
+        {/* {view === "Table" && (
           <div className={`flex gap-2 items-center ml-auto`}>
             <Button
               variant="outline"
@@ -106,7 +102,7 @@ export function Header({
             </Button>
             <Searchbar />
           </div>
-        )}
+        )} */}
 
         <div className="flex gap-2 items-center ml-auto">
           {view === "Community" && (

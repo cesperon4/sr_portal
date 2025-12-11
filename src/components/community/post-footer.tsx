@@ -1,13 +1,15 @@
-import React, { useMemo } from "react";
-import { FaRegComment } from "react-icons/fa";
-import { AiOutlineLike } from "react-icons/ai";
-import { PiShareFat } from "react-icons/pi";
-import { type Like } from "../../../generated/graphql";
 import { useUserContext } from "@/context/UserContext";
-import clsx from "clsx";
-import { useToggleLikeMutation } from "../../../generated/graphql";
-import { type Post } from "../../../generated/graphql";
 import { gql } from "@apollo/client";
+import clsx from "clsx";
+import { useMemo } from "react";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegComment } from "react-icons/fa";
+import { PiShareFat } from "react-icons/pi";
+import {
+  useToggleLikeMutation,
+  type Like,
+  type Post,
+} from "../../../generated/graphql";
 
 interface PostFooterProps {
   post: Post;
@@ -49,9 +51,7 @@ function PostFooter({ post }: PostFooterProps) {
       },
 
       update: (cache, { data }) => {
-        console.log("updating cache");
         const updatedLike = data?.toggleLike?.data;
-        console.log("updated like: ", updatedLike);
         if (!updatedLike) return;
 
         cache.modify({

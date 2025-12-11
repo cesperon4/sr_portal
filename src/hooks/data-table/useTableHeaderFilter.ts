@@ -1,8 +1,6 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export function useTableHeaderFilter() {
-  // State to manage the header filter value and direction
-
   const [headerFilter, setHeaderFilter] = useState<string | null>(null);
   const [filterDirection, setFilterDirection] = useState<string | null>(null);
 

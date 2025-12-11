@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useArrestLogContext } from "@/context/ArrestLogContext";
+import { Input } from "@/components/ui/input";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 const filters = [
   "First Name",
@@ -24,9 +23,13 @@ const filters = [
   "Date Arrested",
 ];
 
-function Searchbar() {
+type SearchbarProps = {
+  searchArrestLogs: (e: string, filter?: string) => void;
+};
+
+function Searchbar({ searchArrestLogs }: SearchbarProps) {
   const [filterState, setFilterState] = useState<Record<string, boolean>>({});
-  const { searchArrestLogs } = useArrestLogContext();
+
   const selectedFilter = useMemo(() => {
     const entry = Object.entries(filterState).find(([, value]) => value);
     return entry?.[0];
@@ -38,7 +41,7 @@ function Searchbar() {
     if (selectedFilter) {
       searchArrestLogs(filterText, selectedFilter);
     }
-  }, [filterText, selectedFilter, searchArrestLogs]);
+  }, [filterText, searchArrestLogs]);
 
   const setShowStatusBar = useCallback((checkedFilter: string) => {
     setFilterState((prev) =>
@@ -62,7 +65,7 @@ function Searchbar() {
             Search by
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-56 bg-white rounded">
           <DropdownMenuLabel>Filter By</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {filters.map((filter: string, index: number) => {

@@ -1,45 +1,18 @@
 "use client";
 
-import * as React from "react";
-import { Backdrop } from "../backdrop";
-// import { TABLE_ROW_CLASSES } from "@/lib/constants";
+import { createModalSection } from "@/utils/createModalSection";
 import { X } from "lucide-react";
-
-interface ArrestLogType {
-  attributes: {
-    AGE: string | null;
-    ARREST_STATUS: string | null;
-    ArrestLocationAptFlr: string | null;
-    ArrestLocationCity: string | null;
-    ArrestLocationStreet: string | null;
-    ArrestLocationStreetNBR: string | null;
-    Arrest_Charge: string | null;
-    Arrest_ID: string | null;
-    Case_Number: string | null;
-    Charge_Description: string | null;
-    Charge_Sequence: string | null;
-    DATE_ARRESTED: string | null;
-    DOB: string | null;
-    Degree: string | null;
-    FIRSTNAME: string | null;
-    LASTNAME: string | null;
-    MIDDLENAME: string | null;
-    OBJECTID: number | null;
-    OBJECTID_1: number | null;
-    RACE: string | null;
-    SEX: string | null;
-    SUFFIX: string | null;
-    TIME_ARREST: string | null;
-    UNIQUEKEY: string | null;
-  };
-}
+import * as React from "react";
+import { type DisplayLog } from "../../types/openDataPortal.type";
+import { Backdrop } from "../backdrop";
 
 interface DataTableProps {
-  data: ArrestLogType;
+  data: DisplayLog;
   handleClose: () => void;
 }
 
 export function TableRowModal({ data, handleClose }: DataTableProps) {
+  console.log("TableRowModal: ", data);
   // Handle escape key
   React.useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -49,60 +22,7 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
     return () => window.removeEventListener("keydown", handleEscape);
   }, [handleClose]);
 
-  const sections = [
-    {
-      title: "Identification",
-      fields: [
-        { label: "Object ID", value: data.attributes.OBJECTID },
-        { label: "Arrest ID", value: data.attributes.Arrest_ID },
-        { label: "Unique Key", value: data.attributes.UNIQUEKEY },
-        { label: "Case Number", value: data.attributes.Case_Number },
-      ],
-    },
-    {
-      title: "Personal Information",
-      fields: [
-        { label: "First Name", value: data.attributes.FIRSTNAME },
-        { label: "Middle Name", value: data.attributes.MIDDLENAME },
-        { label: "Last Name", value: data.attributes.LASTNAME },
-        { label: "Suffix", value: data.attributes.SUFFIX },
-        { label: "Date of Birth", value: data.attributes.DOB },
-        { label: "Age", value: data.attributes.AGE },
-        { label: "Sex", value: data.attributes.SEX },
-        { label: "Race", value: data.attributes.RACE },
-      ],
-    },
-    {
-      title: "Arrest Details",
-      fields: [
-        { label: "Date Arrested", value: data.attributes.DATE_ARRESTED },
-        { label: "Time of Arrest", value: data.attributes.TIME_ARREST },
-        { label: "Arrest Status", value: data.attributes.ARREST_STATUS },
-        { label: "Arrest Charge", value: data.attributes.Arrest_Charge },
-        {
-          label: "Charge Description",
-          value: data.attributes.Charge_Description,
-        },
-        { label: "Charge Sequence", value: data.attributes.Charge_Sequence },
-        { label: "Degree", value: data.attributes.Degree },
-      ],
-    },
-    {
-      title: "Location Information",
-      fields: [
-        {
-          label: "Street Number",
-          value: data.attributes.ArrestLocationStreetNBR,
-        },
-        { label: "Street", value: data.attributes.ArrestLocationStreet },
-        {
-          label: "Apartment/Floor",
-          value: data.attributes.ArrestLocationAptFlr,
-        },
-        { label: "City", value: data.attributes.ArrestLocationCity },
-      ],
-    },
-  ];
+  const sections = createModalSection(data);
 
   return (
     <Backdrop
@@ -116,11 +36,8 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
           e.stopPropagation();
         }}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Arrest Log Details
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-900">Log Details</h2>
           <button
             onClick={handleClose}
             className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-gray-500 hover:text-gray-700"
@@ -130,7 +47,6 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
           </button>
         </div>
 
-        {/* Content */}
         <div className="overflow-y-auto flex-1 px-6 py-6">
           <div className="space-y-8">
             {sections.map((section, sectionIdx) => (
@@ -157,7 +73,6 @@ export function TableRowModal({ data, handleClose }: DataTableProps) {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl flex-shrink-0">
           <button
             onClick={handleClose}
