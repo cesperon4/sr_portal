@@ -8,7 +8,13 @@ import {
   initialPolicePursuitColumns,
 } from "@/lib/constants";
 import { CrimeFilterState } from "@/types/map.interface";
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   type DataCategory,
   type VisibleFields,
@@ -53,14 +59,18 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [visibleUseOfForceColumns, setVisibleUseOfForceColumns] =
     useState<VisibleFields>(initialPoliceForceColumns);
 
+  useEffect(() => {
+    console.log("use effect for visible force");
+  }, [visibleUseOfForceColumns]);
+
   const columnSetters: Record<
     DataCategory,
     React.Dispatch<React.SetStateAction<VisibleFields>>
   > = {
     ["Arrest Logs"]: setVisibleArrestLogColumns,
     ["Police Complaints"]: setVisiblePoliceComplaintColumns,
-    ["Police Pursuits"]: () => setVisiblePolicePursuitColumns,
-    ["Use of Force Reports"]: () => setVisibleUseOfForceColumns,
+    ["Police Pursuits"]: setVisiblePolicePursuitColumns,
+    ["Use of Force Reports"]: setVisibleUseOfForceColumns,
   };
 
   const columnStates: Record<DataCategory, VisibleFields> = {
@@ -75,6 +85,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       acc[key as keyof VisibleFields] = false; // Set each key's value to false
       return acc;
     }, {} as VisibleFields);
+
     columnSetters[group](updatedObj);
   };
 
