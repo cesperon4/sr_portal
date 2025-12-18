@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
+import * as React from "react";
 
 interface BackdropProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface BackdropProps {
 export function Backdrop({ children, onClick }: BackdropProps) {
   return (
     <motion.div
-      className="backdrop top-0 left-0 w-full h-full bg-opaq-black flex items-center justify-center z-50 fixed"
+      className="backdrop top-0 left-0 w-full h-full bg-opaq-black flex items-center justify-center z-[9999] fixed"
       onClick={onClick}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

@@ -12,71 +12,105 @@ interface EthnicityChartProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
   chartData: ChartsData["doughnutChartData"];
 }
+
 export default function EthnicityChart({
   toggleChartModal,
   chartData,
 }: EthnicityChartProps) {
-  if (!chartData) return <div>loading...</div>;
+  if (!chartData) {
+    return <div className="rounded-2xl bg-white p-6 shadow-sm">Loading…</div>;
+  }
 
   const highestArrestEthnicity = getMaxChartData(chartData);
   const leastArrestedEthnicity = getMinChartData(chartData);
   const highestOccurringRace = getHighestRace(chartData);
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-          <h2 className="text-sm font-medium text-gray-600 mb-3">
-            Highest Arrested Ethnicity
-          </h2>
+    <div className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Arrests by Ethnicity
+        </h3>
+        <span className="text-xs text-gray-500">Click chart to expand</span>
+      </div>
 
-          <ul className="space-y-1">
-            {highestOccurringRace?.map((race, index) => (
-              <li key={index} className="text-gray-700 text-sm font-medium">
-                <span className="font-semibold">{index + 1}.</span> {race[0]} -{" "}
-                {race[1]} arrests
-              </li>
-            ))}
-          </ul>
-        </div>
-
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4">
         <ChartCard
-          title={"Ethnicity with Most Arrests"}
+          title="Ethnicity with Most Arrests"
           stat={highestArrestEthnicity}
-          color={"blue"}
+          color="blue"
         />
-
         <ChartCard
-          title={"Ethnicity with Least Arrests"}
+          title="Ethnicity with Least Arrests"
           stat={leastArrestedEthnicity}
-          color={"green"}
+          color="green"
         />
       </div>
+
+      {/* Top Ethnicities List */}
+      <div className="rounded-xl border bg-gray-50 p-4">
+        <h4 className="mb-3 text-sm font-medium text-gray-600">
+          Highest Arrested Ethnicities
+        </h4>
+
+        <ul className="space-y-2">
+          {highestOccurringRace?.map(([race, count], index) => (
+            <li
+              key={index}
+              className="flex items-center justify-between rounded-md bg-white px-3 py-2 text-sm text-gray-700 shadow-sm"
+            >
+              <span className="font-medium">
+                {index + 1}. {race}
+              </span>
+              <span className="text-gray-500">{count}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Chart */}
       <div
-        className="cursor-pointer h-[60vh]" // or h-full if inside a sized container
-        onClick={() => {
+        className="relative h-[260px] w-full rounded-xl border bg-gray-50 p-4 transition hover:shadow-md cursor-pointer"
+        onClick={() =>
           toggleChartModal(
-            <div className="p-8 bg-white rounded">
-              <Doughnut
-                data={chartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                }}
-                className="w-full h-[50vh]"
-              />
-            </div>,
+            <Doughnut
+              data={chartData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "bottom",
+                  },
+                },
+              }}
+            />,
             "sm"
-          );
-        }}
+          )
+        }
       >
         <Doughnut
           data={chartData}
           options={{
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  font: { size: 12 },
+                  color: "#4B5563",
+                },
+              },
+              tooltip: {
+                backgroundColor: "#111827",
+                titleFont: { size: 13 },
+                bodyFont: { size: 12 },
+                padding: 10,
+              },
+            },
           }}
-          className="w-full h-full"
         />
       </div>
     </div>

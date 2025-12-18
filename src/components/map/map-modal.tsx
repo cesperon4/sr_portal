@@ -17,6 +17,7 @@ type MapModalProps = {
 };
 
 export default function MapModal({ id, closeMapModal, type }: MapModalProps) {
+  console.log("map modal rendered");
   const {
     data: policeIncident,
     isLoading: isPoliceIncidentLoading,
@@ -35,11 +36,16 @@ export default function MapModal({ id, closeMapModal, type }: MapModalProps) {
     skip: type === "incident",
   });
 
+  console.log("data: ", data);
+
   if (isPoliceIncidentLoading || loading) {
+    console.log("error 1");
     return <Backdrop onClick={closeMapModal}>Loading…</Backdrop>;
   }
 
   if (policeIncidentError || error) {
+    console.log("error 2");
+
     return (
       <Backdrop onClick={closeMapModal}>
         <div className="bg-white p-6 rounded-xl">Failed to load details</div>
@@ -53,6 +59,8 @@ export default function MapModal({ id, closeMapModal, type }: MapModalProps) {
       : type === "post" && data?.post
       ? normalizeIncident(data.post)
       : [];
+
+  console.log("fields: ", fields);
 
   return (
     <Backdrop onClick={closeMapModal}>

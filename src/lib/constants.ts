@@ -350,12 +350,10 @@ export const navLinks = [
 ];
 
 export const initialSidebarState: SidebarState = {
-  Age: false,
-  Gender: false,
-  Location: false,
-  Ethnicity: false,
-  Degree: false,
-  Charge: false,
+  ["Arrest Logs"]: false,
+  ["Police Complaints"]: false,
+  ["Police Pursuits"]: false,
+  ["Use of Force"]: false,
 };
 
 export const initialArrestLogColumns = {

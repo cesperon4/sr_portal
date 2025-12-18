@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ChartCardProps {
   title: string;
   stat: number | string | null;
@@ -12,7 +10,7 @@ export function ChartCard({ title, stat, color }: ChartCardProps) {
       className={`flex flex-col justify-between p-4 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 bg-white border border-gray-200 min-w-[150px]`}
     >
       {/* Title */}
-      <h2 className="text-sm font-medium text-gray-600">{title}</h2>
+      <h2 className={`text-sm font-medium text-gray-600`}>{title}</h2>
 
       {/* Stat */}
       <span

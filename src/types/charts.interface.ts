@@ -1,11 +1,9 @@
 import { ChartData, Point } from "chart.js";
 export interface SidebarState {
-  Age: boolean;
-  Gender: boolean;
-  Location: boolean;
-  Ethnicity: boolean;
-  Degree: boolean;
-  Charge: boolean;
+  ["Arrest Logs"]: boolean;
+  ["Police Complaints"]: boolean;
+  ["Police Pursuits"]: boolean;
+  ["Use of Force"]: boolean;
 }
 
 export type ChartsData = {

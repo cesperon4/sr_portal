@@ -1,15 +1,6 @@
-import React from "react";
-import { initialSidebarState } from "@/lib/constants";
-import {
-  BarChart3,
-  Users,
-  MapPin,
-  Palette,
-  Award,
-  FileText,
-  Calendar,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { initialSidebarState } from "@/lib/constants";
+import { BarChart3, Calendar, MapPin, Palette, Users } from "lucide-react";
 
 interface SidebarProps {
   getButtonClass: (key: keyof typeof initialSidebarState) => string;
@@ -17,12 +8,14 @@ interface SidebarProps {
 }
 
 const categories = [
-  { key: "Age" as const, label: "Age", icon: Calendar },
-  { key: "Gender" as const, label: "Gender", icon: Users },
-  { key: "Location" as const, label: "Location", icon: MapPin },
-  { key: "Ethnicity" as const, label: "Ethnicity", icon: Palette },
-  { key: "Degree" as const, label: "Degree", icon: Award },
-  { key: "Charge" as const, label: "Charge", icon: FileText },
+  { key: "Arrest Logs" as const, label: "Arrest Logs", icon: Calendar },
+  {
+    key: "Police Complaints" as const,
+    label: "Police Complaints",
+    icon: Users,
+  },
+  { key: "Police Pursuits" as const, label: "Police Pursuits", icon: MapPin },
+  { key: "Use of Force" as const, label: "Use of Force", icon: Palette },
 ];
 
 export function Sidebar({ getButtonClass, updateSidebar }: SidebarProps) {

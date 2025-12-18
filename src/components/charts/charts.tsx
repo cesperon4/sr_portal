@@ -58,7 +58,7 @@ export default function Charts() {
 
   const [sidebarState, setSidebarState] = useState({
     ...initialSidebarState,
-    Age: true,
+    ["Arrest Logs"]: true,
   });
 
   const getButtonClass = (key: keyof typeof initialSidebarState) => {
@@ -89,57 +89,43 @@ export default function Charts() {
   return (
     <div className="flex gap-4 font-sans h-[60vh]">
       <Sidebar getButtonClass={getButtonClass} updateSidebar={updateSidebar} />
-      <div className="w-full">
-        {sidebarState["Age"] && (
-          <Suspense fallback={<Loader text={"Loading Age Chart..."} />}>
-            <AgeChart
-              toggleChartModal={toggleChartModal}
-              chartData={chartData.barChartData}
-            />
-          </Suspense>
-        )}
-        {sidebarState["Gender"] && (
-          <Suspense fallback={<Loader text={"Loading Gender Chart..."} />}>
-            <GenderChart
-              chartData={chartData.pieChartData}
-              toggleChartModal={toggleChartModal}
-            />
-          </Suspense>
-        )}
-        {sidebarState["Location"] && (
-          <Suspense fallback={<Loader text={"Loading Location Chart..."} />}>
-            <LocationChart
-              toggleChartModal={toggleChartModal}
-              chartData={chartData.barChartDataStreet}
-            />
-          </Suspense>
-        )}
-
-        {sidebarState["Ethnicity"] && (
-          <Suspense fallback={<Loader text={"Loading Ethnicity Chart..."} />}>
-            <EthnicityChart
-              toggleChartModal={toggleChartModal}
-              chartData={chartData.doughnutChartData}
-            />
-          </Suspense>
-        )}
-        {sidebarState["Degree"] && (
-          <Suspense fallback={<Loader text={"Loading Degree Chart..."} />}>
-            <DegreeChart
-              toggleChartModal={toggleChartModal}
-              chartData={chartData.barChartDataDegree}
-            />
-          </Suspense>
-        )}
-        {sidebarState["Charge"] && chartData.lineChartDataChargeDescription && (
-          <Suspense fallback={<Loader text={"Loading Charge Chart..."} />}>
-            <ChargeChart
-              toggleChartModal={toggleChartModal}
-              chartData={chartData.lineChartDataChargeDescription}
-            />
-          </Suspense>
-        )}
-
+      <div className="w-full grid grid-cols-2 gap-4">
+        <Suspense fallback={<Loader text={"Loading Location Chart..."} />}>
+          <LocationChart
+            toggleChartModal={toggleChartModal}
+            chartData={chartData.barChartDataStreet}
+          />
+        </Suspense>
+        <Suspense fallback={<Loader text={"Loading Gender Chart..."} />}>
+          <GenderChart
+            chartData={chartData.pieChartData}
+            toggleChartModal={toggleChartModal}
+          />
+        </Suspense>
+        <Suspense fallback={<Loader text={"Loading Age Chart..."} />}>
+          <AgeChart
+            toggleChartModal={toggleChartModal}
+            chartData={chartData.barChartData}
+          />
+        </Suspense>
+        <Suspense fallback={<Loader text={"Loading Ethnicity Chart..."} />}>
+          <EthnicityChart
+            toggleChartModal={toggleChartModal}
+            chartData={chartData.doughnutChartData}
+          />
+        </Suspense>
+        <Suspense fallback={<Loader text={"Loading Degree Chart..."} />}>
+          <DegreeChart
+            toggleChartModal={toggleChartModal}
+            chartData={chartData.barChartDataDegree}
+          />
+        </Suspense>
+        <Suspense fallback={<Loader text={"Loading Charge Chart..."} />}>
+          <ChargeChart
+            toggleChartModal={toggleChartModal}
+            chartData={chartData.lineChartDataChargeDescription}
+          />
+        </Suspense>
         {selectedChart.chart && (
           <Suspense fallback={<Loader text={"Fetching modal data..."} />}>
             <ChartModal chart={selectedChart} handleClose={toggleChartModal} />

@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -17,100 +16,75 @@ interface GenderChartProps {
   toggleChartModal: (chart: React.ReactNode | null, size: "sm" | "lg") => void;
   chartData: ChartsData["pieChartData"];
 }
+
 export default function GenderChart({
   toggleChartModal,
   chartData,
 }: GenderChartProps) {
-  if (!chartData) return <div>loading...</div>;
+  if (!chartData) {
+    return <div className="rounded-2xl bg-white p-6 shadow-sm">Loading…</div>;
+  }
 
   const highestGenderArrests = getMaxChartData(chartData);
   const lowestGenderArrests = getMinChartData(chartData);
 
   return (
-    <div className="flex justify-center gap-8">
-      <div className="flex flex-col items-center justify-center gap-4 h-[60vh]">
-        <div className="flex flex-col p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-          {/* Card Title */}
-          <h2 className="text-sm font-medium text-gray-600 mb-3">
-            Arrests by Gender
-          </h2>
-
-          {/* Table wrapper for scroll on small screens */}
-          <div className="overflow-x-auto">
-            <Table className="w-full table-auto border-collapse">
-              <TableCaption className="sr-only">{""}</TableCaption>
-
-              {/* Table Header */}
-              <TableHeader>
-                <TableRow className="">
-                  <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">
-                    Male
-                  </TableHead>
-                  <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">
-                    Female
-                  </TableHead>
-                  <TableHead className="text-left px-4 py-2 text-gray-500 text-sm">
-                    Juvenile
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-
-              {/* Table Body */}
-              <TableBody>
-                {chartData.datasets?.map((dataset, index) => (
-                  <TableRow
-                    key={index}
-                    className="hover:bg-gray-100 cursor-pointer transition-colors duration-150"
-                  >
-                    {dataset.data?.map((data, cellIndex) => (
-                      <TableCell
-                        key={cellIndex}
-                        className="px-4 py-2 text-gray-700 text-sm font-medium"
-                      >
-                        {data}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
-
-        <div className="chart-cards flex flex-col gap-4">
-          <ChartCard
-            title={"Gender With Highest Number of Arrests"}
-            stat={highestGenderArrests}
-            color={"blue"}
-          />
-          <ChartCard
-            title={"Gender With Lowest Number of Arrests"}
-            stat={lowestGenderArrests}
-            color={"green"}
-          />
-        </div>
+    <div className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Arrests by Gender
+        </h3>
+        <span className="text-xs text-gray-500">Click chart to expand</span>
       </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4">
+        <ChartCard
+          title="Highest Arrests"
+          stat={highestGenderArrests}
+          color="blue"
+        />
+        <ChartCard
+          title="Lowest Arrests"
+          stat={lowestGenderArrests}
+          color="green"
+        />
+      </div>
+
+      {/* Table */}
+      <div className="rounded-xl border bg-gray-50 p-4">
+        <Table className="w-full table-auto">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-gray-500 text-sm">Male</TableHead>
+              <TableHead className="text-gray-500 text-sm">Female</TableHead>
+              <TableHead className="text-gray-500 text-sm">Juvenile</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {chartData.datasets?.map((dataset, index) => (
+              <TableRow key={index} className="hover:bg-gray-100">
+                {dataset.data?.map((value, i) => (
+                  <TableCell
+                    key={i}
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    {value}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Chart */}
       <div
-        className="p-4 rounded cursor-pointer h-[60vh]"
-        onClick={() => {
+        className="relative h-[260px] w-full rounded-xl border bg-gray-50 p-4 transition hover:shadow-md cursor-pointer"
+        onClick={() =>
           toggleChartModal(
-            <Pie
-              data={chartData!}
-              options={{ responsive: true }}
-              className="bg-white rounded" // Fixed height (adjust as needed)
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            />,
-            "sm"
-          );
-        }}
-      >
-        <div className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 min-w-[250px]">
-          <h2 className="text-sm font-medium text-gray-600 mb-3">
-            Arrests by Category
-          </h2>
-          <div className="w-full h-[400px] flex items-center justify-center">
             <Pie
               data={chartData}
               options={{
@@ -118,23 +92,36 @@ export default function GenderChart({
                 plugins: {
                   legend: {
                     position: "bottom",
-                    labels: {
-                      font: { size: 12 },
-                      color: "#4B5563", // Tailwind gray-700
-                    },
-                  },
-                  tooltip: {
-                    backgroundColor: "#111827", // Tailwind gray-900
-                    titleFont: { size: 13 },
-                    bodyFont: { size: 12 },
-                    padding: 10,
                   },
                 },
               }}
-              className="!w-full !h-full cursor-pointer"
-            />
-          </div>
-        </div>
+            />,
+            "sm"
+          )
+        }
+      >
+        <Pie
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  font: { size: 12 },
+                  color: "#4B5563",
+                },
+              },
+              tooltip: {
+                backgroundColor: "#111827",
+                titleFont: { size: 13 },
+                bodyFont: { size: 12 },
+                padding: 10,
+              },
+            },
+          }}
+        />
       </div>
     </div>
   );
