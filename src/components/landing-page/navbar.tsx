@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { navLinks } from "@/lib/constants";
-import { motion, AnimatePresence } from "framer-motion";
-import { SlArrowDown, SlArrowUp } from "react-icons/sl";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import UnderlineButton from "../ui/underline-button";
 
 export function Navbar() {
@@ -20,11 +20,11 @@ export function Navbar() {
             aria-hidden
             src="/logo4.png"
             alt="Illustration"
-            width={50}
-            height={50}
+            width={40}
+            height={40}
             className="relative z-10 animate-fadeIn rounded-xl"
           />
-          SR Portal
+          <span className="text-md">SR Portal</span>
         </a>
 
         <nav className="desktop">
@@ -42,7 +42,7 @@ export function Navbar() {
               >
                 <UnderlineButton path={""}>
                   {
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-sm">
                       <span>{name}</span>
                       {activeLink.name === name ? (
                         <SlArrowUp size={12} />
@@ -58,7 +58,7 @@ export function Navbar() {
         </nav>
 
         <UnderlineButton path="/login">
-          <span className="fond-medium">Login / Register</span>
+          <span className="fond-medium text-sm">Login / Register</span>
         </UnderlineButton>
       </div>
 

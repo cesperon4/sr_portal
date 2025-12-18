@@ -3,6 +3,7 @@ import { type Feature, type OpenDataResponse } from "./openDataPortal.type";
 export type PolicePursuit = {
   OBJECTID: number;
   IncidentNumber: number;
+
   UniqueKey: string;
   CaseNumber: string;
   PursuitNumber: number;

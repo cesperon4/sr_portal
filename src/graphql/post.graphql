@@ -7,6 +7,14 @@ query GetPost($id: Int!) {
     createdAt
     updatedAt
     arrestLogId
+    lat
+    lon
+    street
+    city
+    state
+    zip
+    category
+    date_occurred
     postComments {
       id
       user {
@@ -77,6 +85,14 @@ query GetPosts($data: PostsInput) {
         updatedAt
         arrestLogId
         imageUrls
+        lat
+        lon
+        street
+        city
+        state
+        zip
+        category
+        date_occurred
         user {
           id
           username
@@ -103,6 +119,20 @@ query GetPosts($data: PostsInput) {
       }
       cursor
       hasNextPage
+    }
+  }
+}
+
+query GetMapPosts {
+  mapPosts {
+    status
+    message
+    data {
+      id
+      lat
+      lon
+      title
+      date_occurred
     }
   }
 }

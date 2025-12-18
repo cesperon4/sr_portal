@@ -13,7 +13,7 @@ import {
   type PolicePursuitFeature,
 } from "./policePursuit.type";
 
-type coordinates = {
+export type coordinates = {
   x: number;
   y: number;
 };

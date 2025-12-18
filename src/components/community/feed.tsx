@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
-import Post from "./post";
-import { Loader } from "../ui/loader";
 import { useGetPosts } from "@/hooks/community/useGetPosts";
-
+import { Loader } from "../ui/loader";
+import Post from "./post";
+import PostButton from "./post-button";
 function Feed() {
-  const { posts, loading, error } = useGetPosts();
+  const { posts, loading, error } = useGetPosts({ limit: 5 });
 
   if (loading) {
     return (
@@ -27,6 +26,8 @@ function Feed() {
     );
   return (
     <div className="flex flex-col gap-2 w-11/12 md:w-4/12">
+      <PostButton text="Create Post" returnView="Community" />
+
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}

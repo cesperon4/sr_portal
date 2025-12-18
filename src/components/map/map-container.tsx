@@ -1,9 +1,15 @@
 "use client";
 
-import { type PoliceIncidentMapFeature } from "@/types/map.interface";
+import {
+  type MarkerDataType,
+  type PoliceIncidentMapFeature,
+} from "@/types/map.interface";
+import { normalizeMapMarker } from "@/utils/mapData";
 import { Icon } from "leaflet";
+import React from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
+import { type MapPost } from "../../../generated/graphql";
 import SearchBox from "./SearchBox";
 
 const customIcon = new Icon({
@@ -13,11 +19,21 @@ const customIcon = new Icon({
 
 interface DataTableProps {
   policeIncidents: PoliceIncidentMapFeature[] | [];
-  openMapModal: (incident: PoliceIncidentMapFeature) => void;
+  openMapModal: (id: number, type: MarkerDataType) => void;
+  posts: MapPost[] | [];
 }
 
-export function Map({ policeIncidents, openMapModal }: DataTableProps) {
+export default React.memo(function Map({
+  policeIncidents,
+  posts,
+  openMapModal,
+}: DataTableProps) {
+  console.log("map re render");
   const center: [number, number] = [38.4404, -122.7141];
+
+  const markers = normalizeMapMarker(policeIncidents, posts);
+
+  console.log("markers: ", markers);
 
   return (
     <div className="w-full mr-4 flex items-center justify-center z-0">
@@ -33,9 +49,9 @@ export function Map({ policeIncidents, openMapModal }: DataTableProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <MarkerClusterGroup>
-          {policeIncidents?.map((incident, index) => (
+          {markers?.map((incident, index) => (
             <Marker
-              position={[incident.attributes.LAT, incident.attributes.LON]}
+              position={[incident.lat, incident.lon]}
               icon={customIcon}
               key={index}
             >
@@ -45,10 +61,14 @@ export function Map({ policeIncidents, openMapModal }: DataTableProps) {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      openMapModal(incident);
+
+                      openMapModal(incident.id, incident.type);
                     }}
                     className={`cursor-pointer`}
-                  >{`${incident.attributes.StatuteDescription}, ${incident.attributes.DateOccurred}`}</div>
+                  >
+                    {/* {`${incident.attributes.StatuteDescription}, ${incident.attributes.DateOccurred}`} */}
+                    {incident.description}
+                  </div>
                 </Popup>
                 )
               </div>
@@ -58,4 +78,4 @@ export function Map({ policeIncidents, openMapModal }: DataTableProps) {
       </MapContainer>
     </div>
   );
-}
+});

@@ -23,7 +23,7 @@ export default React.memo(function WeatherWrapper() {
       onClick={() => {
         setIsModalOpen((prev) => !prev);
       }}
-      className={`bg-gradient-to-br flex justify-center items-center rounded-xl ${
+      className={`bg-gradient-to-br flex justify-center items-center rounded-xl z-100 ${
         modalDetails?.gradient || ""
       } shadow-md cursor-pointer`}
     >

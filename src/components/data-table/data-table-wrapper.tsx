@@ -51,30 +51,33 @@ export default function DataTableWrapper() {
           uncheckAllVisibleColumns={uncheckAllVisibleColumns}
         />
       )}
-      <div className={clsx("flex justify-start gap-3 w-full px-12")}>
-        {dataCategories.map((category) => (
-          <button
-            onClick={() => setSelectedCategory(category)}
-            key={category}
-            className={clsx(
-              "px-4 py-2 rounded-xl text-sm font-medium border border-gray-300 hover:bg-gray-100 transition",
-              { "bg-gray-100": selectedCategory === category }
-            )}
+      <div className={clsx("flex justify-start w-full ml-12 gap-8")}>
+        <div className="data-categories flex gap-1">
+          {dataCategories.map((category) => (
+            <button
+              onClick={() => setSelectedCategory(category)}
+              key={category}
+              className={clsx(
+                "px-4 py-1 rounded-xl text-sm font-medium border border-gray-300 hover:bg-gray-100 transition",
+                { "bg-gray-100": selectedCategory === category }
+              )}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1">
+          <Button
+            variant="outline"
+            onClick={() => {
+              openSelectColumns();
+            }}
+            className="border-1 border-gray-300 hover:bg-gray-50 rounded-xl"
           >
-            {category}
-          </button>
-        ))}
-
-        <Button
-          variant="outline"
-          onClick={() => {
-            openSelectColumns();
-          }}
-          className="border-1 border-gray-300 hover:bg-gray-50 rounded-xl ml-auto"
-        >
-          Select Columns
-        </Button>
-        <Searchbar searchArrestLogs={searchArrestLogs} />
+            Select Columns
+          </Button>
+          <Searchbar searchArrestLogs={searchArrestLogs} />
+        </div>
       </div>
       <DataTable
         displayLogs={displayLogs}

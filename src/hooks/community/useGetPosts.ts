@@ -1,15 +1,36 @@
-import { useMemo, useEffect } from "react";
-
+import { useEffect, useMemo } from "react";
 import { useGetPostsQuery } from "../../../generated/graphql";
 
-export function useGetPosts() {
-  const LIMIT = 5;
+type props = {
+  limit: number;
+};
+export function useGetPosts({ limit }: props) {
+  // const LIMIT = 5;
 
-  const { data, loading, error, fetchMore } = useGetPostsQuery({
-    variables: { data: { limit: LIMIT, cursor: null } },
+  const { data, loading, error, fetchMore, networkStatus } = useGetPostsQuery({
+    variables: { data: { limit: limit, cursor: null } },
     fetchPolicy: "cache-first", // only fetch if cache is empty
     nextFetchPolicy: "cache-and-network", // optional background update
+    // notifyOnNetworkStatusChange: true,
   }); //refetch the posts using refetch { data, loading, error, refetch}}
+
+  // useEffect(() => {
+  //   if (networkStatus === NetworkStatus.loading) {
+  //     console.log("Initial network fetch");
+  //   }
+
+  //   if (networkStatus === NetworkStatus.ready) {
+  //     console.log("Data ready (likely cache)");
+  //   }
+
+  //   if (networkStatus === NetworkStatus.fetchMore) {
+  //     console.log("Fetching more from network");
+  //   }
+
+  //   if (networkStatus === NetworkStatus.refetch) {
+  //     console.log("Refetching from network");
+  //   }
+  // }, [networkStatus]);
 
   const posts = useMemo(() => data?.posts?.data?.posts ?? [], [data]); //useMemo ensures that posts only changes when data changes, not on every render.
   const hasNextPage = useMemo(
@@ -22,7 +43,7 @@ export function useGetPosts() {
     if (!hasNextPage) return; // No more posts to load
 
     await fetchMore({
-      variables: { data: { limit: LIMIT, cursor: cursor } },
+      variables: { data: { limit: limit, cursor: cursor } },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult?.posts?.data?.posts) return prev;
 

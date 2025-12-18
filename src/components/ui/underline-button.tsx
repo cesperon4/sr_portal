@@ -1,5 +1,5 @@
-import React from "react";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 interface UnderlineButtonProps {
   children: React.ReactNode;
@@ -36,7 +36,6 @@ function UnderlineButton({
         }`}
       />
     </a>
-    //w-full bg-blue-600
   );
 }
 

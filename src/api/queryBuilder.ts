@@ -1,12 +1,13 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 interface QueryBuilderProps {
-  searchParams: Record<string, string | number> | undefined;
+  searchParams?: Record<string, string | number> | undefined;
   filterParams?: Record<string, boolean> | undefined;
   base_url: string | undefined;
   orderBy?: string;
   type: "open_data" | "weather";
   enabled?: boolean;
+  objectID?: number | undefined;
 }
 
 type BuildArrestLogParams = Omit<QueryBuilderProps, "type">;
@@ -20,6 +21,7 @@ const buildArrestLogsUrl = ({
   filterParams,
   base_url,
   orderBy,
+  objectID,
 }: BuildArrestLogParams) => {
   let whereClause = "1=1"; // Default filter (no filter)
   // If searchParams are provided, create the where clause dynamically
@@ -51,6 +53,10 @@ const buildArrestLogsUrl = ({
           ? filterClause
           : `(${whereClause}) AND (${filterClause})`;
     }
+  }
+
+  if (objectID) {
+    whereClause = `OBJECTID=${objectID}`;
   }
 
   const params = new URLSearchParams({
@@ -96,9 +102,16 @@ export function useQueryBuilder<T>({
   orderBy,
   type,
   enabled,
+  objectID,
 }: QueryBuilderProps): UseQueryResult<T> {
   return useQuery<T>({
-    queryKey: [base_url, searchParams, filterParams, orderBy],
+    queryKey: [
+      base_url,
+      searchParams ?? "searchParams:ALL",
+      filterParams ?? "filterParams:ALL",
+      orderBy ?? "orderBy:ALL",
+      objectID ?? "objectID:ALL",
+    ],
     queryFn: async () => {
       let url = "";
 
@@ -109,6 +122,7 @@ export function useQueryBuilder<T>({
             filterParams,
             base_url,
             orderBy,
+            objectID,
           });
           break;
 

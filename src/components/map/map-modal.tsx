@@ -1,15 +1,59 @@
 "use client";
 
-import { type PoliceIncidentMapFeature } from "@/types/map.interface";
+import { useQueryBuilder } from "@/api/queryBuilder";
+import {
+  type FieldData,
+  type MarkerDataType,
+  type PoliceIncidentMapResponse,
+} from "@/types/map.interface";
+import { normalizeIncident } from "@/utils/mapData";
+import { useGetPostQuery } from "../../../generated/graphql";
 import { Backdrop } from "../backdrop";
 
 type MapModalProps = {
-  incident: PoliceIncidentMapFeature;
+  id: number;
   closeMapModal: () => void;
+  type: MarkerDataType;
 };
 
-export default function MapModal({ incident, closeMapModal }: MapModalProps) {
-  const a = incident.attributes;
+export default function MapModal({ id, closeMapModal, type }: MapModalProps) {
+  const {
+    data: policeIncident,
+    isLoading: isPoliceIncidentLoading,
+    error: policeIncidentError,
+  } = useQueryBuilder<PoliceIncidentMapResponse>({
+    searchParams: undefined,
+    filterParams: undefined,
+    objectID: type === "incident" ? id : undefined,
+    base_url: process.env.NEXT_PUBLIC_POLICE_INCIDENT_URL,
+    type: "open_data",
+    enabled: type === "incident",
+  });
+
+  const { data, loading, error } = useGetPostQuery({
+    variables: { id },
+    skip: type === "incident",
+  });
+
+  if (isPoliceIncidentLoading || loading) {
+    return <Backdrop onClick={closeMapModal}>Loading…</Backdrop>;
+  }
+
+  if (policeIncidentError || error) {
+    return (
+      <Backdrop onClick={closeMapModal}>
+        <div className="bg-white p-6 rounded-xl">Failed to load details</div>
+      </Backdrop>
+    );
+  }
+
+  const fields: FieldData[] =
+    type === "incident" && policeIncident?.features[0]
+      ? normalizeIncident(policeIncident.features[0])
+      : type === "post" && data?.post
+      ? normalizeIncident(data.post)
+      : [];
+
   return (
     <Backdrop onClick={closeMapModal}>
       <form
@@ -21,31 +65,13 @@ export default function MapModal({ incident, closeMapModal }: MapModalProps) {
         </h2>
 
         <div className="grid grid-cols-3 gap-4">
-          <Field label="Agency" value={a.Agency || ""} />
-          <Field label="Date Occurred" value={a?.DateOccurred || ""} />
-          <Field label="Charge Count" value={a?.ChargeCount || ""} />
-          <Field label="Day Of the Week" value={a.DayOfWeek || ""} />
-          <Field label="Hour Occurred" value={a?.HourOccurred || ""} />
-          <Field label="Beat Zone" value={a?.Beat_Zone || ""} />
-          <Field label="City" value={a?.City || ""} />
-          <Field label="State" value={a?.State || ""} />
-
-          {/* Repeated Beat Zone fields preserved */}
-
-          <Field label="Incident Number" value={a?.Incident_number || ""} />
-          <Field label="Latitude" value={a.LAT} />
-          <Field label="Longitude" value={a.LON} />
-          <Field label="Location Type" value={a?.Location_type || ""} />
-          <Field label="Month Stamp" value={a?.MonthStamp || ""} />
-          <Field label="Year" value={a?.YearStamp || ""} />
-          <Field label="Part I" value={a?.PartI || ""} />
-          <Field label="Statute" value={a?.Statute || ""} />
-          <Field
-            label="Statute Description"
-            value={a?.StatuteDescription || ""}
-          />
-          <Field label="Street" value={a?.Street || ""} />
-          <Field label="Zip Code" value={a?.ZIP || ""} />
+          {fields.map((field) => (
+            <Field
+              key={`${field.label} ${field.value}`}
+              label={field.label}
+              value={field.value}
+            />
+          ))}
         </div>
 
         <div className="pt-4 flex justify-end">
