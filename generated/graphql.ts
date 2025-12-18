@@ -135,8 +135,13 @@ export type CreatePostCommentInput = {
 export type CreatePostInput = {
   arrestLogId?: InputMaybe<Scalars['Int']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  date_occurred?: InputMaybe<Scalars['DateTime']['input']>;
   imageBase64?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   imageName?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  lat?: InputMaybe<Scalars['String']['input']>;
+  locationName?: InputMaybe<Scalars['String']['input']>;
+  lon?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
@@ -180,6 +185,22 @@ export type Like = {
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type MapPost = {
+  __typename?: 'MapPost';
+  date_occurred?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['Int']['output'];
+  lat: Scalars['Float']['output'];
+  lon: Scalars['Float']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type MapPostsResponse = {
+  __typename?: 'MapPostsResponse';
+  data: Array<MapPost>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Mutation = {
@@ -311,15 +332,23 @@ export type Post = {
   arrestLog?: Maybe<ArrestLog>;
   arrestLogId?: Maybe<Scalars['Int']['output']>;
   body?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
+  date_occurred?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['Int']['output'];
   imageUrls?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  lat?: Maybe<Scalars['Float']['output']>;
   likes: Array<Like>;
+  lon?: Maybe<Scalars['Float']['output']>;
   postComments: Array<PostComment>;
+  state?: Maybe<Scalars['String']['output']>;
+  street?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['ID']['output']>;
+  zip?: Maybe<Scalars['String']['output']>;
 };
 
 export type PostComment = {
@@ -357,6 +386,7 @@ export type Query = {
   arrestLog?: Maybe<ApiArrestLogResponse>;
   arrestLogs?: Maybe<ApiArrestLogsResponse>;
   chatBotResponse: Scalars['String']['output'];
+  mapPosts?: Maybe<MapPostsResponse>;
   me: User;
   post: Post;
   postComment: PostComment;
@@ -444,6 +474,7 @@ export type UpdatePostCommentInput = {
 
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -495,14 +526,19 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }>, arrestLog?: { __typename?: 'ArrestLog', id?: number | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, lat?: number | null, lon?: number | null, street?: string | null, city?: string | null, state?: string | null, zip?: string | null, category?: string | null, date_occurred?: any | null, imageUrls?: Array<string | null> | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }>, arrestLog?: { __typename?: 'ArrestLog', id?: number | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null } };
 
 export type GetPostsQueryVariables = Exact<{
   data?: InputMaybe<PostsInput>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }> }> } | null } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, lat?: number | null, lon?: number | null, street?: string | null, city?: string | null, state?: string | null, zip?: string | null, category?: string | null, date_occurred?: any | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }> }> } | null } };
+
+export type GetMapPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMapPostsQuery = { __typename?: 'Query', mapPosts?: { __typename?: 'MapPostsResponse', status?: number | null, message?: string | null, data: Array<{ __typename?: 'MapPost', id: number, lat: number, lon: number, title?: string | null, date_occurred?: any | null }> } | null };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -656,6 +692,14 @@ export const GetPostDocument = gql`
     createdAt
     updatedAt
     arrestLogId
+    lat
+    lon
+    street
+    city
+    state
+    zip
+    category
+    date_occurred
     postComments {
       id
       user {
@@ -760,6 +804,14 @@ export const GetPostsDocument = gql`
         updatedAt
         arrestLogId
         imageUrls
+        lat
+        lon
+        street
+        city
+        state
+        zip
+        category
+        date_occurred
         user {
           id
           username
@@ -823,6 +875,53 @@ export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
 export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
 export type GetPostsSuspenseQueryHookResult = ReturnType<typeof useGetPostsSuspenseQuery>;
 export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
+export const GetMapPostsDocument = gql`
+    query GetMapPosts {
+  mapPosts {
+    status
+    message
+    data {
+      id
+      lat
+      lon
+      title
+      date_occurred
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMapPostsQuery__
+ *
+ * To run a query within a React component, call `useGetMapPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMapPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMapPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMapPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetMapPostsQuery, GetMapPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMapPostsQuery, GetMapPostsQueryVariables>(GetMapPostsDocument, options);
+      }
+export function useGetMapPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMapPostsQuery, GetMapPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMapPostsQuery, GetMapPostsQueryVariables>(GetMapPostsDocument, options);
+        }
+export function useGetMapPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMapPostsQuery, GetMapPostsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMapPostsQuery, GetMapPostsQueryVariables>(GetMapPostsDocument, options);
+        }
+export type GetMapPostsQueryHookResult = ReturnType<typeof useGetMapPostsQuery>;
+export type GetMapPostsLazyQueryHookResult = ReturnType<typeof useGetMapPostsLazyQuery>;
+export type GetMapPostsSuspenseQueryHookResult = ReturnType<typeof useGetMapPostsSuspenseQuery>;
+export type GetMapPostsQueryResult = Apollo.QueryResult<GetMapPostsQuery, GetMapPostsQueryVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($data: CreatePostInput!) {
   createPost(data: $data) {

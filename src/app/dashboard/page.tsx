@@ -2,21 +2,14 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import { Header } from "@/components/header";
-import { Filter } from "@/components/map/filter";
+import MapWrapper from "@/components/map/map-wrapper";
 import { ProfileSettings } from "@/components/user/profile-settings";
 import { ArrestLogProvider } from "@/context/ArrestLogContext";
 import { useAuth } from "@/hooks/auth/useAuth";
-import { useRenderMap } from "@/hooks/map/useRenderMap";
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
-import { initialCrimeFilterState } from "@/lib/constants";
 import { type HeaderSelect } from "@/types/header.interface";
-import {
-  type CrimeFilterState,
-  type PoliceIncidentMapResponse,
-} from "@/types/map.interface";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQueryBuilder } from "../../api/queryBuilder"; // Adjust the import path
 import { Loader } from "../../components/ui/loader";
 
 const DataTableWrapper = React.lazy(
@@ -29,7 +22,7 @@ const CommunityContainer = React.lazy(
 const MapModal = React.lazy(() => import("@/components/map/map-modal"));
 
 export default function Dashboard() {
-  console.log("dashbboard rendered");
+  // console.log("dashbboard rendered");
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -50,25 +43,6 @@ export default function Dashboard() {
     }
   }, [loading, isAuthenticated, router, session]);
 
-  //Map Filters
-  const [crimeFilterState, setCrimeFilterState] = useState<CrimeFilterState>(
-    initialCrimeFilterState
-  );
-  const clearAllCriminalFilters = () => {
-    setCrimeFilterState(initialCrimeFilterState);
-  };
-
-  const {
-    data: policeIncidents,
-    isLoading: isPoliceIncidentsLoading,
-    error: policeIncidentsError,
-  } = useQueryBuilder<PoliceIncidentMapResponse>({
-    searchParams: undefined,
-    filterParams: crimeFilterState,
-    base_url: process.env.NEXT_PUBLIC_POLICE_INCIDENT_URL,
-    type: "open_data",
-  });
-
   const [view, setView] = useState<HeaderSelect>(selectedView as HeaderSelect);
 
   useEffect(() => {
@@ -76,17 +50,11 @@ export default function Dashboard() {
     const nextView = view.toLowerCase();
 
     if (currentView !== nextView) {
-      // router.replace(`/dashboard?view=${nextView}`);
+      router.replace(`/dashboard?view=${nextView}`);
     }
   }, [view, searchParams, router]);
 
   const toggleView = (view: HeaderSelect) => setView(view);
-
-  const { renderMap, mapModal, closeMapModal, modalData } = useRenderMap({
-    isPoliceIncidentsLoading,
-    policeIncidentsError,
-    policeIncidents: policeIncidents?.features || [],
-  });
 
   return (
     <div className="grid grid-rows-1 items-center justify-items-center gap-10 font-(family-name:--font-geist-sans)">
@@ -98,23 +66,12 @@ export default function Dashboard() {
         toggleView={toggleView}
         setIsProfileSettingsOpen={setIsProfileSettingsOpen}
       />
+
       <main className="flex flex-col gap-8 w-full">
         {view === "Map" && (
-          <div className="flex w-full gap-4">
-            {mapModal && modalData && (
-              <Suspense
-                fallback={<Loader text={"Fetching incident data..."} />}
-              >
-                <MapModal incident={modalData} closeMapModal={closeMapModal} />
-              </Suspense>
-            )}
-            <Filter
-              crimeFilterState={crimeFilterState}
-              setCrimeFilterState={setCrimeFilterState}
-              clearAllCriminalFilters={clearAllCriminalFilters}
-            />
-            {renderMap()}
-          </div>
+          <Suspense fallback={<Loader text={"Loading map..."} />}>
+            <MapWrapper />
+          </Suspense>
         )}
         {view === "Table" && (
           <Suspense fallback={<Loader text={"Fetching arrest logs..."} />}>

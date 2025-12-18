@@ -1,17 +1,35 @@
 "use client";
 
+import LocationSearch from "@/components/map/location-search";
 import { useUserContext } from "@/context/UserContext";
 import imageCompression from "browser-image-compression";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   useCreatePostMutation,
   useGetPostsQuery,
 } from "../../../../generated/graphql";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { Calendar } from "@/components/ui/calendar"; // Shadcn calendar
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { getPostType, postKey } from "@/utils/convertPostTypes";
 
 type PostType = "post" | "image" | "link";
 
@@ -20,7 +38,40 @@ interface PostImage {
   imageBase64: string;
 }
 
+type Coordinates = {
+  lat: string;
+  lon: string;
+};
+
+type PostData = {
+  title: string;
+  content: string;
+  images: PostImage[];
+  category: string;
+  linkUrl?: string;
+  coordinates: Coordinates;
+  locationName: string;
+  date: Date | undefined;
+};
+
+const postType = [
+  "Violence & Assault",
+  "Sexual Safety",
+  "Children & Elderly Safety",
+  "Theft & Burglary",
+  "Fraud & Scams",
+  "DUI / Drunk Driving",
+  "Traffic Incidents",
+  "Public Disturbance",
+  "Environmental Hazards",
+  "Probation & Legal Alerts",
+  "Court Orders & Legal Notices",
+] as const;
+
 export default function Submit() {
+  const searchParams = useSearchParams();
+  const returnView = searchParams.get("returnView") ?? "Map";
+
   const { refetch } = useGetPostsQuery({
     variables: { data: { limit: 5, cursor: null } },
   });
@@ -29,10 +80,21 @@ export default function Submit() {
   const { loggedUser } = useUserContext();
 
   const [activeTab, setActiveTab] = useState<PostType>("post");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [images, setImages] = useState<PostImage[]>([]);
-  const [linkUrl, setLinkUrl] = useState("");
+
+  const [formData, setFormData] = useState<PostData>({
+    title: "",
+    content: "",
+    images: [],
+    linkUrl: "",
+    category: "",
+    coordinates: { lat: "", lon: "" },
+    locationName: "",
+    date: new Date(Date.now()), // optional fields can be undefined
+  });
+
+  useEffect(() => {
+    console.log("form data: ", formData);
+  }, [formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,11 +107,25 @@ export default function Submit() {
       return;
     }
 
+    if (formData.locationName.split(",").length < 6) {
+      toast("Location must include street name and number", {
+        type: "warning",
+        autoClose: 2000,
+        position: "top-right",
+      });
+      return;
+    }
+
     const data = {
-      title,
-      body: content,
-      imageBase64: images.map((img) => img.imageBase64),
-      imageName: images.map((img) => img.imageName),
+      title: formData.title,
+      body: formData.content,
+      imageBase64: formData.images.map((img) => img.imageBase64),
+      imageName: formData.images.map((img) => img.imageName),
+      lat: formData.coordinates.lat,
+      lon: formData.coordinates.lon,
+      locationName: formData.locationName,
+      date_occurred: formData.date,
+      category: getPostType(formData.category as postKey),
     };
 
     await createPost({
@@ -59,9 +135,10 @@ export default function Submit() {
           userId: loggedUser.id,
         },
       },
-      onCompleted: () => {
+      onCompleted: (data) => {
+        console.log("complete create post: ", data);
         refetch();
-        router.push("/dashboard?view=Community");
+        router.push(`/dashboard?view=Community${returnView}`);
       },
       onError: (error) => {
         console.error("Error creating post:", error);
@@ -74,18 +151,16 @@ export default function Submit() {
     if (!files) return;
 
     const options = {
-      maxSizeMB: 1, // compress images to around 1MB
-      maxWidthOrHeight: 1280, // resize large images (keeps aspect ratio)
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1280,
       useWebWorker: true,
     };
 
     try {
       const compressedImages = await Promise.all(
         Array.from(files).map(async (file) => {
-          // Compress each file
           const compressedFile = await imageCompression(file, options);
 
-          // Convert to Base64
           return new Promise<{ imageName: string; imageBase64: string }>(
             (resolve) => {
               const reader = new FileReader();
@@ -101,26 +176,32 @@ export default function Submit() {
         })
       );
 
-      setImages((prev) => [...prev, ...compressedImages]);
+      //   setImages((prev) => [...prev, ...compressedImages]);
+
+      setFormData((prev) => ({ ...prev, images: compressedImages }));
     } catch (error) {
       console.error("Image compression failed:", error);
     }
   };
 
   const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    // setImages((prev) => prev.filter((_, i) => i !== index));
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
   return (
     <div className="max-w-2xl mx-auto mt-12 p-6 bg-white dark:bg-neutral-900 rounded-2xl shadow-md">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Create a Post</h1>
+        <h1 className="font-semibold">Create a Post</h1>
         <Link
-          href={{ pathname: "/dashboard", query: { view: "Community" } }}
+          href={{ pathname: "/dashboard", query: { view: returnView } }}
           className="text-blue-400 hover:underline text-sm"
         >
-          ← Back to Community
+          {`← Back to ${returnView}`}
         </Link>
       </div>
 
@@ -148,8 +229,10 @@ export default function Submit() {
         {/* Title */}
         <input
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={formData.title}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, title: e.target.value }))
+          }
           placeholder="Title"
           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
@@ -157,14 +240,74 @@ export default function Submit() {
 
         {/* POST TAB */}
         {activeTab === "post" && (
-          <textarea
-            rows={6}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your post..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+          <>
+            <textarea
+              rows={6}
+              value={formData.content}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, content: e.target.value }))
+              }
+              placeholder="Write your post..."
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            {/* Date Picker */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 dark:text-gray-100 text-left text-gray-500">
+                  {formData.date ? formData.date.toDateString() : "Select date"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[320px] p-4 bg-white rounded-xl">
+                <Calendar
+                  mode="single"
+                  selected={formData.date}
+                  onSelect={(date) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      date: date ?? undefined,
+                    }));
+                  }}
+                  className="w-full h-auto [&_button]:rounded-full [&_button]:transition-colors [&_button]:duration-200 [&_button:hover]:bg-blue-500 [&_button:hover]:text-white [&_button:focus]:outline-none"
+                />
+              </PopoverContent>
+            </Popover>
+
+            {/* Category Select */}
+            <Select
+              onValueChange={(category) => {
+                setFormData((prev) => ({ ...prev, category }));
+              }}
+              value={formData.category}
+            >
+              <SelectTrigger className="w-full border border-gray-300 text-gray-500">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                {postType.map((type) => (
+                  <SelectItem
+                    value={type.toLowerCase()}
+                    key={type}
+                    className="data-[highlighted]:bg-blue-200 data-[highlighted]:text-blue-900"
+                  >
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Location */}
+            <LocationSearch
+              onSelect={(loc) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  locationName: loc.display,
+                  coordinates: { lat: loc.lat, lon: loc.lon },
+                }));
+              }}
+              value={formData.locationName}
+            />
+          </>
         )}
 
         {/* IMAGE TAB */}
@@ -179,7 +322,7 @@ export default function Submit() {
               className="hidden"
             />
 
-            {images.length === 0 ? (
+            {formData.images.length === 0 ? (
               <div
                 className="cursor-pointer"
                 onClick={() => document.getElementById("imageUpload")?.click()}
@@ -188,9 +331,8 @@ export default function Submit() {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Preview grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {images.map((img, i) => (
+                  {formData.images.map((img, i) => (
                     <div key={i} className="relative group">
                       <Image
                         src={img.imageBase64 || ""}
@@ -210,7 +352,6 @@ export default function Submit() {
                   ))}
                 </div>
 
-                {/* Upload more button */}
                 <button
                   type="button"
                   onClick={() =>
@@ -227,30 +368,16 @@ export default function Submit() {
 
         {/* LINK TAB */}
         {activeTab === "link" && (
-          <div>
-            <input
-              type="url"
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-              placeholder="Enter a link (https://...)"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            {linkUrl && (
-              <div className="mt-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-neutral-800">
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  🔗 Preview:{" "}
-                  <a
-                    href={linkUrl}
-                    target="_blank"
-                    className="text-blue-400 hover:underline break-all"
-                  >
-                    {linkUrl}
-                  </a>
-                </p>
-              </div>
-            )}
-          </div>
+          <input
+            type="url"
+            value={formData.linkUrl}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, linkUrl: e.target.value }))
+            }
+            placeholder="Enter a link (https://...)"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
         )}
 
         {/* Submit Button */}

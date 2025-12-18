@@ -1,4 +1,5 @@
 "use client";
+
 import { useUserContext } from "@/context/UserContext";
 import { HeaderSelect } from "@/types/header.interface";
 import { signOut } from "next-auth/react";
@@ -8,16 +9,16 @@ import { CiSettings } from "react-icons/ci";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoMdBook } from "react-icons/io";
 import { IoMapOutline } from "react-icons/io5";
-import { MdInsights, MdOutlineAddBox } from "react-icons/md";
+import { MdInsights } from "react-icons/md";
 import { ModeToggle } from "../components/mode-toggle";
 import UnderlineButton from "./ui/underline-button";
 import WeatherWrapper from "./weather/weather-wrapper";
-
 interface HeaderProps {
   view: HeaderSelect;
   toggleView: (view: HeaderSelect) => void;
   setIsProfileSettingsOpen: (arg: boolean) => void;
 }
+
 export function Header({
   view,
   toggleView,
@@ -25,126 +26,103 @@ export function Header({
 }: HeaderProps) {
   const { loggedUser, clearLoggedUser } = useUserContext();
   const router = useRouter();
+
   const handleLogout = async () => {
     clearLoggedUser();
     await signOut({ redirect: false });
-
     router.replace("/");
   };
+
   return (
-    <header className="dashboard-header font-medium mb-4 h-2/12">
-      <div className="header-main">
-        <Image
-          aria-hidden
-          src="/logo4.png"
-          alt="Illustration"
-          width={50}
-          height={50}
-          className="relative z-10 animate-fadeIn rounded-xl"
-        />
-        <span className="font-semibold">SR Portal</span>
-        <ModeToggle />
-        <div className="flex gap-4">
+    <header className="mt-4 mx-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-950 shadow-sm">
+      <div className="mx-auto flex gap-4 h-16 max-w-7xl items-center px-6">
+        {/* Brand */}
+        <div className="flex items-center gap-4">
+          <Image
+            src="/logo4.png"
+            alt="SR Portal"
+            width={40}
+            height={40}
+            className="rounded-full border border-gray-200 dark:border-gray-700"
+          />
+          <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
+            SR Portal
+          </span>
+        </div>
+
+        <WeatherWrapper />
+
+        {/* Navigation */}
+        <nav className="ml-1 flex items-center gap-6">
           <UnderlineButton
-            clickMethod={() => {
-              toggleView("Map");
-            }}
+            clickMethod={() => toggleView("Map")}
             view="Map"
             currentView={view}
           >
-            <IoMapOutline />
-            Map
+            <IoMapOutline className="text-base" />
+            <span className="text-sm">Map</span>
           </UnderlineButton>
 
           <UnderlineButton
-            clickMethod={() => {
-              toggleView("Table");
-            }}
+            clickMethod={() => toggleView("Table")}
             view="Table"
             currentView={view}
           >
-            <IoMdBook />
-            Data Logs
+            <IoMdBook className="text-base" />
+            <span className="text-sm">Logs</span>
           </UnderlineButton>
 
           <UnderlineButton
-            clickMethod={() => {
-              toggleView("Chart");
-            }}
+            clickMethod={() => toggleView("Chart")}
             view="Chart"
             currentView={view}
           >
-            <MdInsights />
-            Data Insights
+            <MdInsights className="text-base" />
+            <span className="text-sm">Insights</span>
           </UnderlineButton>
 
           <UnderlineButton
-            clickMethod={() => {
-              toggleView("Community");
-            }}
+            clickMethod={() => toggleView("Community")}
             view="Community"
             currentView={view}
           >
-            <FaPeopleGroup />
-            Community
+            <FaPeopleGroup className="text-base" />
+            <span className="text-sm">Community</span>
           </UnderlineButton>
-        </div>
-        {/* {view === "Table" && (
-          <div className={`flex gap-2 items-center ml-auto`}>
-            <Button
-              variant="outline"
-              onClick={() => {
-                openSelectColumns();
-              }}
-              className="rounded border-1 border-gray-400 hover:bg-gray-50"
-            >
-              Select Columns
-            </Button>
-            <Searchbar />
-          </div>
-        )} */}
+        </nav>
 
-        <div className="flex gap-2 items-center ml-auto">
-          {view === "Community" && (
-            <button
-              className="flex items-center gap-2 hover:bg-gray-100 rounded-xl p-2 cursor-pointer ml-auto"
-              onClick={() => {
-                router.push("/community/submit");
-              }}
-            >
-              <MdOutlineAddBox size={24} />
+        {/* Right Actions */}
+        <div className="ml-auto flex items-center gap-2">
+          <ModeToggle />
 
-              <span>create</span>
-            </button>
-          )}
-          <WeatherWrapper />
+          {/* User */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {loggedUser.username || loggedUser.role}
+            </span>
 
-          <span className="font-medium">
-            {loggedUser.username ? loggedUser.username : loggedUser.role}
-          </span>
+            {loggedUser.image && (
+              <Image
+                src={loggedUser.image}
+                alt="Profile"
+                width={36}
+                height={36}
+                className="rounded-full border border-gray-200 dark:border-gray-700"
+              />
+            )}
 
-          {/* <span>{loggedUser.image}</span> */}
-          {loggedUser.image && (
-            <Image
-              aria-hidden
-              src={loggedUser.image}
-              alt="Window icon"
-              width={40}
-              height={40}
-              className="rounded-3xl"
+            <CiSettings
+              size={22}
+              className="cursor-pointer text-gray-500 transition-colors hover:text-gray-800 dark:hover:text-white"
+              onClick={() => setIsProfileSettingsOpen(true)}
             />
-          )}
-          <CiSettings
-            size="28"
-            className="hover:bg-text-100 cursor-pointer"
-            onClick={() => {
-              setIsProfileSettingsOpen(true);
-            }}
-          />
-        </div>
+          </div>
 
-        <div className="logout-wrapper">
-          <UnderlineButton clickMethod={handleLogout}>Logout</UnderlineButton>
+          {/* Logout */}
+          <UnderlineButton clickMethod={handleLogout}>
+            <span className="text-sm">Logout</span>
+          </UnderlineButton>
+          {/* <WeatherWrapper /> */}
         </div>
       </div>
     </header>

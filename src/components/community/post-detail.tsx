@@ -1,19 +1,20 @@
 "use client";
-import React from "react";
-import {
-  useGetPostQuery,
-  useCreatePostCommentMutation,
-} from "../../../generated/graphql";
+
+import CommentBox from "@/components/community/comment-box";
+import { useUserContext } from "@/context/UserContext";
+import { timeAgo } from "@/lib/time";
+import Link from "next/link";
 import { FiShield } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
-import PostFooter from "../../components/community/post-footer";
 import { IoIosArrowBack } from "react-icons/io";
-import Link from "next/link";
-import CommentBox from "@/components/community/comment-box";
-import { timeAgo } from "@/lib/time";
-import { useUserContext } from "@/context/UserContext";
+import {
+  useCreatePostCommentMutation,
+  useGetPostQuery,
+} from "../../../generated/graphql";
+import PostFooter from "../../components/community/post-footer";
 import { ImageCarousel } from "../ui/image-carousel";
 import { Loader } from "../ui/loader";
+import { Map } from "./map";
 
 interface PostDetailProps {
   id: number;
@@ -22,12 +23,13 @@ interface PostDetailProps {
 function PostDetail({ id }: PostDetailProps) {
   const { loggedUser } = useUserContext();
   const [createPostComment] = useCreatePostCommentMutation();
+
   const { data, loading, error, refetch } = useGetPostQuery({
     variables: { id },
   });
 
+  if (loading) return <Loader text="Fetching post details..." />;
   if (error) return <div>Error: {error.message}</div>;
-  if (loading) return <Loader text={"Fetching post details ..."} />;
   if (!data?.post) return <div>Post not found</div>;
 
   const images = data.post.imageUrls || [];
@@ -35,7 +37,11 @@ function PostDetail({ id }: PostDetailProps) {
   const submitComment = (text: string) => {
     createPostComment({
       variables: {
-        data: { postId: data.post.id, userId: loggedUser.id, body: text },
+        data: {
+          postId: data.post.id,
+          userId: loggedUser.id,
+          body: text,
+        },
       },
       onCompleted: () => refetch(),
       onError: (error) => console.error("Error creating comment:", error),
@@ -43,63 +49,99 @@ function PostDetail({ id }: PostDetailProps) {
   };
 
   return (
-    <article className="flex flex-col gap-4 w-11/12 md:w-4/12 mx-auto my-8 h-full">
-      {/* Back Link */}
-      <Link href={{ pathname: "/dashboard", query: { view: "Community" } }}>
-        <div className="flex items-center gap-2 text-blue-500 hover:underline">
-          <IoIosArrowBack />
-          <span>Back</span>
-        </div>
+    <article className="mx-auto my-10 w-full max-w-3xl px-4">
+      {/* Back Navigation */}
+      <Link
+        href={{ pathname: "/dashboard", query: { view: "Community" } }}
+        className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:underline"
+      >
+        <IoIosArrowBack />
+        Back to Community
       </Link>
 
       {/* Post Card */}
-      <div className="shadow w-full px-8 py-4 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-neutral-900">
-        <div className="post-header flex gap-2 items-center mb-2 text-gray-600 dark:text-gray-300">
-          <FiShield size={18} />
-          <span>sr/dui</span>
-          <span>• {timeAgo(data.post.createdAt)}</span>
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-neutral-900">
+        {/* Header */}
+        <header className="flex items-center gap-2 px-6 pt-5 text-sm text-gray-500 dark:text-gray-400">
+          <FiShield size={16} className="text-blue-500" />
+          <span>{timeAgo(data.post.createdAt)}</span>
           <HiDotsHorizontal size={18} className="ml-auto" />
+        </header>
+
+        {/* Title + Author */}
+        <div className="px-6 pt-4">
+          <span className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            {data.post.user?.username}
+          </span>
+          <h1 className="mt-1 text-2xl font-semibold leading-tight text-gray-900 dark:text-white">
+            {data.post.title}
+          </h1>
         </div>
 
-        <span className="font-semibold block mb-1">
-          {data.post.user?.username}
-        </span>
-        <h1 className="text-2xl font-bold mb-3">{data.post.title}</h1>
+        {/* Media Section */}
+        {(images.length > 0 || (data.post.lat && data.post.lon)) && (
+          <div className="mt-4 space-y-4 px-6">
+            {/* Images */}
+            {images.length > 0 && (
+              <div className="overflow-hidden rounded-xl">
+                <ImageCarousel images={images} title={data.post.title} />
+              </div>
+            )}
 
-        {/* Image Carousel */}
-        <ImageCarousel images={images} title={data.post.title} />
+            {/* Map */}
+            {data.post.lat && data.post.lon && (
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-neutral-800">
+                <Map
+                  coordinates={{ x: data.post.lat, y: data.post.lon }}
+                  openMapModal={() => {}}
+                />
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  Approximate location
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Body */}
         {data.post.body && (
-          <p className="text-gray-800 dark:text-gray-200 mb-3 whitespace-pre-line">
-            {data.post.body}
-          </p>
+          <div className="px-6 py-5">
+            <p className="whitespace-pre-line text-base leading-relaxed text-gray-800 dark:text-gray-200">
+              {data.post.body}
+            </p>
+          </div>
         )}
 
-        <PostFooter post={data.post} />
+        {/* Footer */}
+        <div className="border-t border-gray-100 px-6 py-4 dark:border-gray-800">
+          <PostFooter post={data.post} />
+        </div>
       </div>
 
-      {/* Comment Box */}
-      <CommentBox onSubmit={submitComment} />
+      {/* Comment Composer */}
+      <div className="mt-6">
+        <CommentBox onSubmit={submitComment} />
+      </div>
 
       {/* Comments */}
-      <div className="flex flex-col gap-4">
-        {data.post?.postComments?.map((comment) => {
+      <div className="mt-6 space-y-4">
+        {data.post.postComments?.map((comment) => {
           if (!comment) return null;
+
           return (
             <div
               key={comment.id}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-sm"
+              className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-neutral-900"
             >
-              <div className="comment-header flex gap-2 items-center text-sm text-gray-600 dark:text-gray-300 mb-1">
-                <span className="font-semibold">
+              <div className="mb-1 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <span className="font-medium text-gray-800 dark:text-gray-200">
                   {comment.user?.username ?? "Anonymous"}
                 </span>
-                <span>• {timeAgo(comment.updatedAt)}</span>
+                <span>•</span>
+                <span>{timeAgo(comment.updatedAt)}</span>
               </div>
-              <p className="ml-2 text-gray-800 dark:text-gray-100">
-                {comment.body}
-              </p>
+
+              <p className="text-gray-800 dark:text-gray-100">{comment.body}</p>
             </div>
           );
         })}

@@ -55,15 +55,10 @@ function Searchbar({ searchArrestLogs }: SearchbarProps) {
   }, []);
 
   return (
-    <div className={`flex p-1rounded`}>
+    <div className={`flex  border-1 border-gray-300 rounded-xl`}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            className="border-1 border-gray-400 rounded"
-          >
-            Search by
-          </Button>
+          <Button className="border-r-1 border-gray-300">Search by</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 bg-white rounded">
           <DropdownMenuLabel>Filter By</DropdownMenuLabel>
@@ -84,7 +79,7 @@ function Searchbar({ searchArrestLogs }: SearchbarProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <Input
-        className="border-1 border-gray-400 rounded"
+        className="border-none"
         onChange={(e) => {
           setFilterText(e.target.value);
         }}

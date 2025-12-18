@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { crimeFilters } from "@/lib/constants";
 import { CrimeFilterState } from "@/types/map.interface";
-import { Button } from "@/components/ui/button";
 import {
-  Filter as FilterIcon,
-  X,
   ChevronDown,
   ChevronRight,
+  Filter as FilterIcon,
   MapPin,
+  X,
 } from "lucide-react";
+import React, { useState } from "react";
+import PostButton from "../community/post-button";
 
 interface FilterProps {
   crimeFilterState: CrimeFilterState;
@@ -18,7 +19,7 @@ interface FilterProps {
   clearAllCriminalFilters: () => void;
 }
 
-export function Filter({
+export default function Filter({
   crimeFilterState,
   setCrimeFilterState,
   clearAllCriminalFilters,
@@ -39,9 +40,13 @@ export function Filter({
     Object.values(crimeFilterState).filter(Boolean).length;
 
   return (
-    <aside className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden flex flex-col max-h-[calc(100vh-120px)]">
+    <aside className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden flex flex-col max-h-[calc(100vh-120px)] ml-4">
       {/* Header */}
       <div className="p-6 border-b border-gray-200 bg-gray-50 flex-shrink-0">
+        <div className="flex justify-center mb-4">
+          <PostButton text={"create map incident"} returnView={"Map"} />
+        </div>
+
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gray-100 rounded-lg">

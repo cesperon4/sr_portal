@@ -10,14 +10,6 @@ import { CheckSquare, Columns3, Square, X } from "lucide-react";
 import * as React from "react";
 import { Backdrop } from "../backdrop";
 
-// type FieldTypes =
-//   | PoliceIncidentAttributes
-//   | PoliceForceAttributes
-//   | PolicePursuit
-//   | ArrestLogType;
-
-// type VisibleFields = Record<keyof FieldTypes, boolean>;
-
 interface DisplayLogField {
   alias: string | null;
   defaultValue: string | null;

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Pagination from "@mui/material/Pagination";
 
 interface PaginateProps {
@@ -13,7 +12,7 @@ export function Paginate({ count, setCurrentPage }: PaginateProps) {
       count={count}
       color="primary"
       size="large"
-      className=""
+      className="mb-12"
       variant="outlined"
       onChange={(e, page) => {
         setCurrentPage(page);

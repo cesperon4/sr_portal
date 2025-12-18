@@ -44,3 +44,18 @@ export type PoliceIncidentMapFeature = Feature<PoliceIncidentMapType> &
 
 export type PoliceIncidentMapResponse =
   OpenDataResponse<PoliceIncidentMapFeature>;
+
+export type MarkerDataType = "post" | "incident";
+
+export type MarkerData = {
+  lon: number;
+  lat: number;
+  id: number;
+  type: MarkerDataType;
+  description: string;
+};
+
+export type FieldData = {
+  label: string;
+  value: string | number;
+};

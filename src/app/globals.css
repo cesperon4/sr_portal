@@ -411,7 +411,7 @@
 @utility dashboard-header {
   @apply w-full;
   .header-main {
-    @apply flex gap-4 items-center border-b-2 border-gray-200 px-8 pb-4;
+    @apply flex gap-4 items-center border-b-2 border-gray-200 px-8 pb-2;
   }
 
   .map-btn {

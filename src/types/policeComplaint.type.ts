@@ -27,13 +27,13 @@ export type PoliceComplaint = {
   Source: string;
   State: string;
   StreetDirection: string | null;
-
   StreetName: string;
   ServiceType: string | null;
   Team: string;
   StreetType: string | null;
   OBJECTID: number;
   Zipcode: number;
+
   UniqueKey: string;
   YearsOfService: number;
 };
