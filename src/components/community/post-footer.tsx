@@ -109,9 +109,10 @@ function PostFooter({ post }: PostFooterProps) {
         <FaRegComment />
         <span className="text-sm">{post.postComments.length}</span>
       </div>
-      <div
+      <button
         onClick={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           toggleLike();
         }}
         className={clsx(
@@ -126,7 +127,7 @@ function PostFooter({ post }: PostFooterProps) {
         <span className="text-sm">
           {post.likes.filter((like) => like.isActive === true).length}
         </span>
-      </div>
+      </button>
       <div className="flex items-center px-4 py-2 gap-1 bg-gray-100 hover:bg-gray-200 rounded-xl cursor-pointer">
         <PiShareFat />
         <span className="text-sm">Share</span>

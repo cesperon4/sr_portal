@@ -76,7 +76,7 @@ query GetPosts($data: PostsInput) {
     status
     message
     data {
-      posts {
+      data {
         id
         title
         body

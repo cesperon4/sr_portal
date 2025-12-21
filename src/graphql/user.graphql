@@ -1,15 +1,218 @@
 # graphql/queries/getUser.graphql
-query GetUser($id: ID!) {
+# query GetUser($id: ID!) {
+#   user(id: $id) {
+#     id
+#     firstname
+#     lastname
+#     email
+#     username
+#     password
+#     role
+#     createdAt
+#     updatedAt
+#   }
+# }
+
+query GetUserComments($id: ID!, $data: PostCommentInput) {
   user(id: $id) {
-    id
-    firstname
-    lastname
-    email
-    username
-    password
-    role
-    createdAt
-    updatedAt
+    status
+    message
+    data {
+      id
+      comments(data: $data) {
+        data {
+          data {
+            id
+            body
+            createdAt
+            updatedAt
+            post {
+              title
+              category
+            }
+          }
+          hasNextPage
+          cursor
+        }
+      }
+    }
+  }
+}
+
+query GetUserLikedPosts($id: ID!, $data: LikedPostInput) {
+  user(id: $id) {
+    status
+    message
+    data {
+      id
+      likedPosts(data: $data) {
+        data {
+          data {
+            id
+            post {
+              id
+              title
+              body
+              userId
+              createdAt
+              updatedAt
+              arrestLogId
+              lat
+              lon
+              street
+              city
+              state
+              zip
+              category
+              date_occurred
+              postComments {
+                id
+                user {
+                  username
+                  role
+                }
+                body
+                createdAt
+                updatedAt
+              }
+              likes {
+                id
+                postId
+                userId
+                isActive
+                createdAt
+                updatedAt
+              }
+              arrestLog {
+                id
+                AGE
+                ARREST_STATUS
+                ArrestLocationAptFlr
+                ArrestLocationCity
+                ArrestLocationStreet
+                ArrestLocationStreetNBR
+                Arrest_Charge
+                Arrest_ID
+                Case_Number
+                Charge_Description
+                Charge_Sequence
+                DATE_ARRESTED
+                DOB
+                Degree
+                FIRSTNAME
+                LASTNAME
+                MIDDLENAME
+                OBJECTID
+                OBJECTID_1
+                RACE
+                SEX
+                SUFFIX
+                TIME_ARREST
+                UNIQUEKEY
+                createdAt
+                updatedAt
+              }
+              user {
+                id
+                username
+                role
+              }
+              imageUrls
+            }
+          }
+          cursor
+          hasNextPage
+        }
+        status
+        message
+      }
+    }
+  }
+}
+
+query GetUserPosts($id: ID!, $data: PostsInput) {
+  user(id: $id) {
+    status
+    message
+    data {
+      id
+      posts(data: $data) {
+        data {
+          data {
+            id
+            title
+            body
+            userId
+            createdAt
+            updatedAt
+            arrestLogId
+            lat
+            lon
+            street
+            city
+            state
+            zip
+            category
+            date_occurred
+            postComments {
+              id
+              user {
+                username
+                role
+              }
+              body
+              createdAt
+              updatedAt
+            }
+            likes {
+              id
+              postId
+              userId
+              isActive
+              createdAt
+              updatedAt
+            }
+            arrestLog {
+              id
+              AGE
+              ARREST_STATUS
+              ArrestLocationAptFlr
+              ArrestLocationCity
+              ArrestLocationStreet
+              ArrestLocationStreetNBR
+              Arrest_Charge
+              Arrest_ID
+              Case_Number
+              Charge_Description
+              Charge_Sequence
+              DATE_ARRESTED
+              DOB
+              Degree
+              FIRSTNAME
+              LASTNAME
+              MIDDLENAME
+              OBJECTID
+              OBJECTID_1
+              RACE
+              SEX
+              SUFFIX
+              TIME_ARREST
+              UNIQUEKEY
+              createdAt
+              updatedAt
+            }
+            user {
+              id
+              username
+              role
+            }
+            imageUrls
+          }
+          hasNextPage
+          cursor
+        }
+      }
+    }
   }
 }
 
@@ -21,7 +224,6 @@ query GetUsers {
       lastname
       email
       username
-      password
       role
       createdAt
       updatedAt
@@ -78,7 +280,6 @@ mutation UpdateUser($id: ID!, $data: UpdateUserInput!) {
     lastname
     email
     username
-    password
     createdAt
     updatedAt
   }
@@ -106,7 +307,6 @@ mutation login($data: LoginInput!) {
       email
       username
       role
-      password
       emailVerified
       createdAt
       updatedAt

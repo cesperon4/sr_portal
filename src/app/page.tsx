@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { useLogin } from "@/hooks/landing-page/useLogin";
-import { SignupModal } from "@/components/landing-page/signup-modal";
 import { Navbar } from "@/components/landing-page/navbar";
+import { SignupModal } from "@/components/landing-page/signup-modal";
+import { useLogin } from "@/hooks/landing-page/useLogin";
 import { useSignupModal } from "@/hooks/landing-page/useSignupModalToggle";
+import Image from "next/image";
 
 export default function LandingPage() {
   const { handleGuestLogin } = useLogin();
@@ -62,41 +62,45 @@ export default function LandingPage() {
       {/* Optional: Feature Section */}
       <section className="py-20 bg-white h-screen">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-3 gap-12 text-center">
+          {/* Location-Based Discovery */}
           <div className="space-y-4">
             <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              {/* Replace with icon */}
-              <span className="text-green-500 font-bold text-xl">📊</span>
+              <span className="text-green-500 text-xl">📍</span>
             </div>
             <h3 className="text-xl font-semibold text-gray-900">
-              Visualize Data
+              Location-Based Discovery
             </h3>
             <p className="text-gray-600">
-              Transform raw data into clear, actionable insights with intuitive
-              charts and tables.
+              Explore incidents and posts happening near where you live, giving
+              you real-world context tied directly to your location.
             </p>
           </div>
+
+          {/* Map & Feed Views */}
           <div className="space-y-4">
             <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-500 font-bold text-xl">🛠️</span>
+              <span className="text-green-500 text-xl">🗺️</span>
             </div>
             <h3 className="text-xl font-semibold text-gray-900">
-              Customizable Forms
+              Map & Feed Views
             </h3>
             <p className="text-gray-600">
-              Admins can build dynamic forms to collect and manage information
-              effortlessly.
+              Switch seamlessly between an interactive map and a chronological
+              feed to visualize activity and dive into detailed reports.
             </p>
           </div>
+
+          {/* Community Awareness */}
           <div className="space-y-4">
             <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <span className="text-green-500 font-bold text-xl">🌐</span>
+              <span className="text-green-500 text-xl">🏘️</span>
             </div>
             <h3 className="text-xl font-semibold text-gray-900">
-              Community Focused
+              Community Awareness
             </h3>
             <p className="text-gray-600">
-              Provide tools and insights that benefit local communities and
-              decision-makers alike.
+              Stay informed about local events and trends, empowering residents
+              to understand what’s happening around them.
             </p>
           </div>
         </div>

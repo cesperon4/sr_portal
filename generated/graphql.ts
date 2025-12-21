@@ -47,6 +47,13 @@ export type ApiUpsertUserResponse = {
   status?: Maybe<Scalars['Int']['output']>;
 };
 
+export type ApiUserResponse = {
+  __typename?: 'ApiUserResponse';
+  data?: Maybe<User>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type ApiUsersResponse = {
   __typename?: 'ApiUsersResponse';
   data?: Maybe<Array<Maybe<User>>>;
@@ -180,6 +187,25 @@ export type Like = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type LikePage = {
+  __typename?: 'LikePage';
+  cursor?: Maybe<Scalars['Int']['output']>;
+  data: Array<Like>;
+  hasNextPage?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type LikedPostInput = {
+  cursor?: InputMaybe<Scalars['Int']['input']>;
+  limit: Scalars['Int']['input'];
+};
+
+export type LikedPostResponse = {
+  __typename?: 'LikedPostResponse';
+  data?: Maybe<LikePage>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
 };
 
 export type LoginInput = {
@@ -362,6 +388,25 @@ export type PostComment = {
   user?: Maybe<User>;
 };
 
+export type PostCommentInput = {
+  cursor?: InputMaybe<Scalars['Int']['input']>;
+  limit: Scalars['Int']['input'];
+};
+
+export type PostCommentPage = {
+  __typename?: 'PostCommentPage';
+  cursor?: Maybe<Scalars['Int']['output']>;
+  data: Array<PostComment>;
+  hasNextPage?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PostCommentResponse = {
+  __typename?: 'PostCommentResponse';
+  data?: Maybe<PostCommentPage>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type PostsInput = {
   cursor?: InputMaybe<Scalars['Int']['input']>;
   limit: Scalars['Int']['input'];
@@ -370,8 +415,8 @@ export type PostsInput = {
 export type PostsPage = {
   __typename?: 'PostsPage';
   cursor?: Maybe<Scalars['Int']['output']>;
+  data: Array<Post>;
   hasNextPage: Scalars['Boolean']['output'];
-  posts: Array<Post>;
 };
 
 export type PostsResponse = {
@@ -392,7 +437,7 @@ export type Query = {
   postComment: PostComment;
   postComments: Array<PostComment>;
   posts: PostsResponse;
-  user: User;
+  user: ApiUserResponse;
   users?: Maybe<ApiUsersResponse>;
 };
 
@@ -500,6 +545,7 @@ export type UpsertUserInput = {
 
 export type User = {
   __typename?: 'User';
+  comments?: Maybe<PostCommentResponse>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   emailVerificationTokens?: Maybe<Array<Maybe<EmailVerificationToken>>>;
@@ -507,11 +553,26 @@ export type User = {
   firstname?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   lastname?: Maybe<Scalars['String']['output']>;
-  password?: Maybe<Scalars['String']['output']>;
-  posts?: Maybe<Array<Maybe<Post>>>;
+  likedPosts?: Maybe<LikedPostResponse>;
+  posts?: Maybe<PostsResponse>;
   role: Role;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   username?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type UserCommentsArgs = {
+  data?: InputMaybe<PostCommentInput>;
+};
+
+
+export type UserLikedPostsArgs = {
+  data?: InputMaybe<LikedPostInput>;
+};
+
+
+export type UserPostsArgs = {
+  data?: InputMaybe<PostsInput>;
 };
 
 export type ToggleLikeMutationVariables = Exact<{
@@ -533,7 +594,7 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, posts: Array<{ __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, lat?: number | null, lon?: number | null, street?: string | null, city?: string | null, state?: string | null, zip?: string | null, category?: string | null, date_occurred?: any | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }> }> } | null } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PostsPage', cursor?: number | null, hasNextPage: boolean, data: Array<{ __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, imageUrls?: Array<string | null> | null, lat?: number | null, lon?: number | null, street?: string | null, city?: string | null, state?: string | null, zip?: string | null, category?: string | null, date_occurred?: any | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }> }> } | null } };
 
 export type GetMapPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -562,17 +623,34 @@ export type CreatePostCommentMutationVariables = Exact<{
 
 export type CreatePostCommentMutation = { __typename?: 'Mutation', createPostComment: { __typename?: 'PostComment', id: number, postId?: number | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
-export type GetUserQueryVariables = Exact<{
+export type GetUserCommentsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  data?: InputMaybe<PostCommentInput>;
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } };
+export type GetUserCommentsQuery = { __typename?: 'Query', user: { __typename?: 'ApiUserResponse', status?: number | null, message?: string | null, data?: { __typename?: 'User', id?: string | null, comments?: { __typename?: 'PostCommentResponse', data?: { __typename?: 'PostCommentPage', hasNextPage?: boolean | null, cursor?: number | null, data: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, post?: { __typename?: 'Post', title?: string | null, category?: string | null } | null }> } | null } | null } | null } };
+
+export type GetUserLikedPostsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data?: InputMaybe<LikedPostInput>;
+}>;
+
+
+export type GetUserLikedPostsQuery = { __typename?: 'Query', user: { __typename?: 'ApiUserResponse', status?: number | null, message?: string | null, data?: { __typename?: 'User', id?: string | null, likedPosts?: { __typename?: 'LikedPostResponse', status?: number | null, message?: string | null, data?: { __typename?: 'LikePage', cursor?: number | null, hasNextPage?: boolean | null, data: Array<{ __typename?: 'Like', id?: number | null, post?: { __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, lat?: number | null, lon?: number | null, street?: string | null, city?: string | null, state?: string | null, zip?: string | null, category?: string | null, date_occurred?: any | null, imageUrls?: Array<string | null> | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }>, arrestLog?: { __typename?: 'ArrestLog', id?: number | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null } | null }> } | null } | null } | null } };
+
+export type GetUserPostsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data?: InputMaybe<PostsInput>;
+}>;
+
+
+export type GetUserPostsQuery = { __typename?: 'Query', user: { __typename?: 'ApiUserResponse', status?: number | null, message?: string | null, data?: { __typename?: 'User', id?: string | null, posts?: { __typename?: 'PostsResponse', data?: { __typename?: 'PostsPage', hasNextPage: boolean, cursor?: number | null, data: Array<{ __typename?: 'Post', id: number, title?: string | null, body?: string | null, userId?: string | null, createdAt?: any | null, updatedAt?: any | null, arrestLogId?: number | null, lat?: number | null, lon?: number | null, street?: string | null, city?: string | null, state?: string | null, zip?: string | null, category?: string | null, date_occurred?: any | null, imageUrls?: Array<string | null> | null, postComments: Array<{ __typename?: 'PostComment', id: number, body?: string | null, createdAt?: any | null, updatedAt?: any | null, user?: { __typename?: 'User', username?: string | null, role: Role } | null }>, likes: Array<{ __typename?: 'Like', id?: number | null, postId?: number | null, userId?: string | null, isActive?: boolean | null, createdAt?: any | null, updatedAt?: any | null }>, arrestLog?: { __typename?: 'ArrestLog', id?: number | null, AGE?: string | null, ARREST_STATUS?: string | null, ArrestLocationAptFlr?: string | null, ArrestLocationCity?: string | null, ArrestLocationStreet?: string | null, ArrestLocationStreetNBR?: string | null, Arrest_Charge?: string | null, Arrest_ID?: string | null, Case_Number?: string | null, Charge_Description?: string | null, Charge_Sequence?: string | null, DATE_ARRESTED?: string | null, DOB?: string | null, Degree?: string | null, FIRSTNAME?: string | null, LASTNAME?: string | null, MIDDLENAME?: string | null, OBJECTID?: number | null, OBJECTID_1?: number | null, RACE?: string | null, SEX?: string | null, SUFFIX?: string | null, TIME_ARREST?: string | null, UNIQUEKEY?: string | null, createdAt?: any | null, updatedAt?: any | null } | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, role: Role } | null }> } | null } | null } | null } };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', users?: { __typename?: 'ApiUsersResponse', status?: number | null, message?: string | null, data?: Array<{ __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } | null> | null } | null };
+export type GetUsersQuery = { __typename?: 'Query', users?: { __typename?: 'ApiUsersResponse', status?: number | null, message?: string | null, data?: Array<{ __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, createdAt?: any | null, updatedAt?: any | null } | null> | null } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -613,7 +691,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, password?: string | null, createdAt?: any | null, updatedAt?: any | null } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -627,7 +705,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, password?: string | null, emailVerified?: any | null, createdAt?: any | null, updatedAt?: any | null } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, emailVerified?: any | null, createdAt?: any | null, updatedAt?: any | null } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -795,7 +873,7 @@ export const GetPostsDocument = gql`
     status
     message
     data {
-      posts {
+      data {
         id
         title
         body
@@ -1026,54 +1104,314 @@ export function useCreatePostCommentMutation(baseOptions?: Apollo.MutationHookOp
 export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePostCommentMutation>;
 export type CreatePostCommentMutationResult = Apollo.MutationResult<CreatePostCommentMutation>;
 export type CreatePostCommentMutationOptions = Apollo.BaseMutationOptions<CreatePostCommentMutation, CreatePostCommentMutationVariables>;
-export const GetUserDocument = gql`
-    query GetUser($id: ID!) {
+export const GetUserCommentsDocument = gql`
+    query GetUserComments($id: ID!, $data: PostCommentInput) {
   user(id: $id) {
-    id
-    firstname
-    lastname
-    email
-    username
-    password
-    role
-    createdAt
-    updatedAt
+    status
+    message
+    data {
+      id
+      comments(data: $data) {
+        data {
+          data {
+            id
+            body
+            createdAt
+            updatedAt
+            post {
+              title
+              category
+            }
+          }
+          hasNextPage
+          cursor
+        }
+      }
+    }
   }
 }
     `;
 
 /**
- * __useGetUserQuery__
+ * __useGetUserCommentsQuery__
  *
- * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUserCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserQuery({
+ * const { data, loading, error } = useGetUserCommentsQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      data: // value for 'data'
  *   },
  * });
  */
-export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables> & ({ variables: GetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetUserCommentsQuery(baseOptions: Apollo.QueryHookOptions<GetUserCommentsQuery, GetUserCommentsQueryVariables> & ({ variables: GetUserCommentsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        return Apollo.useQuery<GetUserCommentsQuery, GetUserCommentsQueryVariables>(GetUserCommentsDocument, options);
       }
-export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+export function useGetUserCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserCommentsQuery, GetUserCommentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+          return Apollo.useLazyQuery<GetUserCommentsQuery, GetUserCommentsQueryVariables>(GetUserCommentsDocument, options);
         }
-export function useGetUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+export function useGetUserCommentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserCommentsQuery, GetUserCommentsQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+          return Apollo.useSuspenseQuery<GetUserCommentsQuery, GetUserCommentsQueryVariables>(GetUserCommentsDocument, options);
         }
-export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
-export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
-export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
-export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export type GetUserCommentsQueryHookResult = ReturnType<typeof useGetUserCommentsQuery>;
+export type GetUserCommentsLazyQueryHookResult = ReturnType<typeof useGetUserCommentsLazyQuery>;
+export type GetUserCommentsSuspenseQueryHookResult = ReturnType<typeof useGetUserCommentsSuspenseQuery>;
+export type GetUserCommentsQueryResult = Apollo.QueryResult<GetUserCommentsQuery, GetUserCommentsQueryVariables>;
+export const GetUserLikedPostsDocument = gql`
+    query GetUserLikedPosts($id: ID!, $data: LikedPostInput) {
+  user(id: $id) {
+    status
+    message
+    data {
+      id
+      likedPosts(data: $data) {
+        data {
+          data {
+            id
+            post {
+              id
+              title
+              body
+              userId
+              createdAt
+              updatedAt
+              arrestLogId
+              lat
+              lon
+              street
+              city
+              state
+              zip
+              category
+              date_occurred
+              postComments {
+                id
+                user {
+                  username
+                  role
+                }
+                body
+                createdAt
+                updatedAt
+              }
+              likes {
+                id
+                postId
+                userId
+                isActive
+                createdAt
+                updatedAt
+              }
+              arrestLog {
+                id
+                AGE
+                ARREST_STATUS
+                ArrestLocationAptFlr
+                ArrestLocationCity
+                ArrestLocationStreet
+                ArrestLocationStreetNBR
+                Arrest_Charge
+                Arrest_ID
+                Case_Number
+                Charge_Description
+                Charge_Sequence
+                DATE_ARRESTED
+                DOB
+                Degree
+                FIRSTNAME
+                LASTNAME
+                MIDDLENAME
+                OBJECTID
+                OBJECTID_1
+                RACE
+                SEX
+                SUFFIX
+                TIME_ARREST
+                UNIQUEKEY
+                createdAt
+                updatedAt
+              }
+              user {
+                id
+                username
+                role
+              }
+              imageUrls
+            }
+          }
+          cursor
+          hasNextPage
+        }
+        status
+        message
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserLikedPostsQuery__
+ *
+ * To run a query within a React component, call `useGetUserLikedPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserLikedPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserLikedPostsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetUserLikedPostsQuery(baseOptions: Apollo.QueryHookOptions<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables> & ({ variables: GetUserLikedPostsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables>(GetUserLikedPostsDocument, options);
+      }
+export function useGetUserLikedPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables>(GetUserLikedPostsDocument, options);
+        }
+export function useGetUserLikedPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables>(GetUserLikedPostsDocument, options);
+        }
+export type GetUserLikedPostsQueryHookResult = ReturnType<typeof useGetUserLikedPostsQuery>;
+export type GetUserLikedPostsLazyQueryHookResult = ReturnType<typeof useGetUserLikedPostsLazyQuery>;
+export type GetUserLikedPostsSuspenseQueryHookResult = ReturnType<typeof useGetUserLikedPostsSuspenseQuery>;
+export type GetUserLikedPostsQueryResult = Apollo.QueryResult<GetUserLikedPostsQuery, GetUserLikedPostsQueryVariables>;
+export const GetUserPostsDocument = gql`
+    query GetUserPosts($id: ID!, $data: PostsInput) {
+  user(id: $id) {
+    status
+    message
+    data {
+      id
+      posts(data: $data) {
+        data {
+          data {
+            id
+            title
+            body
+            userId
+            createdAt
+            updatedAt
+            arrestLogId
+            lat
+            lon
+            street
+            city
+            state
+            zip
+            category
+            date_occurred
+            postComments {
+              id
+              user {
+                username
+                role
+              }
+              body
+              createdAt
+              updatedAt
+            }
+            likes {
+              id
+              postId
+              userId
+              isActive
+              createdAt
+              updatedAt
+            }
+            arrestLog {
+              id
+              AGE
+              ARREST_STATUS
+              ArrestLocationAptFlr
+              ArrestLocationCity
+              ArrestLocationStreet
+              ArrestLocationStreetNBR
+              Arrest_Charge
+              Arrest_ID
+              Case_Number
+              Charge_Description
+              Charge_Sequence
+              DATE_ARRESTED
+              DOB
+              Degree
+              FIRSTNAME
+              LASTNAME
+              MIDDLENAME
+              OBJECTID
+              OBJECTID_1
+              RACE
+              SEX
+              SUFFIX
+              TIME_ARREST
+              UNIQUEKEY
+              createdAt
+              updatedAt
+            }
+            user {
+              id
+              username
+              role
+            }
+            imageUrls
+          }
+          hasNextPage
+          cursor
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserPostsQuery__
+ *
+ * To run a query within a React component, call `useGetUserPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserPostsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetUserPostsQuery(baseOptions: Apollo.QueryHookOptions<GetUserPostsQuery, GetUserPostsQueryVariables> & ({ variables: GetUserPostsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserPostsQuery, GetUserPostsQueryVariables>(GetUserPostsDocument, options);
+      }
+export function useGetUserPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserPostsQuery, GetUserPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserPostsQuery, GetUserPostsQueryVariables>(GetUserPostsDocument, options);
+        }
+export function useGetUserPostsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserPostsQuery, GetUserPostsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserPostsQuery, GetUserPostsQueryVariables>(GetUserPostsDocument, options);
+        }
+export type GetUserPostsQueryHookResult = ReturnType<typeof useGetUserPostsQuery>;
+export type GetUserPostsLazyQueryHookResult = ReturnType<typeof useGetUserPostsLazyQuery>;
+export type GetUserPostsSuspenseQueryHookResult = ReturnType<typeof useGetUserPostsSuspenseQuery>;
+export type GetUserPostsQueryResult = Apollo.QueryResult<GetUserPostsQuery, GetUserPostsQueryVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   users {
@@ -1083,7 +1421,6 @@ export const GetUsersDocument = gql`
       lastname
       email
       username
-      password
       role
       createdAt
       updatedAt
@@ -1314,7 +1651,6 @@ export const UpdateUserDocument = gql`
     lastname
     email
     username
-    password
     createdAt
     updatedAt
   }
@@ -1397,7 +1733,6 @@ export const LoginDocument = gql`
       email
       username
       role
-      password
       emailVerified
       createdAt
       updatedAt

@@ -10,6 +10,7 @@ import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { type HeaderSelect } from "@/types/header.interface";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import ProfileWrapper from "../../components/profile/profile-wrapper";
 import { Loader } from "../../components/ui/loader";
 
 const DataTableWrapper = React.lazy(
@@ -31,7 +32,7 @@ export default function Dashboard() {
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
 
-  const selectedView = searchParams.get("view") || "Map";
+  const selectedView = searchParams.get("view") || "Profile";
 
   useEffect(() => {
     if (!loading && !isAuthenticated && !session) {
@@ -46,7 +47,7 @@ export default function Dashboard() {
   const [view, setView] = useState<HeaderSelect>(selectedView as HeaderSelect);
 
   useEffect(() => {
-    const currentView = searchParams.get("view") || "Map"; //avoid intial re render when currentView === nextview
+    const currentView = searchParams.get("view") || "Profile"; //avoid intial re render when currentView === nextview
     const nextView = view.toLowerCase();
 
     if (currentView !== nextView) {
@@ -57,7 +58,7 @@ export default function Dashboard() {
   const toggleView = (view: HeaderSelect) => setView(view);
 
   return (
-    <div className="grid grid-rows-1 items-center justify-items-center gap-10 font-(family-name:--font-geist-sans)">
+    <div className="grid grid-rows-1 items-center justify-items-center gap-8 font-(family-name:--font-geist-sans)">
       {isProfileSettingsOpen && (
         <ProfileSettings setIsProfileSettingsOpen={setIsProfileSettingsOpen} />
       )}
@@ -68,6 +69,11 @@ export default function Dashboard() {
       />
 
       <main className="flex flex-col gap-8 w-full">
+        {view === "Profile" && (
+          <Suspense fallback={<Loader text={"Loading map..."} />}>
+            <ProfileWrapper />
+          </Suspense>
+        )}
         {view === "Map" && (
           <Suspense fallback={<Loader text={"Loading map..."} />}>
             <MapWrapper />
