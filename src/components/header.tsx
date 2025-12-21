@@ -5,7 +5,7 @@ import { HeaderSelect } from "@/types/header.interface";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { CiSettings } from "react-icons/ci";
+import { CiSettings, CiUser } from "react-icons/ci";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoMdBook } from "react-icons/io";
 import { IoMapOutline } from "react-icons/io5";
@@ -13,6 +13,7 @@ import { MdInsights } from "react-icons/md";
 import { ModeToggle } from "../components/mode-toggle";
 import UnderlineButton from "./ui/underline-button";
 import WeatherWrapper from "./weather/weather-wrapper";
+
 interface HeaderProps {
   view: HeaderSelect;
   toggleView: (view: HeaderSelect) => void;
@@ -54,6 +55,15 @@ export function Header({
 
         {/* Navigation */}
         <nav className="ml-1 flex items-center gap-6">
+          <UnderlineButton
+            clickMethod={() => toggleView("Profile")}
+            view="Profile"
+            currentView={view}
+          >
+            <CiUser className="text-base" />
+
+            <span className="text-sm">Profile</span>
+          </UnderlineButton>
           <UnderlineButton
             clickMethod={() => toggleView("Map")}
             view="Map"

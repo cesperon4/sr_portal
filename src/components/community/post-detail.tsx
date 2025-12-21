@@ -11,6 +11,7 @@ import {
   useCreatePostCommentMutation,
   useGetPostQuery,
 } from "../../../generated/graphql";
+import CommentSection from "../../components/comment-section";
 import PostFooter from "../../components/community/post-footer";
 import { ImageCarousel } from "../ui/image-carousel";
 import { Loader } from "../ui/loader";
@@ -124,7 +125,8 @@ function PostDetail({ id }: PostDetailProps) {
       </div>
 
       {/* Comments */}
-      <div className="mt-6 space-y-4">
+      <CommentSection comments={data.post.postComments} />
+      {/* <div className="mt-6 space-y-4">
         {data.post.postComments?.map((comment) => {
           if (!comment) return null;
 
@@ -145,7 +147,7 @@ function PostDetail({ id }: PostDetailProps) {
             </div>
           );
         })}
-      </div>
+      </div> */}
     </article>
   );
 }

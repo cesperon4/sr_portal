@@ -32,7 +32,7 @@ export function useGetPosts({ limit }: props) {
   //   }
   // }, [networkStatus]);
 
-  const posts = useMemo(() => data?.posts?.data?.posts ?? [], [data]); //useMemo ensures that posts only changes when data changes, not on every render.
+  const posts = useMemo(() => data?.posts?.data?.data ?? [], [data]); //useMemo ensures that posts only changes when data changes, not on every render.
   const hasNextPage = useMemo(
     () => data?.posts?.data?.hasNextPage ?? false,
     [data]
@@ -45,16 +45,16 @@ export function useGetPosts({ limit }: props) {
     await fetchMore({
       variables: { data: { limit: limit, cursor: cursor } },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult?.posts?.data?.posts) return prev;
+        if (!fetchMoreResult?.posts?.data?.data) return prev;
 
         return {
           posts: {
             __typename: prev.posts.__typename,
             data: {
-              posts: [
-                ...(prev.posts.data?.posts ?? []),
-                ...fetchMoreResult.posts?.data.posts?.filter(
-                  (p) => !prev.posts.data?.posts.some((old) => old.id === p.id)
+              data: [
+                ...(prev.posts.data?.data ?? []),
+                ...fetchMoreResult.posts?.data.data?.filter(
+                  (p) => !prev.posts.data?.data.some((old) => old.id === p.id)
                 ), // avoids duplicates
               ],
               cursor: fetchMoreResult.posts?.data?.cursor,
@@ -78,7 +78,7 @@ export function useGetPosts({ limit }: props) {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [posts]);
+  }, [loadMore]);
 
   return { posts, loading, error, hasNextPage, cursor, loadMore };
 }

@@ -1,1 +1,1 @@
-export type HeaderSelect = "Map" | "Table" | "Chart" | "Community";
+export type HeaderSelect = "Map" | "Table" | "Chart" | "Community" | "Profile";

@@ -7,7 +7,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import {
   useCreatePostMutation,
@@ -91,10 +91,6 @@ export default function Submit() {
     locationName: "",
     date: new Date(Date.now()), // optional fields can be undefined
   });
-
-  useEffect(() => {
-    console.log("form data: ", formData);
-  }, [formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
