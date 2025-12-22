@@ -10,7 +10,7 @@ import PostFooter from "./post-footer";
 
 type PostType = NonNullable<
   NonNullable<GetPostsQuery["posts"]>["data"]
->["posts"][number];
+>["data"][number];
 
 interface PostProps {
   post: PostType;
