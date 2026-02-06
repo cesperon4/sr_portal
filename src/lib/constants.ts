@@ -347,6 +347,10 @@ export const navLinks = [
     name: "Developer",
     link: "#skills",
   },
+  {
+    name: "Plans",
+    link: "#plan",
+  },
 ];
 
 export const initialSidebarState: SidebarState = {

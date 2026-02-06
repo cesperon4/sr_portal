@@ -9,7 +9,7 @@ export function useGetUserComments({ limit, id }: props) {
   const { data, loading, error, fetchMore } = useGetUserCommentsQuery({
     variables: {
       id: id,
-      data: { limit: 5, cursor: null },
+      data: { limit: 10, cursor: null },
     },
   });
 

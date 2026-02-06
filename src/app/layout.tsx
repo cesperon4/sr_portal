@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   title: "SR Portal",
   description: "A community-focused platform for Santa Rosa, CA residents.",
   icons: {
-    icon: "/favicon.png", // classic favicon
-    shortcut: "/favicon.png", // fallback for browsers
-    apple: "/favicon.png", // iOS home screen
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
   },
 };
 

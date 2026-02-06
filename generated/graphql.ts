@@ -40,6 +40,13 @@ export type ApiLikeResponse = {
   status?: Maybe<Scalars['Int']['output']>;
 };
 
+export type ApiStripeResponse = {
+  __typename?: 'ApiStripeResponse';
+  data?: Maybe<PaymentIntentData>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type ApiUpsertUserResponse = {
   __typename?: 'ApiUpsertUserResponse';
   data?: Maybe<UpsertUserData>;
@@ -131,6 +138,10 @@ export type CreateArrestLogInput = {
 export type CreateLikeInput = {
   postId?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreatePaymentIntentInput = {
+  amount: Scalars['Int']['input'];
 };
 
 export type CreatePostCommentInput = {
@@ -233,6 +244,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createArrestLog: ArrestLog;
   createLike?: Maybe<ApiLikeResponse>;
+  createPaymentIntent?: Maybe<ApiStripeResponse>;
   createPost: Post;
   createPostComment: PostComment;
   deleteArrestLog: ArrestLog;
@@ -262,6 +274,11 @@ export type MutationCreateArrestLogArgs = {
 
 export type MutationCreateLikeArgs = {
   data?: InputMaybe<CreateLikeInput>;
+};
+
+
+export type MutationCreatePaymentIntentArgs = {
+  data?: InputMaybe<CreatePaymentIntentInput>;
 };
 
 
@@ -351,6 +368,16 @@ export type MutationUpsertUserArgs = {
 
 export type MutationVerifyEmailArgs = {
   token: Scalars['Token']['input'];
+};
+
+export type PaymentIntentData = {
+  __typename?: 'PaymentIntentData';
+  amount?: Maybe<Scalars['Int']['output']>;
+  clientSecret?: Maybe<Scalars['String']['output']>;
+  currency?: Maybe<Scalars['String']['output']>;
+  livemode?: Maybe<Scalars['Boolean']['output']>;
+  paymentIntentId?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
 };
 
 export type Post = {
@@ -622,6 +649,13 @@ export type CreatePostCommentMutationVariables = Exact<{
 
 
 export type CreatePostCommentMutation = { __typename?: 'Mutation', createPostComment: { __typename?: 'PostComment', id: number, postId?: number | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } };
+
+export type CreatePaymentIntentMutationVariables = Exact<{
+  data: CreatePaymentIntentInput;
+}>;
+
+
+export type CreatePaymentIntentMutation = { __typename?: 'Mutation', createPaymentIntent?: { __typename?: 'ApiStripeResponse', status?: number | null, message?: string | null, data?: { __typename?: 'PaymentIntentData', clientSecret?: string | null, paymentIntentId?: string | null, amount?: number | null, currency?: string | null, status?: string | null, livemode?: boolean | null } | null } | null };
 
 export type GetUserCommentsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1104,6 +1138,48 @@ export function useCreatePostCommentMutation(baseOptions?: Apollo.MutationHookOp
 export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePostCommentMutation>;
 export type CreatePostCommentMutationResult = Apollo.MutationResult<CreatePostCommentMutation>;
 export type CreatePostCommentMutationOptions = Apollo.BaseMutationOptions<CreatePostCommentMutation, CreatePostCommentMutationVariables>;
+export const CreatePaymentIntentDocument = gql`
+    mutation CreatePaymentIntent($data: CreatePaymentIntentInput!) {
+  createPaymentIntent(data: $data) {
+    data {
+      clientSecret
+      paymentIntentId
+      amount
+      currency
+      status
+      livemode
+    }
+    status
+    message
+  }
+}
+    `;
+export type CreatePaymentIntentMutationFn = Apollo.MutationFunction<CreatePaymentIntentMutation, CreatePaymentIntentMutationVariables>;
+
+/**
+ * __useCreatePaymentIntentMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentIntentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentIntentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentIntentMutation, { data, loading, error }] = useCreatePaymentIntentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePaymentIntentMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaymentIntentMutation, CreatePaymentIntentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePaymentIntentMutation, CreatePaymentIntentMutationVariables>(CreatePaymentIntentDocument, options);
+      }
+export type CreatePaymentIntentMutationHookResult = ReturnType<typeof useCreatePaymentIntentMutation>;
+export type CreatePaymentIntentMutationResult = Apollo.MutationResult<CreatePaymentIntentMutation>;
+export type CreatePaymentIntentMutationOptions = Apollo.BaseMutationOptions<CreatePaymentIntentMutation, CreatePaymentIntentMutationVariables>;
 export const GetUserCommentsDocument = gql`
     query GetUserComments($id: ID!, $data: PostCommentInput) {
   user(id: $id) {

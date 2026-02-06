@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
-import { Backdrop } from "../backdrop";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
-import { X, User, Mail, Lock, UserCircle, AlertCircle } from "lucide-react";
+import { AlertCircle, Lock, Mail, User, UserCircle, X } from "lucide-react";
+import React from "react";
+import { FcBiomass } from "react-icons/fc";
+import { Backdrop } from "../backdrop";
 
 interface ProfileSettingsProps {
   setIsProfileSettingsOpen: (arg: boolean) => void;
@@ -202,6 +203,25 @@ export function ProfileSettings({
               <p className="text-xs text-gray-500 mt-1">
                 Leave blank to keep your current password
               </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="tier"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Account Type
+              </label>
+              <div className="flex justify-between">
+                <div className="relative flex items-center gap-1">
+                  <FcBiomass />
+                  <p>Free</p>
+                </div>
+
+                <button className="bg-blue-400 p-2 rounded text-white hover:bg-blue-200">
+                  Upgrade Account
+                </button>
+              </div>
             </div>
           </form>
         </div>

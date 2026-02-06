@@ -135,6 +135,34 @@
   @apply grid grid-cols-1 xl:grid-cols-12 gap-10;
 }
 
+/* App-wide typography — use across landing, dashboard, auth, etc.
+   display: hero/CTA headlines · heading: section titles · subheading: card titles
+   body / body-sm: paragraphs · label: overlines · caption: small labels · accent: links/emphasis */
+@utility text-display {
+  @apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-gray-900 dark:text-white leading-[1.1];
+}
+@utility text-heading {
+  @apply text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white;
+}
+@utility text-subheading {
+  @apply text-lg sm:text-xl font-semibold text-gray-900 dark:text-white;
+}
+@utility text-body {
+  @apply text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed;
+}
+@utility text-body-sm {
+  @apply text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed;
+}
+@utility text-label {
+  @apply text-xs sm:text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400;
+}
+@utility text-caption {
+  @apply text-xs text-gray-500 dark:text-gray-400;
+}
+@utility text-accent {
+  @apply text-blue-600 dark:text-blue-400 font-medium;
+}
+
 @utility hero-layout {
   @apply relative z-10 xl:mt-20 mt-32 md:h-dvh h-[80vh] flex xl:items-center items-start justify-center;
 }
@@ -162,7 +190,7 @@
 }
 
 @utility navbar {
-  @apply fixed w-full left-1/2 py-5 px-5 md:px-100 -translate-x-1/2 z-100 transition-all duration-300 ease-in-out;
+  @apply fixed w-full left-1/2 py-3 px-5 md:px-100 -translate-x-1/2 z-100 transition-all duration-300 ease-in-out;
 
   &.scrolled {
     @apply top-0 bg-white;
@@ -213,15 +241,15 @@
   }
 
   .fadebox {
-    @apply w-full text-black mt-10;
+    @apply w-full text-gray-900 dark:text-gray-100 bg-white dark:bg-neutral-950;
+  }
 
-    .fadebox-border {
-      @apply border-t-1 border-gray-300;
-    }
+  .fadebox .fadebox-border {
+    @apply border-t border-gray-100 dark:border-neutral-800;
+  }
 
-    .fadebox-content {
-      @apply px-20 py-20 bg-white;
-    }
+  .fadebox .fadebox-content {
+    @apply max-w-5xl mx-auto px-6 sm:px-8 md:px-10 py-8 md:py-10;
   }
 }
 
@@ -500,6 +528,85 @@
 }
 
 /* Hero Text slider ends */
+
+/* Landing: subtle hero background glow (use with animate-landing-glow) */
+@keyframes landing-glow {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.animate-landing-glow {
+  animation: landing-glow 8s ease-in-out infinite;
+}
+
+/* Hero image: animated gradient border (Glean-style) */
+@keyframes hero-image-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+.hero-image-border {
+  background: linear-gradient(
+    90deg,
+    rgb(229 231 235),
+    rgb(191 219 254),
+    rgb(147 197 253),
+    rgb(59 130 246),
+    rgb(147 197 253),
+    rgb(191 219 254),
+    rgb(229 231 235)
+  );
+  background-size: 200% 100%;
+  animation: hero-image-shimmer 5s ease-in-out infinite;
+}
+.dark .hero-image-border {
+  background: linear-gradient(
+    90deg,
+    rgb(38 38 38),
+    rgb(30 58 138 / 0.6),
+    rgb(59 130 246 / 0.4),
+    rgb(96 165 250 / 0.5),
+    rgb(59 130 246 / 0.4),
+    rgb(30 58 138 / 0.6),
+    rgb(38 38 38)
+  );
+  background-size: 200% 100%;
+  animation: hero-image-shimmer 5s ease-in-out infinite;
+}
+
+/* Hero illustration: soft glow on cards (Glean-style) */
+@keyframes hero-card-glow {
+  0%,
+  100% {
+    box-shadow: 0 4px 24px -4px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 4px 28px -2px rgba(59, 130, 246, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.6);
+  }
+}
+.hero-card-glow {
+  animation: hero-card-glow 3s ease-in-out infinite;
+}
+.dark .hero-card-glow {
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Dotted line flow animation */
+@keyframes dotted-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.animate-dotted-flow {
+  animation: dotted-flow 1.5s linear infinite;
+}
 
 .gradient-line {
   width: 2px;

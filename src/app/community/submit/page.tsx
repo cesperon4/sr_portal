@@ -132,7 +132,6 @@ export default function Submit() {
         },
       },
       onCompleted: (data) => {
-        console.log("complete create post: ", data);
         refetch();
         router.push(`/dashboard?view=Community${returnView}`);
       },

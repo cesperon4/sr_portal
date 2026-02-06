@@ -1,0 +1,14 @@
+mutation CreatePaymentIntent($data: CreatePaymentIntentInput!) {
+  createPaymentIntent(data: $data) {
+    data {
+      clientSecret
+      paymentIntentId
+      amount
+      currency
+      status
+      livemode
+    }
+    status
+    message
+  }
+}

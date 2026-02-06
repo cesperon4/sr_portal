@@ -14,11 +14,11 @@ import ProfileWrapper from "../../components/profile/profile-wrapper";
 import { Loader } from "../../components/ui/loader";
 
 const DataTableWrapper = React.lazy(
-  () => import("@/components/data-table/data-table-wrapper")
+  () => import("@/components/data-table/data-table-wrapper"),
 );
 const Charts = React.lazy(() => import("@/components/charts/charts"));
 const CommunityContainer = React.lazy(
-  () => import("@/components/community/community-container")
+  () => import("@/components/community/community-container"),
 );
 const MapModal = React.lazy(() => import("@/components/map/map-modal"));
 
