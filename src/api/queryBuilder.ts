@@ -77,7 +77,7 @@ export const buildOpenWeatherUrl = ({
   base_url,
 }: BuildOpenWeatherParams) => {
   if (
-    !process.env.OPEN_WEATHER_API_KEY ||
+    !process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY ||
     !base_url ||
     (!searchParams?.lat && !searchParams?.lon)
   ) {
@@ -87,10 +87,12 @@ export const buildOpenWeatherUrl = ({
   const params = new URLSearchParams({
     lat: searchParams.lat.toString(),
     lon: searchParams.lon.toString(),
-    appid: process.env.OPEN_WEATHER_API_KEY,
+    appid: process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY,
   });
 
   const url = `${base_url}?${params.toString()}`;
+
+  console.log("weather api url: ", url);
 
   return url;
 };

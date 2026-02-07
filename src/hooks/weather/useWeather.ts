@@ -45,7 +45,7 @@ export function useWeather() {
     if (weatherData) {
       const dayTime = isDaytime(
         weatherData.sys.sunrise,
-        weatherData.sys.sunset
+        weatherData.sys.sunset,
       );
 
       const temp = kelvinToFahrenheit(weatherData.main.temp);
