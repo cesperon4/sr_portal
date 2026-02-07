@@ -1,10 +1,10 @@
+"use client";
+
 import { useUserContext } from "@/context/UserContext";
 import { gql } from "@apollo/client";
 import clsx from "clsx";
+import { ArrowBigUp, MessageCircle, Share2, Bookmark } from "lucide-react";
 import { useMemo } from "react";
-import { AiOutlineLike } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
-import { PiShareFat } from "react-icons/pi";
 import {
   useToggleLikeMutation,
   type Like,
@@ -24,7 +24,12 @@ function PostFooter({ post }: PostFooterProps) {
     return like?.isActive ?? false;
   }, [post.likes, loggedUser.id]);
 
-  const toggleLike = async () => {
+  const likeCount = post.likes.filter((like) => like.isActive === true).length;
+  const commentCount = post.postComments?.length ?? 0;
+
+  const toggleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!post) return;
     const userLike = post.likes.find((l: Like) => l.userId === loggedUser.id);
     const isLiking = !userLike?.isActive;
@@ -32,7 +37,6 @@ function PostFooter({ post }: PostFooterProps) {
 
     await toggleLikeMutation({
       variables: { data: { userId: loggedUser.id, postId: post.id } },
-
       optimisticResponse: {
         toggleLike: {
           __typename: "ApiLikeResponse",
@@ -49,11 +53,9 @@ function PostFooter({ post }: PostFooterProps) {
           },
         },
       },
-
       update: (cache, { data }) => {
         const updatedLike = data?.toggleLike?.data;
         if (!updatedLike) return;
-
         cache.modify({
           id: cache.identify({ __typename: "Post", id: post.id }),
           fields: {
@@ -61,7 +63,6 @@ function PostFooter({ post }: PostFooterProps) {
               const index = existingLikes.findIndex(
                 (l: Like) => cache.identify(l) === cache.identify(updatedLike)
               );
-
               if (index >= 0) {
                 const updated = [...existingLikes];
                 updated[index] = cache.writeFragment({
@@ -79,8 +80,6 @@ function PostFooter({ post }: PostFooterProps) {
                 });
                 return updated;
               }
-
-              // Add new like as a reference
               return [
                 ...existingLikes,
                 cache.writeFragment({
@@ -103,35 +102,52 @@ function PostFooter({ post }: PostFooterProps) {
       },
     });
   };
+
   return (
-    <div className="footer-container flex gap-2">
-      <div className="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl">
-        <FaRegComment />
-        <span className="text-sm">{post.postComments.length}</span>
-      </div>
+    <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+      {/* Upvote */}
       <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          toggleLike();
-        }}
+        onClick={toggleLike}
         className={clsx(
-          "flex items-center px-4 py-2 cursor-pointer rounded-xl",
-          {
-            "bg-green-100 hover:bg-green-200": hasLiked,
-            "bg-gray-100 hover:bg-gray-200": !hasLiked,
-          }
+          "flex items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100 dark:hover:bg-neutral-800",
+          hasLiked
+            ? "text-orange-500 dark:text-orange-400"
+            : "hover:text-orange-500 dark:hover:text-orange-400"
         )}
+        aria-label={hasLiked ? "Remove upvote" : "Upvote"}
       >
-        <AiOutlineLike />
-        <span className="text-sm">
-          {post.likes.filter((like) => like.isActive === true).length}
-        </span>
+        <ArrowBigUp
+          className={clsx("size-4 shrink-0", hasLiked && "fill-current")}
+          strokeWidth={1.5}
+        />
+        <span>{likeCount}</span>
       </button>
-      <div className="flex items-center px-4 py-2 gap-1 bg-gray-100 hover:bg-gray-200 rounded-xl cursor-pointer">
-        <PiShareFat />
-        <span className="text-sm">Share</span>
+
+      {/* Comments */}
+      <div className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+        <MessageCircle className="size-4 shrink-0" strokeWidth={1.5} />
+        <span>{commentCount}</span>
       </div>
+
+      {/* Share */}
+      <button
+        type="button"
+        className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+        aria-label="Share"
+      >
+        <Share2 className="size-4 shrink-0" strokeWidth={1.5} />
+        <span>Share</span>
+      </button>
+
+      {/* Save */}
+      <button
+        type="button"
+        className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-700 dark:hover:text-gray-300 transition-colors ml-auto"
+        aria-label="Save"
+      >
+        <Bookmark className="size-4 shrink-0" strokeWidth={1.5} />
+        <span>Save</span>
+      </button>
     </div>
   );
 }
