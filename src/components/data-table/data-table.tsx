@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import clsx from "clsx";
-import { ArrowDown, ArrowUp, Database } from "lucide-react";
+import { ArrowDown, ArrowUp, Database, FileSearch } from "lucide-react";
 import { useState } from "react";
 import {
   type DisplayLog,
@@ -55,152 +55,150 @@ export function DataTable({
     setTableRow(false);
   };
 
-  if (activeLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-gray-500">Loading table...</p>
-      </div>
-    );
-  }
-
   if (!visibleColumns) {
     return null;
   }
 
+  const columnKeys = Object.entries(visibleColumns)
+    .filter(([, value]) => value)
+    .map(([key]) => key);
+
   return (
-    <div className="flex flex-col gap-2 px-6 lg:px-12">
+    <div className="flex flex-col gap-4">
       {tableRow && tableRowModalData && (
         <TableRowModal handleClose={closeTableRow} data={tableRowModalData} />
       )}
 
-      <div className="flex items-center justify-between">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gray-100 rounded-lg">
-            <Database className="w-5 h-5 text-blue-600" />
+          <div className="flex items-center justify-center size-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/50">
+            <Database className="size-5 text-blue-600 dark:text-blue-400" strokeWidth={1.5} />
           </div>
           <div>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <p className="text-body-sm font-semibold text-gray-900 dark:text-white">
               {count.toLocaleString()} {count === 1 ? "record" : "records"}
             </p>
+            <p className="text-caption">Click a row to view full details</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Table card */}
+      <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-20rem)]">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50 hover:bg-gray-50">
-                {Object.entries(visibleColumns)?.map(([key, value]) => {
-                  if (value)
-                    return (
-                      <TableHead
-                        key={key}
-                        className="font-semibold text-gray-700"
-                      >
-                        <div className="flex gap-2 items-center whitespace-nowrap">
-                          <span>{key}</span>
-                          <div className="flex flex-col">
-                            <button
-                              onClick={() => {
-                                setFilterText(() => ({
-                                  header: key,
-                                  direction: "ASC",
-                                }));
-                              }}
-                              className={clsx(
-                                "p-0.5 rounded transition-colors hover:bg-gray-200",
-                                {
-                                  "text-blue-600":
-                                    filterText.header === key &&
-                                    filterText.direction === "ASC",
-                                  "text-gray-400":
-                                    filterText.header !== key ||
-                                    filterText.direction !== "ASC",
-                                }
-                              )}
-                              aria-label={`Sort ${key} ascending`}
-                            >
-                              <ArrowUp className="w-3.5 h-3.5" />
-                            </button>
-
-                            <button
-                              onClick={() => {
-                                setFilterText(() => ({
-                                  header: key,
-                                  direction: "DESC",
-                                }));
-                              }}
-                              className={clsx(
-                                "p-0.5 rounded transition-colors hover:bg-gray-200",
-                                {
-                                  "text-blue-600":
-                                    filterText.header === key &&
-                                    filterText.direction === "DESC",
-                                  "text-gray-400":
-                                    filterText.header !== key ||
-                                    filterText.direction !== "DESC",
-                                }
-                              )}
-                              aria-label={`Sort ${key} descending`}
-                            >
-                              <ArrowDown className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+              <TableRow className="border-0 bg-gray-50 dark:bg-neutral-800/80 hover:bg-gray-50 dark:hover:bg-neutral-800/80">
+                {columnKeys.map((key) => {
+                  const isActive = filterText.header === key;
+                  const isAsc = filterText.direction === "ASC";
+                  return (
+                    <TableHead
+                      key={key}
+                      className="sticky top-0 z-10 h-12 px-4 bg-gray-50 dark:bg-neutral-800/80 font-semibold text-gray-700 dark:text-gray-300 text-left align-middle whitespace-nowrap border-b border-gray-200 dark:border-neutral-700"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span>{key}</span>
+                        <div className="flex flex-col shrink-0">
+                          <button
+                            onClick={() =>
+                              setFilterText({
+                                header: key,
+                                direction: isActive && isAsc ? "DESC" : "ASC",
+                              })
+                            }
+                            className={clsx(
+                              "p-0.5 rounded transition-colors hover:bg-gray-200 dark:hover:bg-neutral-700",
+                              isActive
+                                ? "text-blue-600 dark:text-blue-400"
+                                : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
+                            )}
+                            aria-label={`Sort by ${key} ${isActive && !isAsc ? "ascending" : "descending"}`}
+                          >
+                            {isActive && !isAsc ? (
+                              <ArrowDown className="size-3.5" strokeWidth={2} />
+                            ) : (
+                              <ArrowUp className="size-3.5" strokeWidth={2} />
+                            )}
+                          </button>
                         </div>
-                      </TableHead>
-                    );
+                      </div>
+                    </TableHead>
+                  );
                 })}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {displayLogs.length > 0 ? (
-                displayLogs.map((displayLog) => {
-                  return (
-                    <TableRow
-                      key={displayLog?.attributes.OBJECTID}
-                      className="cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => {
-                        openTableRow(displayLog);
-                      }}
-                    >
-                      {Object.keys(visibleColumns).map((columnKey) => {
-                        if (
-                          visibleColumns[
-                            columnKey as keyof typeof visibleColumns
-                          ]
-                        ) {
-                          const key =
-                            columnKey as keyof typeof displayLog.attributes;
-                          return (
-                            <TableCell key={key} className="text-gray-700">
-                              {displayLog.attributes[key] || (
-                                <span className="text-gray-400 italic text-sm">
-                                  —
-                                </span>
-                              )}
-                            </TableCell>
-                          );
-                        }
-                        return null;
-                      })}
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow className="hover:bg-white">
-                  <TableCell
-                    colSpan={displayFields?.length}
-                    className="text-center py-12"
+              {activeLoading ? (
+                Array.from({ length: 8 }).map((_, i) => (
+                  <TableRow
+                    key={i}
+                    className="border-b border-gray-100 dark:border-neutral-800/80"
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <Database className="w-12 h-12 text-gray-300" />
-                      <p className="text-gray-500 font-medium">
-                        No records found
-                      </p>
-                      <p className="text-sm text-gray-400">
-                        Try adjusting your filters
-                      </p>
+                    {columnKeys.map((_, j) => (
+                      <TableCell
+                        key={j}
+                        className="px-4 py-3 h-14"
+                      >
+                        <div className="h-4 rounded bg-gray-200 dark:bg-neutral-700 animate-pulse max-w-[120px]" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : displayLogs.length > 0 ? (
+                displayLogs.map((displayLog, rowIndex) => (
+                  <TableRow
+                    key={displayLog?.attributes?.OBJECTID ?? rowIndex}
+                    className={clsx(
+                      "cursor-pointer border-b border-gray-100 dark:border-neutral-800/80 transition-colors",
+                      rowIndex % 2 === 0
+                        ? "bg-white dark:bg-neutral-900"
+                        : "bg-gray-50/50 dark:bg-neutral-800/30",
+                      "hover:bg-blue-50/70 dark:hover:bg-blue-950/30"
+                    )}
+                    onClick={() => openTableRow(displayLog)}
+                  >
+                    {columnKeys.map((columnKey) => {
+                      const key = columnKey as keyof typeof displayLog.attributes;
+                      const value = displayLog.attributes[key];
+                      return (
+                        <TableCell
+                          key={columnKey}
+                          className="px-4 py-3 text-body-sm text-gray-700 dark:text-gray-300 align-middle"
+                        >
+                          {value != null && (typeof value !== "string" || value !== "") ? (
+                            <span className="truncate block max-w-[200px]" title={String(value)}>
+                              {String(value)}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 dark:text-gray-500 italic text-sm">
+                              —
+                            </span>
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell
+                    colSpan={columnKeys.length}
+                    className="text-center py-16"
+                  >
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="rounded-full bg-gray-100 dark:bg-neutral-800 p-4">
+                        <FileSearch className="size-10 text-gray-400 dark:text-gray-500" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <p className="text-body-sm font-semibold text-gray-900 dark:text-white">
+                          No records found
+                        </p>
+                        <p className="text-caption text-gray-500 dark:text-gray-400 mt-1">
+                          Try adjusting search or filters
+                        </p>
+                      </div>
                     </div>
                   </TableCell>
                 </TableRow>

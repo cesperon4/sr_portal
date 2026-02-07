@@ -1,23 +1,29 @@
+const colorMap: Record<string, string> = {
+  blue: "text-blue-600 dark:text-blue-400",
+  green: "text-emerald-600 dark:text-emerald-400",
+  orange: "text-amber-600 dark:text-amber-400",
+  yellow: "text-amber-500 dark:text-amber-400",
+};
+
 interface ChartCardProps {
   title: string;
   stat: number | string | null;
-  color: string; // expects tailwind color class like "bg-gray-100"
+  color: string;
 }
 
 export function ChartCard({ title, stat, color }: ChartCardProps) {
-  return (
-    <div
-      className={`flex flex-col justify-between p-4 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 bg-white border border-gray-200 min-w-[150px]`}
-    >
-      {/* Title */}
-      <h2 className={`text-sm font-medium text-gray-600`}>{title}</h2>
+  const colorClass = colorMap[color] ?? "text-gray-900 dark:text-white";
 
-      {/* Stat */}
+  return (
+    <div className="chart-card flex flex-col gap-1 rounded-xl bg-gray-50/80 dark:bg-neutral-800/50 border border-gray-100 dark:border-neutral-700/50 p-3.5 min-w-0">
+      <p className="text-caption text-gray-500 dark:text-gray-400 truncate">
+        {title}
+      </p>
       <span
-        className={`mt-2 text-2xl font-bold ${color} truncate`}
-        title={stat?.toString()}
+        className={`text-xl font-semibold tabular-nums ${colorClass} truncate`}
+        title={stat != null ? String(stat) : undefined}
       >
-        {stat ?? "-"}
+        {stat ?? "—"}
       </span>
     </div>
   );

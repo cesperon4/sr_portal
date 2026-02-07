@@ -14,24 +14,27 @@ export default function DegreeChart({
   chartData,
 }: DegreeChartProps) {
   if (!chartData) {
-    return <div className="rounded-2xl bg-white p-6 shadow-sm">Loading…</div>;
+    return (
+      <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 animate-pulse">
+        <div className="h-5 w-40 rounded bg-gray-200 dark:bg-neutral-700 mb-4" />
+        <div className="h-[200px] rounded-lg bg-gray-100 dark:bg-neutral-800" />
+      </div>
+    );
   }
 
   const highestArrestDegree = getMaxChartData(chartData);
   const leastArrestedDegree = getMinChartData(chartData);
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Arrests by Degree
+    <article className="flex flex-col gap-5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 shadow-sm">
+      <header className="flex items-center justify-between gap-2">
+        <h3 className="text-subheading text-gray-900 dark:text-white">
+          Arrests by degree
         </h3>
-        <span className="text-xs text-gray-500">Click chart to expand</span>
-      </div>
+        <span className="text-caption text-gray-500 dark:text-gray-400 shrink-0">Click to expand</span>
+      </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <ChartCard
           title="Degree with Most Arrests"
           stat={highestArrestDegree}
@@ -44,9 +47,8 @@ export default function DegreeChart({
         />
       </div>
 
-      {/* Chart */}
       <div
-        className="relative h-[260px] w-full rounded-xl border bg-gray-50 p-4 transition hover:shadow-md cursor-pointer"
+        className="relative h-[240px] w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/50 p-4 cursor-pointer hover:bg-gray-100/80 dark:hover:bg-neutral-700/50 transition-colors"
         onClick={() =>
           toggleChartModal(
             <Bar
@@ -89,6 +91,6 @@ export default function DegreeChart({
           }}
         />
       </div>
-    </div>
+    </article>
   );
 }

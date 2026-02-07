@@ -18,7 +18,12 @@ export default function EthnicityChart({
   chartData,
 }: EthnicityChartProps) {
   if (!chartData) {
-    return <div className="rounded-2xl bg-white p-6 shadow-sm">Loading…</div>;
+    return (
+      <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 animate-pulse">
+        <div className="h-5 w-40 rounded bg-gray-200 dark:bg-neutral-700 mb-4" />
+        <div className="h-[200px] rounded-lg bg-gray-100 dark:bg-neutral-800" />
+      </div>
+    );
   }
 
   const highestArrestEthnicity = getMaxChartData(chartData);
@@ -26,17 +31,15 @@ export default function EthnicityChart({
   const highestOccurringRace = getHighestRace(chartData);
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Arrests by Ethnicity
+    <article className="flex flex-col gap-5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 shadow-sm">
+      <header className="flex items-center justify-between gap-2">
+        <h3 className="text-subheading text-gray-900 dark:text-white">
+          Arrests by ethnicity
         </h3>
-        <span className="text-xs text-gray-500">Click chart to expand</span>
-      </div>
+        <span className="text-caption text-gray-500 dark:text-gray-400 shrink-0">Click to expand</span>
+      </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <ChartCard
           title="Ethnicity with Most Arrests"
           stat={highestArrestEthnicity}
@@ -49,30 +52,27 @@ export default function EthnicityChart({
         />
       </div>
 
-      {/* Top Ethnicities List */}
-      <div className="rounded-xl border bg-gray-50 p-4">
-        <h4 className="mb-3 text-sm font-medium text-gray-600">
-          Highest Arrested Ethnicities
+      <div className="rounded-xl border border-gray-100 dark:border-neutral-700 bg-gray-50/50 dark:bg-neutral-800/30 p-4">
+        <h4 className="mb-3 text-label text-gray-600 dark:text-gray-400">
+          Highest arrested ethnicities
         </h4>
-
-        <ul className="space-y-2">
+        <ul className="space-y-1.5">
           {highestOccurringRace?.map(([race, count], index) => (
             <li
               key={index}
-              className="flex items-center justify-between rounded-md bg-white px-3 py-2 text-sm text-gray-700 shadow-sm"
+              className="flex items-center justify-between rounded-lg bg-white dark:bg-neutral-800/50 px-3 py-2 text-body-sm text-gray-700 dark:text-gray-300"
             >
-              <span className="font-medium">
+              <span className="font-medium truncate">
                 {index + 1}. {race}
               </span>
-              <span className="text-gray-500">{count}</span>
+              <span className="text-caption shrink-0 ml-2">{count}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Chart */}
       <div
-        className="relative h-[260px] w-full rounded-xl border bg-gray-50 p-4 transition hover:shadow-md cursor-pointer"
+        className="relative h-[240px] w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/50 p-4 cursor-pointer hover:bg-gray-100/80 dark:hover:bg-neutral-700/50 transition-colors"
         onClick={() =>
           toggleChartModal(
             <Doughnut
@@ -113,6 +113,6 @@ export default function EthnicityChart({
           }}
         />
       </div>
-    </div>
+    </article>
   );
 }

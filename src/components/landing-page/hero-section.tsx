@@ -1,8 +1,8 @@
 "use client";
 
+import { useLogin } from "@/hooks/landing-page/useLogin";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useLogin } from "@/hooks/landing-page/useLogin";
 import { HeroIllustration } from "./hero-illustration";
 
 const HERO_TABS = [
@@ -54,7 +54,11 @@ export function HeroSection() {
               className="text-display mb-5"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.6,
+                delay: 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
               Unlock{" "}
               <span className="relative inline-block">
@@ -70,7 +74,9 @@ export function HeroSection() {
                 />
               </span>
               <br />
-              <span className="text-gray-900 dark:text-white">insights that matter</span>
+              <span className="text-gray-900 dark:text-white">
+                insights that matter
+              </span>
             </motion.h1>
 
             <motion.p
@@ -79,7 +85,8 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.25 }}
             >
-              See what’s happening in your neighborhood. Maps, trends, and community discussions—all in one place.
+              See what’s happening in your neighborhood. Maps, trends, and
+              community discussions—all in one place.
             </motion.p>
 
             <motion.div
@@ -108,7 +115,7 @@ export function HeroSection() {
             >
               <button
                 onClick={handleGuestLogin}
-                className="text-sm sm:text-base px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] w-full sm:w-auto"
+                className="hero-cta-glean w-full sm:w-auto text-sm sm:text-base px-8 py-3.5 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 focus:ring-offset-transparent"
               >
                 Explore as guest
               </button>

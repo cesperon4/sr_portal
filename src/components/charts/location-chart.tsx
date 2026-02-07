@@ -26,7 +26,12 @@ export default function LocationChart({
   chartData,
 }: LocationChartProps) {
   if (!chartData) {
-    return <div className="rounded-2xl bg-white p-6 shadow-sm">Loading…</div>;
+    return (
+      <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 animate-pulse">
+        <div className="h-5 w-40 rounded bg-gray-200 dark:bg-neutral-700 mb-4" />
+        <div className="h-[200px] rounded-lg bg-gray-100 dark:bg-neutral-800" />
+      </div>
+    );
   }
 
   const highestArrestStreet = getHighestArrestStreetBar(chartData);
@@ -34,17 +39,15 @@ export default function LocationChart({
   const minArrestStreet = getMinChartData(chartData);
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Arrests by Location
+    <article className="flex flex-col gap-5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 shadow-sm">
+      <header className="flex items-center justify-between gap-2">
+        <h3 className="text-subheading text-gray-900 dark:text-white">
+          Arrests by location
         </h3>
-        <span className="text-xs text-gray-500">Click chart to expand</span>
-      </div>
+        <span className="text-caption text-gray-500 dark:text-gray-400 shrink-0">Click to expand</span>
+      </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <ChartCard
           title="Street with Most Arrests"
           stat={maxArrestStreet}
@@ -57,27 +60,25 @@ export default function LocationChart({
         />
       </div>
 
-      {/* Table */}
-      <div className="rounded-xl border bg-gray-50 p-4">
+      <div className="rounded-xl border border-gray-100 dark:border-neutral-700 bg-gray-50/50 dark:bg-neutral-800/30 overflow-hidden">
         <Table className="w-full table-auto">
           <TableHeader>
-            <TableRow>
-              <TableHead className="text-gray-500 text-sm">
-                Street Name
+            <TableRow className="border-gray-100 dark:border-neutral-700 hover:bg-transparent">
+              <TableHead className="text-label text-gray-500 dark:text-gray-400">
+                Street name
               </TableHead>
-              <TableHead className="text-gray-500 text-sm">
-                Total Arrests
+              <TableHead className="text-label text-gray-500 dark:text-gray-400">
+                Total arrests
               </TableHead>
             </TableRow>
           </TableHeader>
-
           <TableBody>
             {highestArrestStreet?.map(([street, total], index) => (
-              <TableRow key={index} className="hover:bg-gray-100">
-                <TableCell className="text-sm font-medium text-gray-700">
+              <TableRow key={index} className="border-gray-100 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-700/30">
+                <TableCell className="text-body-sm text-gray-700 dark:text-gray-300">
                   {street}
                 </TableCell>
-                <TableCell className="text-sm font-medium text-gray-700">
+                <TableCell className="text-body-sm text-gray-700 dark:text-gray-300">
                   {total}
                 </TableCell>
               </TableRow>
@@ -86,9 +87,8 @@ export default function LocationChart({
         </Table>
       </div>
 
-      {/* Chart */}
       <div
-        className="relative h-[260px] w-full rounded-xl border bg-gray-50 p-4 transition hover:shadow-md cursor-pointer"
+        className="relative h-[240px] w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/50 p-4 cursor-pointer hover:bg-gray-100/80 dark:hover:bg-neutral-700/50 transition-colors"
         onClick={() =>
           toggleChartModal(
             <Bar
@@ -131,6 +131,6 @@ export default function LocationChart({
           }}
         />
       </div>
-    </div>
+    </article>
   );
 }

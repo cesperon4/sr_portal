@@ -15,10 +15,12 @@ type ModalDetails = {
   gradient: string;
   iconPath: string;
   temp: number;
+  feels_like: number;
   high: number;
   low: number;
   wind_speed: number;
   humidity: number;
+  dateLabel: string;
   weather: Weather[];
 };
 
@@ -50,6 +52,20 @@ export function useWeather() {
 
       const temp = kelvinToFahrenheit(weatherData.main.temp);
 
+      const localTime = new Date((weatherData.dt + weatherData.timezone) * 1000);
+      const today = new Date();
+      const isToday =
+        localTime.getUTCDate() === today.getUTCDate() &&
+        localTime.getUTCMonth() === today.getUTCMonth() &&
+        localTime.getUTCFullYear() === today.getUTCFullYear();
+      const dateStr = localTime.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
+      const dateLabel = isToday ? `Today, ${dateStr}` : dateStr;
+
       let modal: ModalDetails = {
         gradient: "",
         iconPath: "",
@@ -57,16 +73,20 @@ export function useWeather() {
         high: 0,
         low: 0,
         temp: 0,
+        feels_like: 0,
         wind_speed: 0,
         humidity: 0,
+        dateLabel: "",
         weather: [],
       };
       modal.name = weatherData.name;
       modal.temp = temp;
+      modal.feels_like = kelvinToFahrenheit(weatherData.main.feels_like);
       modal.high = kelvinToFahrenheit(weatherData.main.temp_max);
       modal.low = kelvinToFahrenheit(weatherData.main.temp_min);
-      modal.wind_speed = weatherData.wind.speed;
+      modal.wind_speed = Math.round(weatherData.wind.speed * 2.237 * 10) / 10; // m/s → mph
       modal.humidity = weatherData.main.humidity;
+      modal.dateLabel = dateLabel;
       modal.weather = [...weatherData.weather];
 
       const weatherType = weatherData.weather[0].main.toLowerCase();

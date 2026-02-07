@@ -1,5 +1,6 @@
 "use client";
 
+import { LogoMark } from "@/components/logo-mark";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserContext } from "@/context/UserContext";
 import { HeaderSelect } from "@/types/header.interface";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import {
   BarChart3,
   LogOut,
@@ -21,7 +19,9 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { LogoMark } from "@/components/logo-mark";
+import { signOut } from "next-auth/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ModeToggle } from "../components/mode-toggle";
 import WeatherWrapper from "./weather/weather-wrapper";
 
@@ -69,8 +69,8 @@ export function Header({
           </div>
         </div>
 
-        {/* Weather */}
-        <div className="hidden md:flex flex-shrink-0 items-center">
+        {/* Weather — my-2 creates gap between pill and header top/bottom */}
+        <div className="hidden md:flex flex-shrink-0 items-center self-center my-2">
           <WeatherWrapper />
         </div>
 
@@ -93,7 +93,11 @@ export function Header({
                   }
                 `}
               >
-                <Icon className="size-[1.125rem] shrink-0 stroke-[1.5]" strokeWidth={1.5} aria-hidden />
+                <Icon
+                  className="size-[1.125rem] shrink-0 stroke-[1.5]"
+                  strokeWidth={1.5}
+                  aria-hidden
+                />
                 <span>{item.label}</span>
                 <span
                   className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-blue-500 dark:bg-blue-400 transition-all duration-300 ease-out origin-left ${
@@ -115,12 +119,26 @@ export function Header({
                 aria-label="Open menu"
               >
                 {navItems.find((item) => item.id === view)?.label ?? "Menu"}
-                <svg className="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  className="size-4 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-1 shadow-lg z-[9999]">
+            <DropdownMenuContent
+              align="end"
+              className="w-52 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-1 shadow-lg z-[9999]"
+            >
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = view === item.id;
@@ -134,10 +152,17 @@ export function Header({
                         : "text-gray-700 dark:text-gray-300"
                     }`}
                   >
-                    <Icon className="size-[1.125rem] shrink-0 stroke-[1.5]" strokeWidth={1.5} aria-hidden />
+                    <Icon
+                      className="size-[1.125rem] shrink-0 stroke-[1.5]"
+                      strokeWidth={1.5}
+                      aria-hidden
+                    />
                     <span>{item.label}</span>
                     {isActive && (
-                      <span className="ml-auto size-1.5 rounded-full bg-blue-500 dark:bg-blue-400" aria-hidden />
+                      <span
+                        className="ml-auto size-1.5 rounded-full bg-blue-500 dark:bg-blue-400"
+                        aria-hidden
+                      />
                     )}
                   </DropdownMenuItem>
                 );
@@ -168,7 +193,9 @@ export function Header({
                   />
                 ) : (
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-xs font-semibold text-white">
-                    {(loggedUser.username || loggedUser.role || "U").charAt(0).toUpperCase()}
+                    {(loggedUser.username || loggedUser.role || "U")
+                      .charAt(0)
+                      .toUpperCase()}
                   </div>
                 )}
                 <div className="hidden md:flex flex-col items-start text-left">
@@ -186,7 +213,12 @@ export function Header({
                   viewBox="0 0 24 24"
                   aria-hidden
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </button>
             </DropdownMenuTrigger>
@@ -207,7 +239,11 @@ export function Header({
                   onClick={() => setIsProfileSettingsOpen(true)}
                   className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium tracking-tight text-gray-700 dark:text-gray-300 focus:bg-gray-50 dark:focus:bg-neutral-800 focus:text-gray-900 dark:focus:text-white"
                 >
-                  <Settings className="size-[1.125rem] shrink-0 stroke-[1.5]" strokeWidth={1.5} aria-hidden />
+                  <Settings
+                    className="size-[1.125rem] shrink-0 stroke-[1.5]"
+                    strokeWidth={1.5}
+                    aria-hidden
+                  />
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="my-1" />
@@ -215,7 +251,11 @@ export function Header({
                   onClick={handleLogout}
                   className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium tracking-tight text-red-600 dark:text-red-400 focus:bg-red-50 dark:focus:bg-red-950/30 focus:text-red-600 dark:focus:text-red-400"
                 >
-                  <LogOut className="size-[1.125rem] shrink-0 stroke-[1.5]" strokeWidth={1.5} aria-hidden />
+                  <LogOut
+                    className="size-[1.125rem] shrink-0 stroke-[1.5]"
+                    strokeWidth={1.5}
+                    aria-hidden
+                  />
                   <span>Logout</span>
                 </DropdownMenuItem>
               </div>

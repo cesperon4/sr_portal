@@ -1,12 +1,16 @@
 "use client";
 import { useState } from "react";
 
-import { navLinks } from "@/lib/constants";
 import { LogoMark } from "@/components/logo-mark";
+import { navLinks } from "@/lib/constants";
 import { AnimatePresence, motion } from "framer-motion";
+import { HiOutlineExternalLink } from "react-icons/hi";
+import {
+  HiOutlineChartBar,
+  HiOutlineChatBubbleLeftRight,
+  HiOutlineMap,
+} from "react-icons/hi2";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
-import { HiOutlineMap, HiOutlineChatBubbleLeftRight, HiOutlineChartBar } from "react-icons/hi2";
-import { HiOutlineExternalLink, HiCheck } from "react-icons/hi";
 import UnderlineButton from "../ui/underline-button";
 
 export function Navbar() {
@@ -106,7 +110,10 @@ export function Navbar() {
                 About SR Portal
               </h3>
               <p className="text-body-sm text-gray-700 dark:text-gray-300 mb-6">
-                A community-focused platform that brings public police data to life for Santa Rosa, CA. We built it to give residents clear, actionable insights into what's happening in their neighborhoods.
+                A community-focused platform that brings public police data to
+                life for Santa Rosa, CA. We built it to give residents clear,
+                actionable insights into what's happening in their
+                neighborhoods.
               </p>
               <p className="text-label text-gray-500 dark:text-gray-400 mb-3">
                 What you can do
@@ -117,8 +124,12 @@ export function Navbar() {
                     <HiOutlineMap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <span className="text-body-sm font-semibold text-gray-900 dark:text-white block">Interactive map</span>
-                    <span className="text-caption text-gray-600 dark:text-gray-400">See where incidents occurred.</span>
+                    <span className="text-body-sm font-semibold text-gray-900 dark:text-white block">
+                      Interactive map
+                    </span>
+                    <span className="text-caption text-gray-600 dark:text-gray-400">
+                      See where incidents occurred.
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800/80 border border-gray-200 dark:border-neutral-700 shadow-sm">
@@ -126,8 +137,12 @@ export function Navbar() {
                     <HiOutlineChatBubbleLeftRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div>
-                    <span className="text-body-sm font-semibold text-gray-900 dark:text-white block">Discussion threads</span>
-                    <span className="text-caption text-gray-600 dark:text-gray-400">Discuss incidents, share photos & context.</span>
+                    <span className="text-body-sm font-semibold text-gray-900 dark:text-white block">
+                      Discussion threads
+                    </span>
+                    <span className="text-caption text-gray-600 dark:text-gray-400">
+                      Discuss incidents, share photos & context.
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800/80 border border-gray-200 dark:border-neutral-700 shadow-sm">
@@ -135,13 +150,18 @@ export function Navbar() {
                     <HiOutlineChartBar className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                   </div>
                   <div>
-                    <span className="text-body-sm font-semibold text-gray-900 dark:text-white block">Data charts</span>
-                    <span className="text-caption text-gray-600 dark:text-gray-400">Trends and patterns in local activity.</span>
+                    <span className="text-body-sm font-semibold text-gray-900 dark:text-white block">
+                      Data charts
+                    </span>
+                    <span className="text-caption text-gray-600 dark:text-gray-400">
+                      Trends and patterns in local activity.
+                    </span>
                   </div>
                 </div>
               </div>
               <p className="text-body-sm text-gray-600 dark:text-gray-400 mt-5">
-                Official data, community discussion, and clear visuals—all in one place to keep you informed and engaged.
+                Official data, community discussion, and clear visuals—all in
+                one place to keep you informed and engaged.
               </p>
             </div>
 
@@ -167,10 +187,15 @@ export function Navbar() {
                 Data source
               </h3>
               <p className="text-body-sm text-gray-700 dark:text-gray-300 mb-4">
-                SR Portal uses public police data from the City of Santa Rosa's official open data platform (ArcGIS Open Data). The dataset is detailed, regularly updated, and covers public safety incidents across Santa Rosa, CA.
+                SR Portal uses public police data from the City of Santa Rosa's
+                official open data platform (ArcGIS Open Data). The dataset is
+                detailed, regularly updated, and covers public safety incidents
+                across Santa Rosa, CA.
               </p>
               <div className="p-4 rounded-xl bg-white dark:bg-neutral-800/80 border border-gray-200 dark:border-neutral-700 shadow-sm">
-                <p className="text-label text-gray-500 dark:text-gray-400 mb-2">Official open data</p>
+                <p className="text-label text-gray-500 dark:text-gray-400 mb-2">
+                  Official open data
+                </p>
                 <a
                   href="https://data-santarosa.opendata.arcgis.com/"
                   target="_blank"
@@ -182,7 +207,9 @@ export function Navbar() {
                 </a>
               </div>
               <p className="text-body-sm text-gray-600 dark:text-gray-400 mt-4">
-                Using this source keeps our maps, charts, and threads accurate and transparent. Geographic details in the data power our interactive map and trend views.
+                Using this source keeps our maps, charts, and threads accurate
+                and transparent. Geographic details in the data power our
+                interactive map and trend views.
               </p>
             </div>
             <hr className="fadebox-border" />
@@ -207,10 +234,15 @@ export function Navbar() {
                 Built by Christian Esperon
               </h3>
               <p className="text-body-sm text-gray-700 dark:text-gray-300 mb-4">
-                Software engineer with 4 years of experience building modern, user-focused apps. Based in Santa Rosa, CA—combining technical skills with a focus on tools that make a real impact in the community.
+                Software engineer with 4 years of experience building modern,
+                user-focused apps. Based in Santa Rosa, CA—combining technical
+                skills with a focus on tools that make a real impact in the
+                community.
               </p>
               <p className="text-body-sm text-gray-600 dark:text-gray-400 mb-6">
-                Background includes a startup and environmental consulting, developing data management systems for Bay Area water agencies. Full-stack focus: clean, scalable, and intuitive solutions.
+                Background includes a startup and environmental consulting,
+                developing data management systems for Bay Area water agencies.
+                Full-stack focus: clean, scalable, and intuitive solutions.
               </p>
               <a
                 href="https://portfolio-topaz-chi-49.vercel.app/"
@@ -225,7 +257,7 @@ export function Navbar() {
             <hr className="fadebox-border" />
           </motion.div>
         )}
-        {activeLink.name === "Plans" && (
+        {/* {activeLink.name === "Plans" && (
           <motion.div
             key="fadeBox"
             initial={{ opacity: 0, y: -8 }}
@@ -279,7 +311,7 @@ export function Navbar() {
             </div>
             <hr className="fadebox-border" />
           </motion.div>
-        )}
+        )} */}
       </AnimatePresence>
     </header>
   );

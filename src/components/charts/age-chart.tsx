@@ -20,7 +20,12 @@ export default function AgeChart({
   chartData,
 }: AgeChartsProps) {
   if (!chartData) {
-    return <div className="rounded-2xl bg-white p-6 shadow-sm">Loading…</div>;
+    return (
+      <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 animate-pulse">
+        <div className="h-5 w-40 rounded bg-gray-200 dark:bg-neutral-700 mb-4" />
+        <div className="h-[200px] rounded-lg bg-gray-100 dark:bg-neutral-800" />
+      </div>
+    );
   }
 
   const averageArrestAge = getAverageArrestAgeBar(chartData);
@@ -29,17 +34,15 @@ export default function AgeChart({
   const highestOccurringArrestAge = getMaxChartData(chartData);
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Arrest Age Distribution
+    <article className="flex flex-col gap-5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 shadow-sm">
+      <header className="flex items-center justify-between gap-2">
+        <h3 className="text-subheading text-gray-900 dark:text-white">
+          Age distribution
         </h3>
-        <span className="text-xs text-gray-500">Click chart to expand</span>
-      </div>
+        <span className="text-caption text-gray-500 dark:text-gray-400 shrink-0">Click to expand</span>
+      </header>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <ChartCard title="Youngest" stat={youngestArrestAge} color="blue" />
         <ChartCard title="Oldest" stat={oldestArrestAge} color="green" />
         <ChartCard title="Average" stat={averageArrestAge} color="orange" />
@@ -50,9 +53,8 @@ export default function AgeChart({
         />
       </div>
 
-      {/* Chart */}
       <div
-        className="relative h-[260px] w-full rounded-xl border bg-gray-50 p-4 transition hover:shadow-md cursor-pointer"
+        className="relative h-[240px] w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/50 p-4 cursor-pointer hover:bg-gray-100/80 dark:hover:bg-neutral-700/50 transition-colors"
         onClick={() =>
           toggleChartModal(
             <Bar
@@ -90,6 +92,6 @@ export default function AgeChart({
           }}
         />
       </div>
-    </div>
+    </article>
   );
 }

@@ -11,7 +11,7 @@ interface BackdropProps {
 export function Backdrop({ children, onClick }: BackdropProps) {
   return (
     <motion.div
-      className="backdrop top-0 left-0 w-full h-full bg-opaq-black flex items-center justify-center z-[9999] fixed"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClick}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

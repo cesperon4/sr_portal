@@ -50,5 +50,25 @@ export function useCharts() {
     };
   }, [arrestLogs]);
 
-  return { chartData, isArrestLogsLoading, arrestLogsError };
+  const totalRecords = arrestLogs?.features?.length ?? 0;
+  const summary = useMemo(() => {
+    if (!chartData) return null;
+    const locations =
+      chartData.barChartDataStreet?.labels?.length ??
+      chartData.barChartDataStreet?.datasets?.[0]?.data?.length ??
+      0;
+    const genders = chartData.pieChartData?.labels?.length ?? 0;
+    const charges =
+      chartData.lineChartDataChargeDescription?.labels?.length ?? 0;
+    const ageBuckets = chartData.barChartData?.labels?.length ?? 0;
+    return { locations, genders, charges, ageBuckets };
+  }, [chartData]);
+
+  return {
+    chartData,
+    isArrestLogsLoading,
+    arrestLogsError,
+    totalRecords,
+    summary,
+  };
 }

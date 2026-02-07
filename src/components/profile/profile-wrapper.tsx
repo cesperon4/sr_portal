@@ -22,7 +22,7 @@ export default function ProfileWrapper() {
 
   const [currentView, setCurrentView] = useState<ProfileView>("My Posts");
   return (
-    <div className="flex flex-col justify-center gap-2 items-center">
+    <div className="flex w-full flex-col items-center gap-2 bg-white dark:bg-neutral-950">
       <ProfileHeader
         currentView={currentView}
         setCurrentView={setCurrentView}
