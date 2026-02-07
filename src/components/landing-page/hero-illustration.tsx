@@ -12,9 +12,27 @@ const BUBBLES = [
 ];
 
 const CARDS = [
-  { id: "map", label: "Map", sublabel: "Explore incidents", y: "12%", color: "from-blue-400/90 to-cyan-400/90" },
-  { id: "community", label: "Community", sublabel: "Discussion & posts", y: "36%", color: "from-violet-400/90 to-purple-400/90" },
-  { id: "insights", label: "Insights", sublabel: "Charts & trends", y: "58%", color: "from-amber-400/90 to-orange-400/90" },
+  {
+    id: "map",
+    label: "Map",
+    sublabel: "Explore incidents",
+    y: "12%",
+    color: "from-blue-400/90 to-cyan-400/90",
+  },
+  {
+    id: "community",
+    label: "Community",
+    sublabel: "Discussion & posts",
+    y: "36%",
+    color: "from-violet-400/90 to-purple-400/90",
+  },
+  {
+    id: "insights",
+    label: "Insights",
+    sublabel: "Charts & trends",
+    y: "58%",
+    color: "from-amber-400/90 to-orange-400/90",
+  },
 ];
 
 export function HeroIllustration() {
@@ -62,16 +80,115 @@ export function HeroIllustration() {
       >
         <defs>
           <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgb(147, 197, 253)" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="rgb(139, 92, 246)" stopOpacity="0.75" />
+            <stop
+              offset="0%"
+              stopColor="rgb(147, 197, 253)"
+              stopOpacity="0.75"
+            />
+            <stop
+              offset="100%"
+              stopColor="rgb(139, 92, 246)"
+              stopOpacity="0.75"
+            />
           </linearGradient>
         </defs>
-        <g stroke="url(#lineGrad)" strokeWidth="0.65" strokeDasharray="2.5 2.5" strokeLinecap="round" fill="none">
-          <motion.path d="M 50 50 L 28 46" initial={{ pathLength: 0, opacity: 0.5 }} animate={{ pathLength: 1, opacity: 0.8, strokeDashoffset: [0, -15] }} transition={{ pathLength: { duration: 1, delay: 0.3 }, opacity: { duration: 1, delay: 0.3 }, strokeDashoffset: { duration: 1.2, repeat: Infinity, ease: "linear" } }} />
-          <motion.path d="M 50 50 L 68 16" initial={{ pathLength: 0, opacity: 0.5 }} animate={{ pathLength: 1, opacity: 0.8, strokeDashoffset: [0, -15] }} transition={{ pathLength: { duration: 1, delay: 0.4 }, opacity: { duration: 1, delay: 0.4 }, strokeDashoffset: { duration: 1.2, repeat: Infinity, ease: "linear" } }} />
-          <motion.path d="M 50 50 L 68 38" initial={{ pathLength: 0, opacity: 0.5 }} animate={{ pathLength: 1, opacity: 0.8, strokeDashoffset: [0, -15] }} transition={{ pathLength: { duration: 1, delay: 0.5 }, opacity: { duration: 1, delay: 0.5 }, strokeDashoffset: { duration: 1.2, repeat: Infinity, ease: "linear" } }} />
-          <motion.path d="M 50 50 L 68 60" initial={{ pathLength: 0, opacity: 0.5 }} animate={{ pathLength: 1, opacity: 0.8, strokeDashoffset: [0, -15] }} transition={{ pathLength: { duration: 1, delay: 0.6 }, opacity: { duration: 1, delay: 0.6 }, strokeDashoffset: { duration: 1.2, repeat: Infinity, ease: "linear" } }} />
-          <motion.path d="M 50 50 L 50 76" initial={{ pathLength: 0, opacity: 0.5 }} animate={{ pathLength: 1, opacity: 0.8, strokeDashoffset: [0, -15] }} transition={{ pathLength: { duration: 1, delay: 0.7 }, opacity: { duration: 1, delay: 0.7 }, strokeDashoffset: { duration: 1.2, repeat: Infinity, ease: "linear" } }} />
+        <g
+          stroke="url(#lineGrad)"
+          strokeWidth="0.65"
+          strokeDasharray="2.5 2.5"
+          strokeLinecap="round"
+          fill="none"
+        >
+          <motion.path
+            d="M 50 50 L 28 46"
+            initial={{ pathLength: 0, opacity: 0.5 }}
+            animate={{
+              pathLength: 1,
+              opacity: 0.8,
+              strokeDashoffset: [0, -15],
+            }}
+            transition={{
+              pathLength: { duration: 1, delay: 0.3 },
+              opacity: { duration: 1, delay: 0.3 },
+              strokeDashoffset: {
+                duration: 1.2,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            }}
+          />
+          <motion.path
+            d="M 50 50 L 68 16"
+            initial={{ pathLength: 0, opacity: 0.5 }}
+            animate={{
+              pathLength: 1,
+              opacity: 0.8,
+              strokeDashoffset: [0, -15],
+            }}
+            transition={{
+              pathLength: { duration: 1, delay: 0.4 },
+              opacity: { duration: 1, delay: 0.4 },
+              strokeDashoffset: {
+                duration: 1.2,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            }}
+          />
+          <motion.path
+            d="M 50 50 L 68 38"
+            initial={{ pathLength: 0, opacity: 0.5 }}
+            animate={{
+              pathLength: 1,
+              opacity: 0.8,
+              strokeDashoffset: [0, -15],
+            }}
+            transition={{
+              pathLength: { duration: 1, delay: 0.5 },
+              opacity: { duration: 1, delay: 0.5 },
+              strokeDashoffset: {
+                duration: 1.2,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            }}
+          />
+          <motion.path
+            d="M 50 50 L 68 60"
+            initial={{ pathLength: 0, opacity: 0.5 }}
+            animate={{
+              pathLength: 1,
+              opacity: 0.8,
+              strokeDashoffset: [0, -15],
+            }}
+            transition={{
+              pathLength: { duration: 1, delay: 0.6 },
+              opacity: { duration: 1, delay: 0.6 },
+              strokeDashoffset: {
+                duration: 1.2,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            }}
+          />
+          <motion.path
+            d="M 50 50 L 50 76"
+            initial={{ pathLength: 0, opacity: 0.5 }}
+            animate={{
+              pathLength: 1,
+              opacity: 0.8,
+              strokeDashoffset: [0, -15],
+            }}
+            transition={{
+              pathLength: { duration: 1, delay: 0.7 },
+              opacity: { duration: 1, delay: 0.7 },
+              strokeDashoffset: {
+                duration: 1.2,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            }}
+          />
         </g>
       </svg>
 
@@ -126,14 +243,44 @@ export function HeroIllustration() {
               <stop offset="100%" stopColor="rgb(139, 92, 246)" />
             </linearGradient>
             <filter id="robotShadow">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" floodOpacity="0.25" />
+              <feDropShadow
+                dx="0"
+                dy="4"
+                stdDeviation="6"
+                floodOpacity="0.25"
+              />
             </filter>
           </defs>
           {/* Robot body (rounded box) */}
-          <rect x="22" y="48" width="76" height="52" rx="12" ry="12" fill="url(#robotGrad)" filter="url(#robotShadow)" />
-          <rect x="22" y="48" width="76" height="52" rx="12" ry="12" fill="url(#robotGrad)" opacity="0.95" />
+          <rect
+            x="22"
+            y="48"
+            width="76"
+            height="52"
+            rx="12"
+            ry="12"
+            fill="url(#robotGrad)"
+            filter="url(#robotShadow)"
+          />
+          <rect
+            x="22"
+            y="48"
+            width="76"
+            height="52"
+            rx="12"
+            ry="12"
+            fill="url(#robotGrad)"
+            opacity="0.95"
+          />
           {/* Body panel line */}
-          <rect x="42" y="58" width="36" height="2" rx="1" fill="rgba(255,255,255,0.25)" />
+          <rect
+            x="42"
+            y="58"
+            width="36"
+            height="2"
+            rx="1"
+            fill="rgba(255,255,255,0.25)"
+          />
           {/* Bolts on body */}
           <circle cx="28" cy="58" r="3" fill="rgba(255,255,255,0.4)" />
           <circle cx="92" cy="58" r="3" fill="rgba(255,255,255,0.4)" />
@@ -141,59 +288,175 @@ export function HeroIllustration() {
           <circle cx="92" cy="90" r="3" fill="rgba(255,255,255,0.4)" />
 
           {/* Robot head (rounded box) */}
-          <rect x="28" y="14" width="64" height="38" rx="10" ry="10" fill="url(#robotGrad)" />
-          <rect x="28" y="14" width="64" height="38" rx="10" ry="10" fill="url(#robotGrad)" opacity="0.95" />
+          <rect
+            x="28"
+            y="14"
+            width="64"
+            height="38"
+            rx="10"
+            ry="10"
+            fill="url(#robotGrad)"
+          />
+          <rect
+            x="28"
+            y="14"
+            width="64"
+            height="38"
+            rx="10"
+            ry="10"
+            fill="url(#robotGrad)"
+            opacity="0.95"
+          />
           {/* Head bolts */}
           <circle cx="34" cy="22" r="2.5" fill="rgba(255,255,255,0.5)" />
           <circle cx="86" cy="22" r="2.5" fill="rgba(255,255,255,0.5)" />
 
           {/* Visor eyes (rectangular with scan line) */}
-          <rect x="38" y="22" width="18" height="14" rx="4" fill="rgb(30, 58, 138)" />
-          <rect x="64" y="22" width="18" height="14" rx="4" fill="rgb(30, 58, 138)" />
+          <rect
+            x="38"
+            y="22"
+            width="18"
+            height="14"
+            rx="4"
+            fill="rgb(30, 58, 138)"
+          />
+          <rect
+            x="64"
+            y="22"
+            width="18"
+            height="14"
+            rx="4"
+            fill="rgb(30, 58, 138)"
+          />
           <motion.rect
-            x="40" y="26" width="14" height="2" rx="1"
+            x="40"
+            y="26"
+            width="14"
+            height="2"
+            rx="1"
             fill="rgb(147, 197, 253)"
             animate={{ opacity: [1, 0.4, 1] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.rect
-            x="66" y="26" width="14" height="2" rx="1"
+            x="66"
+            y="26"
+            width="14"
+            height="2"
+            rx="1"
             fill="rgb(147, 197, 253)"
             animate={{ opacity: [1, 0.4, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.2,
+            }}
           />
           {/* Small lens highlight */}
           <circle cx="44" cy="29" r="1.5" fill="rgba(255,255,255,0.6)" />
           <circle cx="72" cy="29" r="1.5" fill="rgba(255,255,255,0.6)" />
 
           {/* Speaker grille mouth */}
-          <rect x="44" y="72" width="4" height="3" rx="1" fill="rgba(255,255,255,0.7)" />
-          <rect x="52" y="72" width="4" height="3" rx="1" fill="rgba(255,255,255,0.7)" />
-          <rect x="60" y="72" width="4" height="3" rx="1" fill="rgba(255,255,255,0.7)" />
-          <rect x="68" y="72" width="4" height="3" rx="1" fill="rgba(255,255,255,0.7)" />
-          <rect x="76" y="72" width="4" height="3" rx="1" fill="rgba(255,255,255,0.7)" />
+          <rect
+            x="44"
+            y="72"
+            width="4"
+            height="3"
+            rx="1"
+            fill="rgba(255,255,255,0.7)"
+          />
+          <rect
+            x="52"
+            y="72"
+            width="4"
+            height="3"
+            rx="1"
+            fill="rgba(255,255,255,0.7)"
+          />
+          <rect
+            x="60"
+            y="72"
+            width="4"
+            height="3"
+            rx="1"
+            fill="rgba(255,255,255,0.7)"
+          />
+          <rect
+            x="68"
+            y="72"
+            width="4"
+            height="3"
+            rx="1"
+            fill="rgba(255,255,255,0.7)"
+          />
+          <rect
+            x="76"
+            y="72"
+            width="4"
+            height="3"
+            rx="1"
+            fill="rgba(255,255,255,0.7)"
+          />
 
           {/* Antennae (robot style) */}
-          <path d="M 48 14 L 48 4" fill="none" stroke="rgb(147, 197, 253)" strokeWidth="3" strokeLinecap="round" />
-          <path d="M 72 14 L 72 4" fill="none" stroke="rgb(147, 197, 253)" strokeWidth="3" strokeLinecap="round" />
+          <path
+            d="M 48 14 L 48 4"
+            fill="none"
+            stroke="rgb(147, 197, 253)"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 72 14 L 72 4"
+            fill="none"
+            stroke="rgb(147, 197, 253)"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
           <circle cx="48" cy="4" r="4" fill="rgb(147, 197, 253)" />
           <circle cx="72" cy="4" r="4" fill="rgb(147, 197, 253)" />
           <motion.circle
-            cx="48" cy="4" r="2"
+            cx="48"
+            cy="4"
+            r="2"
             fill="white"
             animate={{ opacity: [0.8, 0.2, 0.8] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.circle
-            cx="72" cy="4" r="2"
+            cx="72"
+            cy="4"
+            r="2"
             fill="white"
             animate={{ opacity: [0.8, 0.2, 0.8] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.5,
+            }}
           />
 
           {/* Simple arms (rounded bars) */}
-          <rect x="14" y="62" width="12" height="6" rx="3" fill="url(#robotGrad)" opacity="0.9" />
-          <rect x="94" y="62" width="12" height="6" rx="3" fill="url(#robotGrad)" opacity="0.9" />
+          <rect
+            x="14"
+            y="62"
+            width="12"
+            height="6"
+            rx="3"
+            fill="url(#robotGrad)"
+            opacity="0.9"
+          />
+          <rect
+            x="94"
+            y="62"
+            width="12"
+            height="6"
+            rx="3"
+            fill="url(#robotGrad)"
+            opacity="0.9"
+          />
         </motion.svg>
       </motion.div>
 
@@ -210,10 +473,14 @@ export function HeroIllustration() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 + i * 0.15 }}
         >
-          <div className={`inline-block rounded-lg bg-gradient-to-r ${card.color} px-2 py-0.5 text-xs font-semibold text-white mb-1.5`}>
+          <div
+            className={`inline-block rounded-lg bg-gradient-to-r ${card.color} px-2 py-0.5 text-xs font-semibold text-white mb-1.5`}
+          >
             {card.label}
           </div>
-          <p className="text-xs text-gray-600 dark:text-gray-400">{card.sublabel}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            {card.sublabel}
+          </p>
         </motion.div>
       ))}
 
@@ -224,8 +491,12 @@ export function HeroIllustration() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-        <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm">Data & Search</span>
-        <span className="text-gray-400 dark:text-gray-500 text-xs">Open data · Filters</span>
+        <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm">
+          Data & Search
+        </span>
+        <span className="text-gray-400 dark:text-gray-500 text-xs">
+          Open data · Filters
+        </span>
       </motion.div>
     </div>
   );

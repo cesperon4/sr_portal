@@ -25,13 +25,16 @@ export default function Filter({
   setCrimeFilterState,
   clearAllCriminalFilters,
 }: FilterProps) {
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >({});
 
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) => ({ ...prev, [category]: !prev[category] }));
   };
 
-  const activeFilterCount = Object.values(crimeFilterState).filter(Boolean).length;
+  const activeFilterCount =
+    Object.values(crimeFilterState).filter(Boolean).length;
 
   return (
     <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0 flex flex-col rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm max-h-[calc(100vh-8rem)]">
@@ -48,13 +51,19 @@ export default function Filter({
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex-shrink-0 p-2 rounded-lg bg-blue-100 dark:bg-blue-950/50">
-              <FilterIcon className="size-4 text-blue-600 dark:text-blue-400" strokeWidth={1.5} />
+              <FilterIcon
+                className="size-4 text-blue-600 dark:text-blue-400"
+                strokeWidth={1.5}
+              />
             </div>
             <div className="min-w-0">
-              <h2 className="text-body-sm font-semibold text-gray-900 dark:text-white truncate">Filters</h2>
+              <h2 className="text-body-sm font-semibold text-gray-900 dark:text-white truncate">
+                Filters
+              </h2>
               {activeFilterCount > 0 && (
                 <p className="text-caption text-blue-600 dark:text-blue-400">
-                  {activeFilterCount} active {activeFilterCount === 1 ? "filter" : "filters"}
+                  {activeFilterCount} active{" "}
+                  {activeFilterCount === 1 ? "filter" : "filters"}
                 </p>
               )}
             </div>
@@ -73,7 +82,10 @@ export default function Filter({
         </div>
 
         <div className="flex items-start gap-2 mt-3 text-body-sm text-gray-600 dark:text-gray-400 bg-blue-50/80 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 p-3 rounded-lg">
-          <MapPin className="size-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+          <MapPin
+            className="size-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+            strokeWidth={1.5}
+          />
           <p>Click a marker on the map to view incident details.</p>
         </div>
       </div>
@@ -93,40 +105,55 @@ export default function Filter({
                   onClick={() => toggleCategory(category)}
                   className="w-full flex items-center justify-between p-3 bg-gray-50 dark:bg-neutral-800/50 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors text-left"
                 >
-                  <span className="text-body-sm font-semibold text-gray-900 dark:text-white">{category}</span>
+                  <span className="text-body-sm font-semibold text-gray-900 dark:text-white">
+                    {category}
+                  </span>
                   {isExpanded ? (
-                    <ChevronDown className="size-4 text-gray-500 shrink-0" strokeWidth={1.5} />
+                    <ChevronDown
+                      className="size-4 text-gray-500 shrink-0"
+                      strokeWidth={1.5}
+                    />
                   ) : (
-                    <ChevronRight className="size-4 text-gray-500 shrink-0" strokeWidth={1.5} />
+                    <ChevronRight
+                      className="size-4 text-gray-500 shrink-0"
+                      strokeWidth={1.5}
+                    />
                   )}
                 </button>
                 {isExpanded && (
                   <div className="p-3 space-y-4 bg-white dark:bg-neutral-900">
-                    {Object.entries(subcategories).map(([subcategory, codes]) => (
-                      <div key={subcategory}>
-                        <h4 className="text-label text-gray-600 dark:text-gray-400 mb-2">{subcategory}</h4>
-                        <div className="space-y-2">
-                          {Object.entries(codes).map(([name, code]) => (
-                            <label
-                              key={code}
-                              className="flex items-center gap-2.5 cursor-pointer group"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={crimeFilterState[code] ?? false}
-                                onChange={(e) =>
-                                  setCrimeFilterState((prev) => ({ ...prev, [code]: e.target.checked }))
-                                }
-                                className="size-4 rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 dark:focus:ring-offset-neutral-900 cursor-pointer"
-                              />
-                              <span className="text-body-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-                                {name}
-                              </span>
-                            </label>
-                          ))}
+                    {Object.entries(subcategories).map(
+                      ([subcategory, codes]) => (
+                        <div key={subcategory}>
+                          <h4 className="text-label text-gray-600 dark:text-gray-400 mb-2">
+                            {subcategory}
+                          </h4>
+                          <div className="space-y-2">
+                            {Object.entries(codes).map(([name, code]) => (
+                              <label
+                                key={code}
+                                className="flex items-center gap-2.5 cursor-pointer group"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={crimeFilterState[code] ?? false}
+                                  onChange={(e) =>
+                                    setCrimeFilterState((prev) => ({
+                                      ...prev,
+                                      [code]: e.target.checked,
+                                    }))
+                                  }
+                                  className="size-4 rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 dark:focus:ring-offset-neutral-900 cursor-pointer"
+                                />
+                                <span className="text-body-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                                  {name}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 )}
               </div>

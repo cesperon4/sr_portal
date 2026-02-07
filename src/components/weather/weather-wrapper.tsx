@@ -2,7 +2,7 @@
 
 import { useWeather } from "@/hooks/weather/useWeather";
 import { kelvinToFahrenheit } from "@/utils/convertWeather";
-import { CloudSun, Loader2, Thermometer } from "lucide-react";
+import { CloudSun, Loader2 } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import WeatherModal from "./weather-modal";
@@ -17,7 +17,10 @@ export default React.memo(function WeatherWrapper() {
     weatherDataError,
   } = useWeather();
 
-  const handleClose = React.useCallback(() => setIsModalOpen(false), [setIsModalOpen]);
+  const handleClose = React.useCallback(
+    () => setIsModalOpen(false),
+    [setIsModalOpen],
+  );
 
   const temp = weatherData ? kelvinToFahrenheit(weatherData.main.temp) : null;
   const baseClasses =
@@ -28,7 +31,10 @@ export default React.memo(function WeatherWrapper() {
   if (isWeatherDataLoading) {
     return (
       <div className={`${baseClasses} min-w-[100px]`} aria-hidden>
-        <Loader2 className="size-4 shrink-0 animate-spin text-white/90" strokeWidth={1.5} />
+        <Loader2
+          className="size-4 shrink-0 animate-spin text-white/90"
+          strokeWidth={1.5}
+        />
         <span className="text-caption text-white/90">Weather</span>
       </div>
     );
@@ -36,7 +42,10 @@ export default React.memo(function WeatherWrapper() {
 
   if (weatherDataError) {
     return (
-      <div className={`${baseClasses} min-w-[100px]`} title="Weather unavailable">
+      <div
+        className={`${baseClasses} min-w-[100px]`}
+        title="Weather unavailable"
+      >
         <CloudSun className="size-4 shrink-0 text-white/80" strokeWidth={1.5} />
         <span className="text-caption text-white/90">—</span>
       </div>
@@ -48,7 +57,7 @@ export default React.memo(function WeatherWrapper() {
       <button
         type="button"
         onClick={() => setIsModalOpen((prev) => !prev)}
-        className={`${baseClasses} hover:from-blue-600 hover:to-indigo-600 dark:hover:from-blue-500 dark:hover:to-indigo-500 hover:border-white/30`}
+        className={`${baseClasses} hover:from-blue-600 hover:to-indigo-600 dark:hover:from-blue-500 dark:hover:to-indigo-500 hover:border-white/30 h-12`}
         aria-label="View weather"
         aria-expanded={isModalOpen}
       >
@@ -70,7 +79,9 @@ export default React.memo(function WeatherWrapper() {
             {temp != null ? (
               <>
                 {temp}
-                <span className="text-caption font-normal text-white/90">°F</span>
+                <span className="text-caption font-normal text-white/90">
+                  °F
+                </span>
               </>
             ) : (
               "—"

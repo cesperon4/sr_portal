@@ -20,7 +20,7 @@ const SORT_OPTIONS = [
 
 function Feed({ posts, loading, error }: FeedProps) {
   return (
-    <div className="flex flex-col min-h-0 w-4/12">
+    <div className="flex flex-col min-h-0 ">
       {/* Feed toolbar - Reddit style */}
       <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 px-4 py-2">
         <div className="flex items-center gap-1 rounded-md border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/50">
