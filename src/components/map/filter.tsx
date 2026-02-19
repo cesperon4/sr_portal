@@ -50,7 +50,7 @@ export default function Filter({
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="flex-shrink-0 p-2 rounded-lg bg-blue-100 dark:bg-blue-950/50">
+            <div className="flex-shrink-0 p-2 rounded-xl dark:bg-blue-950/50">
               <FilterIcon
                 className="size-4 text-blue-600 dark:text-blue-400"
                 strokeWidth={1.5}
@@ -81,7 +81,7 @@ export default function Filter({
           )}
         </div>
 
-        <div className="flex items-start gap-2 mt-3 text-body-sm text-gray-600 dark:text-gray-400 bg-blue-50/80 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 p-3 rounded-lg">
+        <div className="flex items-start gap-2 mt-3 text-body-sm text-gray-600 dark:text-gray-400 dark:bg-blue-950/30 border rounded-xl border-gray-200 dark:border-blue-900/50 p-3">
           <MapPin
             className="size-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
             strokeWidth={1.5}

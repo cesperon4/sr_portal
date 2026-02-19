@@ -1,12 +1,14 @@
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
-import { useLoginMutation } from "../../../generated/graphql";
-import { useLoginGuestMutation } from "../../../generated/graphql";
+import {
+  useLoginGuestMutation,
+  useLoginMutation,
+} from "../../../generated/graphql";
 
-import { LoginParams } from "@/types/user.interface";
 import { useUserContext } from "@/context/UserContext";
+import { LoginParams } from "@/types/user.interface";
 
 export function useLogin(openVerificationModal?: () => void) {
   const router = useRouter();
@@ -40,6 +42,7 @@ export function useLogin(openVerificationModal?: () => void) {
       },
       onCompleted: (data) => {
         setRedirecting(true);
+
         setLoggedUser({
           id: data.login.user.id || "",
           username: data.login.user.username || "",
@@ -47,12 +50,12 @@ export function useLogin(openVerificationModal?: () => void) {
           firstname: data.login.user.firstname || "",
           lastname: data.login.user.lastname || "",
           role: data.login.user.role || "",
-          token: data.login.token || "",
+          token: data.login.accessToken || "",
         });
         router.push("/dashboard");
       },
       onError: (error) => {
-        console.log("error");
+        console.log("error", error.message);
         setTimeout(() => {
           toast(error.message, {
             type: "warning",

@@ -1,5 +1,5 @@
-import { useMeQuery } from "../../../generated/graphql";
 import { useUserContext } from "@/context/UserContext";
+import { useMeQuery } from "../../../generated/graphql";
 
 export function useAuth() {
   const { data, loading, error } = useMeQuery();
@@ -13,6 +13,8 @@ export function useAuth() {
       isAuthenticated: true,
     };
   }
+  console.log("useAuth rendered", data);
+
   return {
     user: data?.me,
     loading,

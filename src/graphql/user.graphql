@@ -311,7 +311,7 @@ mutation login($data: LoginInput!) {
       createdAt
       updatedAt
     }
-    token
+    accessToken
   }
 }
 

@@ -18,8 +18,6 @@ export default function ProfileWrapper() {
   const { userComments } = useGetUserComments({ limit: 5, id: loggedUser.id });
   const { likedPosts } = useGetUserLikedPosts({ limit: 5, id: loggedUser.id });
 
-  console.log("liked_posts: ", likedPosts);
-
   const [currentView, setCurrentView] = useState<ProfileView>("My Posts");
   return (
     <div className="flex w-full flex-col items-center gap-2 bg-white dark:bg-neutral-950">

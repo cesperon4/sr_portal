@@ -20,10 +20,8 @@ const Charts = React.lazy(() => import("@/components/charts/charts"));
 const CommunityContainer = React.lazy(
   () => import("@/components/community/community-container"),
 );
-const MapModal = React.lazy(() => import("@/components/map/map-modal"));
 
 export default function Dashboard() {
-  // console.log("dashbboard rendered");
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -35,6 +33,7 @@ export default function Dashboard() {
   const selectedView = searchParams.get("view") || "Profile";
 
   useEffect(() => {
+    console.log("isAuthenticated", isAuthenticated);
     if (!loading && !isAuthenticated && !session) {
       const timeout = setTimeout(() => {
         router.push("/");

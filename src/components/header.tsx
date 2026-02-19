@@ -22,6 +22,7 @@ import {
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useLogoutMutation } from "../../generated/graphql";
 import { ModeToggle } from "../components/mode-toggle";
 import WeatherWrapper from "./weather/weather-wrapper";
 
@@ -39,10 +40,17 @@ export function Header({
   const { loggedUser, clearLoggedUser } = useUserContext();
   const router = useRouter();
 
+  const [logoutMutation] = useLogoutMutation();
+
   const handleLogout = async () => {
-    clearLoggedUser();
-    await signOut({ redirect: false });
-    router.replace("/");
+    try {
+      await logoutMutation(); // wait for backend to invalidate token
+      await signOut({ redirect: false });
+      clearLoggedUser();
+      router.replace("/");
+    } catch (error: any) {
+      console.log("error", error.message);
+    }
   };
 
   const navItems = [

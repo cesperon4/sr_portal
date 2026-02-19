@@ -1,4 +1,4 @@
-mutation CreatePaymentIntent($data: CreatePaymentIntentInput!) {
+mutation CreatePaymentIntent($data: Plan) {
   createPaymentIntent(data: $data) {
     data {
       clientSecret

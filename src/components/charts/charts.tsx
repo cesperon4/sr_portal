@@ -44,7 +44,7 @@ ChartJS.register(
 type Size = "lg" | "sm";
 
 const CHART_SUSPENSE = (
-  <div className="rounded-xl dark:rounded-3xl border border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#132148] p-6 animate-pulse">
+  <div className="rounded-xl dark:rounded-3xl border border-gray-200 dark:border-white/[0.08] bg-white dark:bg-neutral-900 p-6 animate-pulse">
     <div className="h-5 w-32 rounded bg-gray-200 dark:bg-white/10 mb-4" />
     <div className="h-[200px] rounded-lg dark:rounded-xl bg-gray-100 dark:bg-white/5" />
   </div>
@@ -109,7 +109,7 @@ export default function Charts() {
 
   if (isArrestLogsLoading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-50 dark:bg-[#0A1437] py-24 text-gray-900 dark:text-white">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-50 dark:bg-black py-24 text-gray-900 dark:text-white">
         <Loader text="Loading insights…" />
         <p className="text-caption text-gray-500 dark:text-slate-400">Preparing chart data</p>
       </div>
@@ -118,7 +118,7 @@ export default function Charts() {
 
   if (arrestLogsError) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-gray-50 dark:bg-[#0A1437] py-24 px-4 text-gray-900 dark:text-white">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-gray-50 dark:bg-black py-24 px-4 text-gray-900 dark:text-white">
         <div className="rounded-full bg-red-100 dark:bg-red-500/20 p-3">
           <AlertCircle className="size-8 text-red-600 dark:text-red-400" strokeWidth={1.5} />
         </div>
@@ -139,7 +139,7 @@ export default function Charts() {
   };
 
   return (
-    <div className="insights-dashboard min-h-screen bg-gray-50 dark:bg-[#0A1437] text-gray-900 dark:text-slate-100">
+    <div className="insights-dashboard min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-slate-100">
       <div className="flex flex-col gap-6 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Dashboard header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -161,7 +161,7 @@ export default function Charts() {
           {KPI_CARDS.map(({ key, title, icon: Icon, color }) => (
             <div
               key={key}
-              className="flex items-center gap-4 rounded-2xl dark:rounded-3xl bg-white dark:bg-[#132148] border border-gray-200 dark:border-white/[0.08] p-5 shadow-sm"
+              className="flex items-center gap-4 rounded-2xl dark:rounded-3xl bg-white dark:bg-neutral-900 border border-gray-200 dark:border-white/[0.08] p-5 shadow-sm"
             >
               <div
                 className={`flex items-center justify-center size-12 shrink-0 rounded-2xl ${color} shadow-sm dark:shadow-lg`}

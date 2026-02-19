@@ -53,7 +53,7 @@ export function Sidebar({
       <nav
         className={`flex flex-col gap-0.5 p-1.5 rounded-2xl w-fit ${
           isVision
-            ? "bg-gray-100/80 dark:bg-[#0d1b33] border-0 dark:border border-white/[0.08]"
+            ? "bg-gray-100/80 dark:bg-neutral-900 border-0 dark:border border-white/[0.08]"
             : "rounded-2xl bg-gray-100/80 dark:bg-neutral-800/50"
         }`}
       >

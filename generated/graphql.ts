@@ -47,6 +47,13 @@ export type ApiStripeResponse = {
   status?: Maybe<Scalars['Int']['output']>;
 };
 
+export type ApiTokenResponse = {
+  __typename?: 'ApiTokenResponse';
+  data?: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+};
+
 export type ApiUpsertUserResponse = {
   __typename?: 'ApiUpsertUserResponse';
   data?: Maybe<UpsertUserData>;
@@ -103,7 +110,7 @@ export type ArrestLog = {
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
-  token: Scalars['Token']['output'];
+  accessToken: Scalars['Token']['output'];
   user: User;
 };
 
@@ -254,6 +261,7 @@ export type Mutation = {
   login: AuthPayload;
   loginGuest: GuestPayload;
   logout: Scalars['Boolean']['output'];
+  refresh: ApiTokenResponse;
   registerUser: Scalars['Boolean']['output'];
   resendVerificationEmail: Scalars['Boolean']['output'];
   toggleLike?: Maybe<ApiLikeResponse>;
@@ -278,7 +286,7 @@ export type MutationCreateLikeArgs = {
 
 
 export type MutationCreatePaymentIntentArgs = {
-  data?: InputMaybe<CreatePaymentIntentInput>;
+  data?: InputMaybe<Plan>;
 };
 
 
@@ -378,6 +386,11 @@ export type PaymentIntentData = {
   livemode?: Maybe<Scalars['Boolean']['output']>;
   paymentIntentId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
+};
+
+export type Plan = {
+  billingCycle?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Post = {
@@ -651,7 +664,7 @@ export type CreatePostCommentMutationVariables = Exact<{
 export type CreatePostCommentMutation = { __typename?: 'Mutation', createPostComment: { __typename?: 'PostComment', id: number, postId?: number | null, body?: string | null, createdAt?: any | null, updatedAt?: any | null } };
 
 export type CreatePaymentIntentMutationVariables = Exact<{
-  data: CreatePaymentIntentInput;
+  data?: InputMaybe<Plan>;
 }>;
 
 
@@ -739,7 +752,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', token: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, emailVerified?: any | null, createdAt?: any | null, updatedAt?: any | null } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthPayload', accessToken: any, user: { __typename?: 'User', id?: string | null, firstname?: string | null, lastname?: string | null, email?: string | null, username?: string | null, role: Role, emailVerified?: any | null, createdAt?: any | null, updatedAt?: any | null } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1139,7 +1152,7 @@ export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePos
 export type CreatePostCommentMutationResult = Apollo.MutationResult<CreatePostCommentMutation>;
 export type CreatePostCommentMutationOptions = Apollo.BaseMutationOptions<CreatePostCommentMutation, CreatePostCommentMutationVariables>;
 export const CreatePaymentIntentDocument = gql`
-    mutation CreatePaymentIntent($data: CreatePaymentIntentInput!) {
+    mutation CreatePaymentIntent($data: Plan) {
   createPaymentIntent(data: $data) {
     data {
       clientSecret
@@ -1813,7 +1826,7 @@ export const LoginDocument = gql`
       createdAt
       updatedAt
     }
-    token
+    accessToken
   }
 }
     `;
