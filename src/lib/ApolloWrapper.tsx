@@ -157,10 +157,8 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
   // Http link (sends request)
   // ----------------------
   const httpLink = new HttpLink({
-    uri:
-      process.env.NEXT_PUBLIC_NODE_ENV === "development"
-        ? "http://localhost:3000/api/graphql"
-        : "https://sr-portal-graphql-api.vercel.app/api/graphql",
+    // Use same-origin proxy so auth cookies are owned by the frontend domain in all environments.
+    uri: "/api/proxy",
     credentials: "include",
   });
 
