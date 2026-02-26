@@ -43,7 +43,9 @@ export default function Dashboard() {
   useEffect(() => {
     if (loadingState) return;
 
-    if (!isAuthenticated && sessionStatus !== "unauthenticated") {
+    // Only redirect to landing when both app auth and NextAuth session are unauthenticated.
+    // OAuth users can temporarily have !isAuthenticated during token refresh/retry.
+    if (!isAuthenticated && sessionStatus === "unauthenticated") {
       const timeout = setTimeout(() => {
         router.push("/");
       }, 100); // 100–300ms is usually enough
