@@ -22,8 +22,6 @@ export const metadata: Metadata = {
   description: "A community-focused platform for Santa Rosa, CA residents.",
   icons: {
     icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
   },
 };
 

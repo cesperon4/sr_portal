@@ -43,6 +43,8 @@ export function useLogin(openVerificationModal?: () => void) {
       onCompleted: (data) => {
         setRedirecting(true);
 
+        console.log("data", data);
+
         setLoggedUser({
           id: data.login.user.id || "",
           username: data.login.user.username || "",
@@ -55,7 +57,7 @@ export function useLogin(openVerificationModal?: () => void) {
         router.push("/dashboard");
       },
       onError: (error) => {
-        console.log("error", error.message);
+        console.log("login error", error.message);
         setTimeout(() => {
           toast(error.message, {
             type: "warning",

@@ -2,8 +2,10 @@ import { useUserContext } from "@/context/UserContext";
 import { useMeQuery } from "../../../generated/graphql";
 
 export function useAuth() {
-  const { data, loading, error } = useMeQuery();
-  const { loggedUser } = useUserContext();
+  const { loggedUser, isLoggingOut } = useUserContext();
+  const { data, loading, error } = useMeQuery({
+    skip: isLoggingOut,
+  });
 
   if (loggedUser?.role === "GUEST") {
     return {

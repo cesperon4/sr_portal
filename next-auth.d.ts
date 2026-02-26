@@ -24,12 +24,14 @@ declare module "next-auth" {
     username?: string | null;
     role?: string | null;
     backendToken?: string | null;
+    refreshToken?: string | null;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     backendToken?: string | null;
+    refreshToken?: string | null;
     id?: string;
     role?: string | null;
     firstname?: string | null;

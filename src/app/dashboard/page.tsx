@@ -5,11 +5,13 @@ import { Header } from "@/components/header";
 import MapWrapper from "@/components/map/map-wrapper";
 import { ProfileSettings } from "@/components/user/profile-settings";
 import { ArrestLogProvider } from "@/context/ArrestLogContext";
+import { useUserContext } from "@/context/UserContext";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useProfileSettings } from "@/hooks/user/useProfileSettings";
 import { type HeaderSelect } from "@/types/header.interface";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import ProfileWrapper from "../../components/profile/profile-wrapper";
 import { Loader } from "../../components/ui/loader";
 
@@ -25,23 +27,30 @@ export default function Dashboard() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const { loading, isAuthenticated } = useAuth();
+  const { isLoggingOut } = useUserContext();
   const { isProfileSettingsOpen, setIsProfileSettingsOpen } =
     useProfileSettings();
 
   const selectedView = searchParams.get("view") || "Profile";
 
+  const loadingState = useMemo(() => {
+    if (isLoggingOut || sessionStatus === "loading" || loading) return true;
+    return false;
+  }, [isLoggingOut, sessionStatus, loading, isAuthenticated]);
+
   useEffect(() => {
-    console.log("isAuthenticated", isAuthenticated);
-    if (!loading && !isAuthenticated && !session) {
+    if (loadingState) return;
+
+    if (!isAuthenticated && sessionStatus !== "unauthenticated") {
       const timeout = setTimeout(() => {
         router.push("/");
       }, 100); // 100–300ms is usually enough
 
       return () => clearTimeout(timeout);
     }
-  }, [loading, isAuthenticated, router, session]);
+  }, [loading, isAuthenticated, router, session, sessionStatus, isLoggingOut]);
 
   const [view, setView] = useState<HeaderSelect>(selectedView as HeaderSelect);
 
@@ -55,6 +64,8 @@ export default function Dashboard() {
   }, [view, searchParams, router]);
 
   const toggleView = (view: HeaderSelect) => setView(view);
+
+  if (isLoggingOut) return <Loader text={"Logging out..."} />;
 
   return (
     <div className="grid grid-rows-1 items-center justify-items-center gap-8 font-(family-name:--font-geist-sans)">

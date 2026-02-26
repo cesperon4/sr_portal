@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserContext } from "@/context/UserContext";
+import { useLogout } from "@/hooks/auth/useLogout";
 import { HeaderSelect } from "@/types/header.interface";
 import {
   BarChart3,
@@ -19,10 +20,7 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useLogoutMutation } from "../../generated/graphql";
 import { ModeToggle } from "../components/mode-toggle";
 import WeatherWrapper from "./weather/weather-wrapper";
 
@@ -37,21 +35,25 @@ export function Header({
   toggleView,
   setIsProfileSettingsOpen,
 }: HeaderProps) {
-  const { loggedUser, clearLoggedUser } = useUserContext();
-  const router = useRouter();
+  const { handleLogout } = useLogout();
+  const { loggedUser } = useUserContext();
+  // const router = useRouter();
 
-  const [logoutMutation] = useLogoutMutation();
+  // const [logoutMutation] = useLogoutMutation();
 
-  const handleLogout = async () => {
-    try {
-      await logoutMutation(); // wait for backend to invalidate token
-      await signOut({ redirect: false });
-      clearLoggedUser();
-      router.replace("/");
-    } catch (error: any) {
-      console.log("error", error.message);
-    }
-  };
+  // const handleLogout = async () => {
+  //   setLoggingOut(true);
+  //   try {
+  //     await logoutMutation(); // wait for backend to invalidate token
+  //     await signOut({ redirect: false }); //clears session from next-auth
+  //     clearLoggedUser();
+  //     router.replace("/");
+  //   } catch (error: any) {
+  //     console.log("error", error.message);
+  //   }
+  //   // Don't set isLoggingOut(false) here — root page resets it on mount to avoid
+  //   // a race where the dashboard effect redirects before we've unmounted
+  // };
 
   const navItems = [
     { id: "Profile", icon: User, label: "Profile" },

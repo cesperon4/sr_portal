@@ -1,6 +1,7 @@
+import type { User } from "next-auth";
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
   providers: [
@@ -25,6 +26,7 @@ const handler = NextAuth({
           }) {
             data {
               token
+              refreshToken
               user{
                   id
                   email
@@ -50,18 +52,27 @@ const handler = NextAuth({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ query: mutation }),
-          }
+          },
         );
 
         const response = await res.json();
 
         if (response.data) {
-          const token = response.data.upsertUser.data.token;
-          const { id, email, username, firstname, lastname, role } =
-            response.data.upsertUser.data.user;
+          const data = response.data.upsertUser.data;
+          console.log("data response from upsertUser", data);
+          const token = data.token;
+          const refreshToken = data.refreshToken; // Backend must return this for OAuth
+          const { id, email, username, firstname, lastname, role } = data.user;
+
+          console.log("[NextAuth signIn] upsertUser response:", {
+            hasToken: !!token,
+            hasRefreshToken: !!refreshToken,
+            refreshTokenField: refreshToken ?? "(missing)",
+          });
 
           Object.assign(user, {
             backendToken: token,
+            refreshToken,
             id,
             email,
             username,
@@ -69,6 +80,11 @@ const handler = NextAuth({
             lastname,
             role,
           });
+        } else {
+          console.log(
+            "[NextAuth signIn] no response.data:",
+            response.errors ?? response,
+          );
         }
       } catch (err) {
         console.error("Error syncing user with backend:", err);
@@ -78,12 +94,18 @@ const handler = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
-        token.backendToken = user.backendToken;
-        token.id = user.id;
-        token.role = user.role;
-        token.firstname = user.firstname;
-        token.lastname = user.lastname;
-        token.username = user.username;
+        const typedUser = user as User;
+        token.backendToken = typedUser.backendToken;
+        token.refreshToken = typedUser.refreshToken ?? null;
+        token.id = typedUser.id;
+        token.role = typedUser.role;
+        token.firstname = typedUser.firstname;
+        token.lastname = typedUser.lastname;
+        token.username = typedUser.username;
+        console.log(
+          "[NextAuth jwt] stored refreshToken in token:",
+          !!token.refreshToken,
+        );
       }
       return token;
     },

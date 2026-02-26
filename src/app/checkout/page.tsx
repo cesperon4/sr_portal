@@ -17,7 +17,9 @@ export default function Checkout() {
     const createIntent = async () => {
       try {
         await createPaymentIntent({
-          variables: { data: { amount: 5000 } },
+          variables: {
+            data: { type: "subscription", billingCycle: "monthly" },
+          },
           onCompleted: (data) => {
             console.log("create intent complete: ", data);
 

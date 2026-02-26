@@ -267,6 +267,7 @@ mutation UpsertUser($data: UpsertUserInput!) {
         email
       }
       token
+      refreshToken
     }
     status
     message

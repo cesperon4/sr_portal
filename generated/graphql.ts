@@ -573,6 +573,7 @@ export type UpdateUserInput = {
 
 export type UpsertUserData = {
   __typename?: 'UpsertUserData';
+  refreshToken?: Maybe<Scalars['String']['output']>;
   token?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
 };
@@ -730,7 +731,7 @@ export type UpsertUserMutationVariables = Exact<{
 }>;
 
 
-export type UpsertUserMutation = { __typename?: 'Mutation', upsertUser?: { __typename?: 'ApiUpsertUserResponse', status?: number | null, message?: string | null, data?: { __typename?: 'UpsertUserData', token?: string | null, user?: { __typename?: 'User', firstname?: string | null, lastname?: string | null, email?: string | null } | null } | null } | null };
+export type UpsertUserMutation = { __typename?: 'Mutation', upsertUser?: { __typename?: 'ApiUpsertUserResponse', status?: number | null, message?: string | null, data?: { __typename?: 'UpsertUserData', token?: string | null, refreshToken?: string | null, user?: { __typename?: 'User', firstname?: string | null, lastname?: string | null, email?: string | null } | null } | null } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1700,6 +1701,7 @@ export const UpsertUserDocument = gql`
         email
       }
       token
+      refreshToken
     }
     status
     message

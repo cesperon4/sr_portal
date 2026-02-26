@@ -1,13 +1,13 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import React, {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
-import { useSession } from "next-auth/react";
 
 interface User {
   id: string;
@@ -24,6 +24,8 @@ interface UserContextType {
   loggedUser: User;
   setLoggedUser: React.Dispatch<React.SetStateAction<User>>;
   clearLoggedUser: () => void;
+  isLoggingOut: boolean;
+  setLoggingOut: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -41,6 +43,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { data: session } = useSession();
 
+  const [isLoggingOut, setLoggingOut] = useState(false);
   const [loggedUser, setLoggedUser] = useState<User>({
     id: "",
     username: "",
@@ -95,7 +98,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <UserContext.Provider
-      value={{ loggedUser, setLoggedUser, clearLoggedUser }}
+      value={{ loggedUser, setLoggedUser, clearLoggedUser, isLoggingOut, setLoggingOut }}
     >
       {children}
     </UserContext.Provider>
