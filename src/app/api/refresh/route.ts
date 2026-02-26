@@ -2,8 +2,9 @@ import {
   REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_COOKIE_OPTIONS,
 } from "@/lib/auth-cookies";
+import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 /** DELETE /api/refresh — clears the refresh token cookie (httpOnly, must be done server-side) */
 export async function DELETE() {
@@ -28,20 +29,38 @@ const REFRESH_MUTATION = "mutation { refresh { status data message } }";
  * returns JSON { accessToken }. Used by Apollo error link on UNAUTHENTICATED.
  * (Route is at /api/refresh so it is not caught by /api/auth/[...nextauth].)
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const startedAt = Date.now();
   const incomingTraceId = request.headers.get("x-refresh-trace-id");
   const traceId = incomingTraceId || `server-${startedAt}-${Math.random().toString(36).slice(2, 8)}`;
   const logPrefix = `[api/refresh:${traceId}]`;
 
   const cookieStore = await cookies();
-  const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
+  let refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
+  let refreshTokenSource: "cookie" | "nextauth-jwt" = "cookie";
 
   console.log(`${logPrefix} start`, {
     hasIncomingTraceId: !!incomingTraceId,
     refreshTokenExists: !!refreshToken,
     refreshTokenLength: refreshToken?.length ?? 0,
   });
+
+  if (!refreshToken) {
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+    const fallbackRefreshToken =
+      typeof token?.refreshToken === "string" ? token.refreshToken : undefined;
+
+    if (fallbackRefreshToken) {
+      refreshToken = fallbackRefreshToken;
+      refreshTokenSource = "nextauth-jwt";
+      console.log(`${logPrefix} recovered refresh token from NextAuth JWT`, {
+        refreshTokenLength: refreshToken.length,
+      });
+    }
+  }
 
   if (!refreshToken) {
     console.warn(`${logPrefix} no refresh token cookie`, {
@@ -103,10 +122,21 @@ export async function POST(request: Request) {
       ?.split("=")[1];
     console.log(`${logPrefix} response summary`, {
       hasAccessToken: !!accessToken,
+      refreshTokenSource,
       setCookieCount: setCookies.length,
       hasNewRefreshToken: !!newRefreshToken,
       elapsedMs: Date.now() - startedAt,
     });
+    if (newRefreshToken) {
+      response.cookies.set(REFRESH_TOKEN_COOKIE, newRefreshToken, {
+        ...REFRESH_TOKEN_COOKIE_OPTIONS,
+      });
+    } else if (refreshTokenSource === "nextauth-jwt") {
+      // Re-seed frontend cookie so subsequent refresh calls do not depend on JWT fallback.
+      response.cookies.set(REFRESH_TOKEN_COOKIE, refreshToken, {
+        ...REFRESH_TOKEN_COOKIE_OPTIONS,
+      });
+    }
     for (const value of setCookies) {
       response.headers.append("Set-Cookie", value);
     }
