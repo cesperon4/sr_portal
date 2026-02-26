@@ -67,12 +67,28 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
                 return () => {};
               });
             }
-            console.log("unauthenticated, calling /api/refresh");
+            const refreshTraceId = `${operation.operationName || "unknown"}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            console.log(
+              "[apollo refresh] unauthenticated, calling /api/refresh",
+              {
+                operationName: operation.operationName || "(unnamed)",
+                refreshTraceId,
+              },
+            );
             return new Observable((observer) => {
               let sub: { unsubscribe: () => void } | null = null;
 
-              fetch("/api/refresh", { method: "POST", credentials: "include" })
+              fetch("/api/refresh", {
+                method: "POST",
+                credentials: "include",
+                headers: { "x-refresh-trace-id": refreshTraceId },
+              })
                 .then((res) => {
+                  console.log("[apollo refresh] response received", {
+                    operationName: operation.operationName || "(unnamed)",
+                    refreshTraceId,
+                    status: res.status,
+                  });
                   const contentType = res.headers.get("content-type") ?? "";
                   if (!contentType.includes("application/json")) {
                     return res.text().then((text) => {
@@ -91,11 +107,20 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
                     : res.json().then((b) => Promise.reject(b));
                 })
                 .then((data) => {
-                  console.log("data from refresh", data);
+                  console.log("[apollo refresh] parsed payload", {
+                    operationName: operation.operationName || "(unnamed)",
+                    refreshTraceId,
+                    hasAccessToken: !!(data.accessToken ?? data.token),
+                    payload: data,
+                  });
                   const accessToken = data.accessToken ?? data.token;
                   if (accessToken) {
                     tokenRef.current = accessToken;
                     setLoggedUser((prev) => ({ ...prev, token: accessToken }));
+                    console.log("[apollo refresh] retrying original operation", {
+                      operationName: operation.operationName || "(unnamed)",
+                      refreshTraceId,
+                    });
                     sub = forward(operation).subscribe(observer);
                   } else {
                     tokenRef.current = null;
@@ -104,6 +129,11 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
                   }
                 })
                 .catch((err) => {
+                  console.error("[apollo refresh] refresh failed", {
+                    operationName: operation.operationName || "(unnamed)",
+                    refreshTraceId,
+                    error: err,
+                  });
                   tokenRef.current = null;
                   observer.complete();
                   queueMicrotask(() => {

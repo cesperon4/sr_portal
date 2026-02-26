@@ -28,20 +28,30 @@ const REFRESH_MUTATION = "mutation { refresh { status data message } }";
  * returns JSON { accessToken }. Used by Apollo error link on UNAUTHENTICATED.
  * (Route is at /api/refresh so it is not caught by /api/auth/[...nextauth].)
  */
-export async function POST() {
+export async function POST(request: Request) {
+  const startedAt = Date.now();
+  const incomingTraceId = request.headers.get("x-refresh-trace-id");
+  const traceId = incomingTraceId || `server-${startedAt}-${Math.random().toString(36).slice(2, 8)}`;
+  const logPrefix = `[api/refresh:${traceId}]`;
+
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
 
-  console.log("[api/refresh] refresh token:", refreshToken);
-  console.log("[api/refresh] refresh token cookie exists:", !!refreshToken);
-  console.log("[api/refresh] refresh token length:", refreshToken?.length ?? 0);
+  console.log(`${logPrefix} start`, {
+    hasIncomingTraceId: !!incomingTraceId,
+    refreshTokenExists: !!refreshToken,
+    refreshTokenLength: refreshToken?.length ?? 0,
+  });
 
   if (!refreshToken) {
+    console.warn(`${logPrefix} no refresh token cookie`, {
+      elapsedMs: Date.now() - startedAt,
+    });
     return NextResponse.json({ error: "No refresh token" }, { status: 401 });
   }
 
   try {
-    console.log("[api/refresh] calling backend at:", API_URL);
+    console.log(`${logPrefix} calling backend`, { apiUrl: API_URL });
 
     const res = await fetch(API_URL, {
       method: "POST",
@@ -54,13 +64,14 @@ export async function POST() {
     });
 
     const json = await res.json();
-    console.log(
-      "[api/refresh] backend response:",
-      JSON.stringify(json, null, 2),
-    );
+    console.log(`${logPrefix} backend response received`, {
+      status: res.status,
+      hasGraphQLErrors: !!json.errors,
+      elapsedMs: Date.now() - startedAt,
+    });
 
     if (json.errors) {
-      console.error("[api/refresh] GraphQL errors:", json.errors);
+      console.error(`${logPrefix} GraphQL errors`, json.errors);
       return NextResponse.json(
         { error: json.errors[0]?.message ?? "Refresh failed" },
         { status: 401 },
@@ -68,11 +79,10 @@ export async function POST() {
     }
 
     const refresh = json.data?.refresh;
-    console.log("[api/refresh] refresh data:", refresh);
     const accessToken = refresh?.data;
 
     if (!accessToken) {
-      console.error("[api/refresh] no token in response:", refresh);
+      console.error(`${logPrefix} no token in refresh response`, refresh);
       return NextResponse.json(
         { error: refresh?.message ?? "Invalid refresh response" },
         { status: 401 },
@@ -91,17 +101,22 @@ export async function POST() {
       .find((s) => s.startsWith(`${REFRESH_TOKEN_COOKIE}=`))
       ?.split(";")[0]
       ?.split("=")[1];
-    console.log(
-      "[api/refresh] new refreshToken from Set-Cookie:",
-      newRefreshToken,
-    );
+    console.log(`${logPrefix} response summary`, {
+      hasAccessToken: !!accessToken,
+      setCookieCount: setCookies.length,
+      hasNewRefreshToken: !!newRefreshToken,
+      elapsedMs: Date.now() - startedAt,
+    });
     for (const value of setCookies) {
       response.headers.append("Set-Cookie", value);
     }
 
     return response;
   } catch (err) {
-    console.error("[api/refresh] request failed:", err);
+    console.error(`${logPrefix} request failed`, {
+      error: err,
+      elapsedMs: Date.now() - startedAt,
+    });
     return NextResponse.json({ error: "Refresh failed" }, { status: 502 });
   }
 }
