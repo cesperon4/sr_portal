@@ -28,17 +28,32 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
   } = useUserContext();
   const router = useRouter();
   const tokenRef = useRef<string | null>(null);
-  const refreshPromiseRef = useRef<Promise<{ accessToken?: string; token?: string }> | null>(null);
+  const refreshPromiseRef = useRef<Promise<{
+    accessToken?: string;
+    token?: string;
+  }> | null>(null);
   const logoutTriggeredRef = useRef(false);
 
   const forceLogoutRedirect = () => {
+    const accessToken = tokenRef.current ?? loggedUser?.token ?? "";
+    const headers = accessToken
+      ? { Authorization: `Bearer ${accessToken}` }
+      : undefined;
+
     tokenRef.current = null;
     setLoggingOut(false);
     clearLoggedUser();
-    signOut({ redirect: false });
-    fetch("/api/refresh", { method: "DELETE", credentials: "include" }).finally(
-      () => router.push("/"),
-    );
+    fetch("/api/logout", {
+      method: "POST",
+      credentials: "include",
+      ...(headers ? { headers } : {}),
+    })
+      .catch((error) => {
+        console.warn("[apollo refresh] auto-logout backend cleanup failed", error);
+      })
+      .finally(() => {
+        signOut({ redirect: false }).finally(() => router.push("/"));
+      });
   };
 
   // Clear tokenRef on logout so we don't reuse an expired token after re-login
@@ -53,10 +68,13 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
 
   const triggerLogoutOnce = (reason: string, operationName: string) => {
     if (logoutTriggeredRef.current) {
-      console.log("[apollo refresh] logout already triggered, skipping duplicate", {
-        reason,
-        operationName,
-      });
+      console.log(
+        "[apollo refresh] logout already triggered, skipping duplicate",
+        {
+          reason,
+          operationName,
+        },
+      );
       return;
     }
     logoutTriggeredRef.current = true;
@@ -95,7 +113,11 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
         const contentType = res.headers.get("content-type") ?? "";
         if (!contentType.includes("application/json")) {
           return res.text().then((text) => {
-            console.error("refresh returned non-JSON", res.status, text.slice(0, 100));
+            console.error(
+              "refresh returned non-JSON",
+              res.status,
+              text.slice(0, 100),
+            );
             return Promise.reject(new Error("Refresh returned non-JSON"));
           });
         }
@@ -138,9 +160,12 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
               });
             }
             const operationName = operation.operationName || "(unnamed)";
-            console.log("[apollo refresh] unauthenticated operation intercepted", {
-              operationName,
-            });
+            console.log(
+              "[apollo refresh] unauthenticated operation intercepted",
+              {
+                operationName,
+              },
+            );
             return new Observable((observer) => {
               let sub: { unsubscribe: () => void } | null = null;
 
@@ -150,15 +175,21 @@ export function ApolloWrapper({ children }: { children: React.ReactNode }) {
                   if (accessToken) {
                     tokenRef.current = accessToken;
                     setLoggedUser((prev) => ({ ...prev, token: accessToken }));
-                    console.log("[apollo refresh] retrying original operation", {
-                      operationName,
-                    });
+                    console.log(
+                      "[apollo refresh] retrying original operation",
+                      {
+                        operationName,
+                      },
+                    );
                     sub = forward(operation).subscribe(observer);
                   } else {
                     tokenRef.current = null;
                     observer.complete();
                     queueMicrotask(() => {
-                      triggerLogoutOnce("refresh payload missing access token", operationName);
+                      triggerLogoutOnce(
+                        "refresh payload missing access token",
+                        operationName,
+                      );
                     });
                   }
                 })
