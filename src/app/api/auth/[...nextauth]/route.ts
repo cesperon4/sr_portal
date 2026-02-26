@@ -16,6 +16,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user }) {
+      let allowSignIn = false;
       try {
         const mutation = `
         mutation {
@@ -55,10 +56,15 @@ const handler = NextAuth({
           },
         );
 
-        const response = await res.json();
+        if (!res.ok) {
+          console.error("[NextAuth signIn] upsertUser request failed:", res.status);
+          return false;
+        }
 
-        if (response.data) {
-          const data = response.data.upsertUser.data;
+        const response = await res.json();
+        const data = response?.data?.upsertUser?.data;
+
+        if (data) {
           console.log("data response from upsertUser", data);
           const token = data.token;
           const refreshToken = data.refreshToken; // Backend must return this for OAuth
@@ -70,6 +76,13 @@ const handler = NextAuth({
             refreshTokenField: refreshToken ?? "(missing)",
           });
 
+          if (!token || !refreshToken) {
+            console.error(
+              "[NextAuth signIn] missing token fields from backend response",
+            );
+            return false;
+          }
+
           Object.assign(user, {
             backendToken: token,
             refreshToken,
@@ -80,17 +93,20 @@ const handler = NextAuth({
             lastname,
             role,
           });
+          allowSignIn = true;
         } else {
           console.log(
             "[NextAuth signIn] no response.data:",
             response.errors ?? response,
           );
+          return false;
         }
       } catch (err) {
         console.error("Error syncing user with backend:", err);
+        return false;
       }
 
-      return true; // allow sign-in
+      return allowSignIn;
     },
     async jwt({ token, user }) {
       if (user) {

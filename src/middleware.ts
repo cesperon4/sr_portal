@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
 
   // Only check/set refresh token cookie on dashboard route after OAuth
   if (pathname.startsWith("/dashboard")) {
-    const refreshTokenCookie = request.cookies.get(REFRESH_TOKEN_COOKIE); //refreshTokenCookie is populated on logout
+    const refreshTokenCookie = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
     console.log(
       "[middleware] /dashboard: refresh token cookie:",
       refreshTokenCookie,
@@ -36,7 +36,8 @@ export async function middleware(request: NextRequest) {
         secret,
       });
 
-      const refreshToken = token?.refreshToken as string | undefined;
+      const refreshToken =
+        typeof token?.refreshToken === "string" ? token.refreshToken : undefined;
 
       if (refreshToken) {
         const response = NextResponse.next();
