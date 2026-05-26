@@ -1,11 +1,13 @@
 "use client";
 
-import CommentBox from "@/components/community/comment-box";
-import { useUserContext } from "@/context/UserContext";
-import { timeAgo } from "@/lib/time";
 import Link from "next/link";
 import { FiShield } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
+
+import CommentBox from "@/components/community/comment-box";
+import { useUserContext } from "@/context/UserContext";
+import { timeAgo } from "@/lib/time";
+
 import {
   useCreatePostCommentMutation,
   useGetPostQuery,

@@ -1,20 +1,23 @@
 "use client";
 
-import { useUserContext } from "@/context/UserContext";
+import type { Reference, StoreObject } from "@apollo/client";
+import { MoreHorizontal, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useUserContext } from "@/context/UserContext";
+
 import { useDeletePostMutation } from "../../../generated/graphql";
 
 type PostMenuProps = {
   postId: number;
-  postOwnerId: string;
+  postOwnerId?: string | null;
   onDeleted?: (postId: number) => void;
   redirectOnDelete?: string;
   className?: string;
@@ -32,7 +35,9 @@ export default function PostMenu({
   const [open, setOpen] = useState(false);
 
   const isOwner =
-    Boolean(loggedUser?.id) && loggedUser.id === String(postOwnerId);
+    Boolean(loggedUser?.id) &&
+    Boolean(postOwnerId) &&
+    loggedUser.id === String(postOwnerId);
 
   const [deletePost, { loading }] = useDeletePostMutation({
     variables: { id: postId },
@@ -45,14 +50,18 @@ export default function PostMenu({
 
       cache.modify({
         fields: {
-          posts(existing, { readField, DELETE }) {
+          posts(existing, { readField }) {
             const list = readField<{ data?: unknown[] }>("data", existing);
             const inner = list?.data;
             if (!Array.isArray(inner)) return existing;
 
-            const next = inner.filter(
-              (ref) => readField<number>("id", ref) !== deletedId,
-            );
+            const next = inner.filter((ref) => {
+              const id = readField<number>(
+                "id",
+                ref as Reference | StoreObject,
+              );
+              return id !== deletedId;
+            });
             if (next.length === inner.length) return existing;
 
             return {
@@ -64,9 +73,13 @@ export default function PostMenu({
             const inner = readField<unknown[]>("data", existing);
             if (!Array.isArray(inner)) return existing;
 
-            const next = inner.filter(
-              (ref) => readField<number>("id", ref) !== deletedId,
-            );
+            const next = inner.filter((ref) => {
+              const id = readField<number>(
+                "id",
+                ref as Reference | StoreObject,
+              );
+              return id !== deletedId;
+            });
             if (next.length === inner.length) return existing;
 
             return { ...existing, data: next };

@@ -1,4 +1,5 @@
 import { FlatCompat } from "@eslint/eslintrc";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -11,12 +12,10 @@ const compat = new FlatCompat({
 
 export default [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-
   {
     plugins: {
-      "simple-import-sort": await import("eslint-plugin-simple-import-sort"),
+      "simple-import-sort": simpleImportSort,
     },
-
     rules: {
       // Sort imports alphabetically + by groups
       "simple-import-sort/imports": "error",
