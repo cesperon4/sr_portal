@@ -3,28 +3,26 @@
 import { useLogin } from "@/hooks/landing-page/useLogin";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { HeroIllustration } from "./hero-illustration";
-
-const HERO_TABS = [
-  { id: "map", label: "Map", description: "Explore incidents" },
-  { id: "community", label: "Community", description: "Discussion & posts" },
-  { id: "insights", label: "Insights", description: "Charts & trends" },
-];
+import { useState } from "react";
+import {
+  HeroProductPreview,
+  HERO_PREVIEW_TABS,
+  type HeroPreviewId,
+} from "./hero-product-preview";
 
 export function HeroSection() {
   const router = useRouter();
   const { handleGuestLogin } = useLogin();
+  const [activePreview, setActivePreview] = useState<HeroPreviewId>("map");
 
   return (
     <section
       id="hero"
       className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 pt-24 pb-20 bg-white dark:bg-neutral-950"
     >
-      {/* Subtle gradient: white with a hint of blue (Glean-style accent) */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50/40 via-white to-white dark:from-blue-950/20 dark:via-neutral-950 dark:to-neutral-950" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-20%,rgba(59,130,246,0.08),transparent)] dark:bg-[radial-gradient(ellipse_70%_50%_at_50%_-20%,rgba(59,130,246,0.12),transparent)]" />
 
-      {/* Subtle grid overlay */}
       <div
         className="absolute inset-0 opacity-[0.4] dark:opacity-[0.15]"
         style={{
@@ -36,7 +34,6 @@ export function HeroSection() {
 
       <div className="relative z-10 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-12 lg:gap-16">
-          {/* Left: headline, subtext, tabs, CTAs */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left flex-1 lg:max-w-xl">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -86,7 +83,7 @@ export function HeroSection() {
               transition={{ duration: 0.5, delay: 0.25 }}
             >
               See what’s happening in your neighborhood. Maps, trends, and
-              community discussions—all in one place.
+              official records—all in one place.
             </motion.p>
 
             <motion.div
@@ -94,17 +91,28 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.35 }}
+              role="tablist"
+              aria-label="Product preview"
             >
-              {HERO_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  className="text-body-sm px-4 py-2 rounded-lg bg-gray-100 dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/30 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 text-gray-700 dark:text-gray-300 font-medium transition-all duration-200"
-                  aria-label={tab.label}
-                >
-                  {tab.label}
-                </button>
-              ))}
+              {HERO_PREVIEW_TABS.map((tab) => {
+                const isActive = activePreview === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActivePreview(tab.id)}
+                    className={`text-body-sm px-4 py-2 rounded-lg border font-medium transition-all duration-200 ${
+                      isActive
+                        ? "bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-200/50 dark:shadow-blue-950/40"
+                        : "bg-gray-100 dark:bg-neutral-800 border-transparent hover:border-blue-200 dark:hover:border-blue-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-950/30"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </motion.div>
 
             <motion.div
@@ -128,16 +136,17 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right: hero illustration — equal spacing from left block */}
           <motion.div
-            className="flex-1 min-w-0 flex items-center justify-center"
+            className="flex-1 min-w-0 flex items-center justify-center w-full"
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
+            role="tabpanel"
+            aria-label={`${HERO_PREVIEW_TABS.find((t) => t.id === activePreview)?.label} preview`}
           >
-            <div className="w-full max-w-[480px] p-[2px] rounded-2xl hero-image-border shadow-xl shadow-blue-200/20 dark:shadow-blue-950/30 bg-white/80 dark:bg-neutral-900/80">
-              <div className="rounded-[14px] overflow-hidden bg-gradient-to-b from-blue-50/30 to-white dark:from-blue-950/20 dark:to-neutral-950">
-                <HeroIllustration />
+            <div className="w-full max-w-[560px] p-[2px] rounded-2xl hero-image-border shadow-xl shadow-blue-200/20 dark:shadow-blue-950/30 bg-white/80 dark:bg-neutral-900/80">
+              <div className="rounded-[14px] overflow-hidden bg-white dark:bg-neutral-950 ring-1 ring-gray-200/80 dark:ring-neutral-800">
+                <HeroProductPreview activeId={activePreview} />
               </div>
             </div>
           </motion.div>

@@ -3,7 +3,7 @@
 import type { Reference, StoreObject } from "@apollo/client";
 import { MoreHorizontal, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import {
   DropdownMenu,
@@ -33,6 +33,8 @@ export default function PostMenu({
   const { loggedUser } = useUserContext();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const deletingRef = useRef(false);
+  const deletedRef = useRef(false);
 
   const isOwner =
     Boolean(loggedUser?.id) &&
@@ -95,28 +97,36 @@ export default function PostMenu({
   });
 
   const handleDelete = useCallback(
-    async (e: Event | React.SyntheticEvent) => {
-      if ("preventDefault" in e) e.preventDefault();
+    async (e: Event) => {
+      e.preventDefault();
+
+      if (deletedRef.current || deletingRef.current || loading) return;
+
       if ("stopPropagation" in e && typeof e.stopPropagation === "function") {
         e.stopPropagation();
       }
 
-      const confirmed = window.confirm(
-        "Delete this post? This action can't be undone.",
-      );
-      if (!confirmed) return;
-
+      deletingRef.current = true;
       try {
+        const confirmed = window.confirm(
+          "Delete this post? This action can't be undone.",
+        );
+        if (!confirmed) return;
+
         const result = await deletePost();
         if (result.data?.deletePost?.id) {
+          deletedRef.current = true;
           onDeleted?.(result.data.deletePost.id);
           if (redirectOnDelete) router.push(redirectOnDelete);
         }
       } finally {
+        if (!deletedRef.current) {
+          deletingRef.current = false;
+        }
         setOpen(false);
       }
     },
-    [deletePost, onDeleted, redirectOnDelete, router],
+    [deletePost, loading, onDeleted, redirectOnDelete, router],
   );
 
   if (!isOwner) {
@@ -162,8 +172,11 @@ export default function PostMenu({
         className="min-w-40"
       >
         <DropdownMenuItem
-          onSelect={handleDelete}
-          disabled={loading}
+          onSelect={(e) => {
+            e.preventDefault();
+            void handleDelete(e);
+          }}
+          disabled={loading || deletedRef.current}
           className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer"
         >
           <Trash2 className="size-4" strokeWidth={1.5} />

@@ -21,26 +21,32 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const images = post.imageUrls || [];
 
   return (
-    <Link href={`/posts/${post.id}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded">
-      <article className="group flex flex-col w-full border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:bg-gray-50/50 dark:hover:bg-neutral-900/50 transition-colors">
-        {/* Reddit-style header: community/user + time + menu */}
-        <header className="flex items-center gap-2 px-4 pt-3 pb-1">
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 shrink-0">
-              r/SR Portal
-            </span>
-            <span className="text-gray-300 dark:text-gray-600">•</span>
-            <span className="text-caption truncate">
-              Posted by u/{post.user?.username ?? "unknown"}
-            </span>
-            <span className="text-gray-300 dark:text-gray-600">•</span>
-            <span className="text-caption text-gray-500 dark:text-gray-400 shrink-0">
-              {timeAgo(post.createdAt)}
-            </span>
-          </div>
-          <PostMenu postId={post.id} postOwnerId={post.userId} />
-        </header>
+    <article className="group flex flex-col w-full border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:bg-gray-50/50 dark:hover:bg-neutral-900/50 transition-colors">
+      {/* Reddit-style header: community/user + time + menu */}
+      <header className="flex items-center gap-2 px-4 pt-3 pb-1">
+        <Link
+          href={`/posts/${post.id}`}
+          className="flex items-center gap-2 min-w-0 flex-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
+        >
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 shrink-0">
+            r/SR Portal
+          </span>
+          <span className="text-gray-300 dark:text-gray-600">•</span>
+          <span className="text-caption truncate">
+            Posted by u/{post.user?.username ?? "unknown"}
+          </span>
+          <span className="text-gray-300 dark:text-gray-600">•</span>
+          <span className="text-caption text-gray-500 dark:text-gray-400 shrink-0">
+            {timeAgo(post.createdAt)}
+          </span>
+        </Link>
+        <PostMenu postId={post.id} postOwnerId={post.userId} />
+      </header>
 
+      <Link
+        href={`/posts/${post.id}`}
+        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
+      >
         {/* Title */}
         <div className="px-4 pt-1 pb-2">
           <h2 className="text-base font-semibold leading-snug text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
@@ -68,13 +74,13 @@ const Post: React.FC<PostProps> = ({ post }) => {
             </div>
           </div>
         )}
+      </Link>
 
-        {/* Reddit-style action bar */}
-        <footer className="px-4 pb-3">
-          <PostFooter post={post} />
-        </footer>
-      </article>
-    </Link>
+      {/* Reddit-style action bar */}
+      <footer className="px-4 pb-3">
+        <PostFooter post={post} />
+      </footer>
+    </article>
   );
 };
 
