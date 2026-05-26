@@ -3,11 +3,11 @@
 import { timeAgo } from "@/lib/time";
 import Link from "next/link";
 import React from "react";
-import { MoreHorizontal } from "lucide-react";
 import { GetPostsQuery } from "../../../generated/graphql";
 import { ImageCarousel } from "../ui/image-carousel";
 import { Map } from "./map";
 import PostFooter from "./post-footer";
+import PostMenu from "./post-menu";
 
 type PostType = NonNullable<
   NonNullable<GetPostsQuery["posts"]>["data"]
@@ -38,13 +38,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
               {timeAgo(post.createdAt)}
             </span>
           </div>
-          <button
-            className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-neutral-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors shrink-0"
-            aria-label="Post options"
-            onClick={(e) => e.preventDefault()}
-          >
-            <MoreHorizontal className="size-4" strokeWidth={1.5} />
-          </button>
+          <PostMenu postId={post.id} postOwnerId={post.userId} />
         </header>
 
         {/* Title */}

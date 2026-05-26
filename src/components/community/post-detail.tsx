@@ -5,7 +5,6 @@ import { useUserContext } from "@/context/UserContext";
 import { timeAgo } from "@/lib/time";
 import Link from "next/link";
 import { FiShield } from "react-icons/fi";
-import { HiDotsHorizontal } from "react-icons/hi";
 import { IoIosArrowBack } from "react-icons/io";
 import {
   useCreatePostCommentMutation,
@@ -16,6 +15,7 @@ import PostFooter from "../../components/community/post-footer";
 import { ImageCarousel } from "../ui/image-carousel";
 import { Loader } from "../ui/loader";
 import { Map } from "./map";
+import PostMenu from "./post-menu";
 
 interface PostDetailProps {
   id: number;
@@ -66,7 +66,13 @@ function PostDetail({ id }: PostDetailProps) {
         <header className="flex items-center gap-2 px-6 pt-5 text-sm text-gray-500 dark:text-gray-400">
           <FiShield size={16} className="text-blue-500" />
           <span>{timeAgo(data.post.createdAt)}</span>
-          <HiDotsHorizontal size={18} className="ml-auto" />
+          <div className="ml-auto">
+            <PostMenu
+              postId={data.post.id}
+              postOwnerId={data.post.userId}
+              redirectOnDelete="/dashboard?view=Community"
+            />
+          </div>
         </header>
 
         {/* Title + Author */}

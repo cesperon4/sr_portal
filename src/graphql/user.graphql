@@ -247,7 +247,15 @@ query Me {
 }
 
 mutation registerUser($data: CreateUserInput!) {
-  registerUser(data: $data)
+  registerUser(data: $data) {
+    data {
+      firstname
+      lastname
+      email
+    }
+    status
+    message
+  }
 }
 
 mutation verifyEmail($token: Token!) {

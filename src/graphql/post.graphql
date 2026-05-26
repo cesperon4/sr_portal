@@ -149,6 +149,12 @@ mutation UpdatePost($id: Int!, $data: UpdatePostInput!) {
   }
 }
 
+mutation DeletePost($id: Int!) {
+  deletePost(id: $id) {
+    id
+  }
+}
+
 mutation CreatePostComment($data: CreatePostCommentInput!) {
   createPostComment(data: $data) {
     id

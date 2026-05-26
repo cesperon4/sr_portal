@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { Role } from "../../../generated/graphql";
 
 export function useSignupModalForm(
-  setRegisterSuccess: React.Dispatch<React.SetStateAction<boolean>>
+  setRegisterSuccess: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
   const [registerUser] = useRegisterUserMutation();
 
@@ -27,6 +27,7 @@ export function useSignupModalForm(
     try {
       e.preventDefault();
       // Call the mutation to create a user
+      console.log("handle submit");
       const { firstname, lastname, email, username, password, role } = formData;
       const res = await registerUser({
         variables: {
@@ -40,6 +41,8 @@ export function useSignupModalForm(
           },
         },
       });
+
+      console.log("res: ", res);
 
       if (res.data?.registerUser) {
         toast("Registration successful", {
